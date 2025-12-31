@@ -1,4 +1,4 @@
-import express from "express";
+﻿import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { prisma } from "./lib/prisma.js";
@@ -7,17 +7,17 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS: lê origens permitidas de variável de ambiente ou usa fallback
-// Em produção, defina CORS_ORIGINS no .env com URLs separadas por vírgula
+// CORS: le origens permitidas de variavel de ambiente ou usa fallback
+// Em producao, defina CORS_ORIGINS no .env com URLs separadas por virgula
 // Exemplo: CORS_ORIGINS=https://agendou-2026.vercel.app,https://seu-dominio.vercel.app
 const corsOriginsEnv = process.env.CORS_ORIGINS;
 
 let allowedOrigins;
 
 if (corsOriginsEnv) {
-  // Se CORS_ORIGINS está definida, usar ela (separada por vírgula)
+  // Se CORS_ORIGINS esta definida, usar ela (separada por virgula)
   allowedOrigins = corsOriginsEnv.split(',').map(origin => origin.trim());
-  console.log(`✅ CORS configurado com origens do ambiente: ${allowedOrigins.join(', ')}`);
+  console.log(`CORS configurado com origens do ambiente: ${allowedOrigins.join(', ')}`);
 } else {
   // Fallback para desenvolvimento local
   allowedOrigins = [
@@ -26,7 +26,7 @@ if (corsOriginsEnv) {
     "https://agendou-2026.vercel.app",
     "https://agendou-seven.vercel.app"
   ];
-  console.log(`⚠️ CORS_ORIGINS não definida, usando fallback (desenvolvimento local)`);
+  console.log(`CORS_ORIGINS nao definida, usando fallback (desenvolvimento local)`);
 }
 
 app.use(
@@ -39,7 +39,7 @@ app.use(
 
       // Log para debug (apenas em desenvolvimento)
       if (process.env.NODE_ENV !== 'production') {
-        console.warn(`⚠️ CORS bloqueado para origem: ${origin}`);
+        console.warn(`CORS bloqueado para origem: ${origin}`);
         console.warn(`   Origens permitidas: ${allowedOrigins.join(', ')}`);
       }
 
@@ -51,28 +51,28 @@ app.use(
 
 app.use(express.json());
 
-// ✅ Health check
+// Health check
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", service: "agendou-api" });
 });
 
-// ✅ Rota raiz
+// Rota raiz
 app.get("/", (_req, res) => {
   res.json({ message: "API Agendou funcionando!" });
 });
 
-// ✅ Teste de conexão com o banco (Neon)
+// Teste de conexao com o banco (Neon)
 app.get("/db-check", async (_req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
-    res.json({ ok: true, message: "Conexão com o banco OK ✅" });
+    res.json({ ok: true, message: "Conexao com o banco OK" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ ok: false, message: "Falha ao conectar no banco ❌" });
+    res.status(500).json({ ok: false, message: "Falha ao conectar no banco" });
   }
 });
 
-// ✅ Rotas da API
+// Rotas da API
 import authRoutes from "./routes/auth.js";
 import usuarioRoutes from "./routes/usuarios.js";
 import agendamentoRoutes from "./routes/agendamentos.js";
@@ -87,9 +87,9 @@ app.use("/servicos", servicoRoutes);
 app.use("/disponibilidades", disponibilidadeRoutes);
 app.use("/notificacoes", notificacaoRoutes);
 
-// ✅ Render usa PORT dinâmica
+// Render usa PORT dinamica
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
-  console.log(`✅ API rodando na porta ${PORT}`);
+  console.log(`API rodando na porta ${PORT}`);
 });

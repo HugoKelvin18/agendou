@@ -98,9 +98,9 @@ export default function Register() {
     
     return(
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-8">
-            <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
-                <h1 className="text-3xl font-semibold text-center text-blue-600 mb-6">Agendou</h1>
-                <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">Crie sua conta</h2>
+            <div className="bg-white shadow-xl rounded-2xl p-6 md:p-8 w-full max-w-md">
+                <h1 className="text-2xl md:text-3xl font-semibold text-center text-blue-600 mb-6">Agendou</h1>
+                <h2 className="text-xl md:text-2xl font-semibold text-center text-gray-800 mb-6">Crie sua conta</h2>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                     <div>
@@ -113,7 +113,7 @@ export default function Register() {
                             placeholder="Digite seu nome completo" 
                             onChange={handleChange} 
                             required 
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-2.5 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
                         />
                     </div>
 
@@ -127,12 +127,12 @@ export default function Register() {
                             placeholder="Digite seu e-mail" 
                             onChange={handleChange} 
                             required 
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-2.5 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
                         />
                     </div>
 
                     <div>
-                        <label htmlFor="register-telefone" className="block text-gray-700 text-sm font-semibold mb-2">Telefone</label>
+                        <label htmlFor="register-telefone" className="block text-gray-700 text-xs md:text-sm font-semibold mb-2">Telefone</label>
                         <input 
                             id="register-telefone"
                             name="telefone" 
@@ -141,7 +141,7 @@ export default function Register() {
                             placeholder="Ex: (31) 99999-9999" 
                             onChange={handleChange} 
                             required 
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-2.5 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
                         />
                     </div>
 
@@ -155,18 +155,18 @@ export default function Register() {
                             placeholder="Digite sua senha" 
                             onChange={handleChange} 
                             required 
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-2.5 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
                         />
                     </div>
 
                     <div>
-                        <label htmlFor="register-role" className="block text-gray-700 text-sm font-semibold mb-2">Tipo de conta</label>
+                        <label htmlFor="register-role" className="block text-gray-700 text-xs md:text-sm font-semibold mb-2">Tipo de conta</label>
                         <select 
                             id="register-role"
                             name="role" 
                             onChange={handleChange} 
                             value={form.role}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full p-2.5 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
                         >
                             <option value="CLIENTE">Sou cliente</option>
                             <option value="PROFISSIONAL">Sou profissional</option>
@@ -184,13 +184,13 @@ export default function Register() {
                                 placeholder="Código de Acesso do Estabelecimento"
                                 onChange={handleChange}
                                 required={form.role === 'PROFISSIONAL'}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full p-2.5 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
                             />
                         </div>
                     )}
 
                     {error && (
-                        <div className="text-red-500 text-sm text-center bg-red-100 p-3 rounded-lg">
+                        <div className="text-red-500 text-xs md:text-sm text-center bg-red-100 p-3 rounded-lg">
                             {error}
                         </div>
                     )}
@@ -198,7 +198,7 @@ export default function Register() {
                     <button 
                         type="submit" 
                         disabled={loading}
-                        className="bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="bg-blue-600 text-white py-2.5 md:py-3 rounded-lg hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base font-medium"
                     >
                         {loading ? "Cadastrando..." : "Cadastrar"}
                     </button>

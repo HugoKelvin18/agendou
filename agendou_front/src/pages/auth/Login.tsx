@@ -63,7 +63,7 @@ const Login: React.FC = () => {
                             <Sparkles className='w-5 h-5 text-blue-600' />
                             <span className='text-sm font-medium text-gray-700'>Agendamentos Inteligentes</span>
                         </div>
-                        <h1 className='text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent leading-tight'>
+                        <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent leading-tight'>
                             Agendou
                         </h1>
                         <p className='text-xl lg:text-2xl text-gray-700 font-medium'>
@@ -87,13 +87,13 @@ const Login: React.FC = () => {
 
                     {/* Card de Login - Lado Direito */}
                     <div className='w-full max-w-md mx-auto'>
-                        <div className='bg-white/70 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20 relative overflow-hidden'>
+                        <div className='bg-white/70 backdrop-blur-lg rounded-3xl p-6 md:p-8 shadow-2xl border border-white/20 relative overflow-hidden'>
                             {/* Efeito de brilho sutil */}
                             <div className='absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 pointer-events-none'></div>
                             
                             <div className='relative z-10'>
-                                <h2 className='text-3xl font-bold text-center text-gray-800 mb-2'>Bem-vindo de volta</h2>
-                                <p className='text-center text-gray-600 mb-8'>Entre para continuar</p>
+                                <h2 className='text-2xl md:text-3xl font-bold text-center text-gray-800 mb-2'>Bem-vindo de volta</h2>
+                                <p className='text-center text-sm md:text-base text-gray-600 mb-8'>Entre para continuar</p>
 
                                 <form onSubmit={handleLogin} className='space-y-6'>
                                     {/* Campo Email com Label Flutuante */}
@@ -110,7 +110,7 @@ const Login: React.FC = () => {
                                             onFocus={() => setFocusedEmail(true)}
                                             onBlur={() => setFocusedEmail(false)}
                                             required 
-                                            className='w-full pl-12 pr-4 pt-6 pb-2 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all'
+                                            className='w-full pl-12 pr-4 pt-5 md:pt-6 pb-2 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm md:text-base'
                                         />
                                         <label 
                                             htmlFor="login-email" 
@@ -138,7 +138,7 @@ const Login: React.FC = () => {
                                             onFocus={() => setFocusedSenha(true)}
                                             onBlur={() => setFocusedSenha(false)}
                                             required 
-                                            className='w-full pl-12 pr-4 pt-6 pb-2 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all'
+                                            className='w-full pl-12 pr-4 pt-5 md:pt-6 pb-2 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm md:text-base'
                                         />
                                         <label 
                                             htmlFor="login-senha" 
@@ -153,7 +153,7 @@ const Login: React.FC = () => {
                                     </div>
 
                                     {error && (
-                                        <div className='text-red-600 text-sm text-center bg-red-50 border border-red-200 p-3 rounded-xl'>
+                                        <div className='text-red-600 text-xs md:text-sm text-center bg-red-50 border border-red-200 p-3 rounded-xl'>
                                             {error}
                                         </div>
                                     )}
@@ -161,7 +161,7 @@ const Login: React.FC = () => {
                                     <button 
                                         type='submit' 
                                         disabled={loading}
-                                        className='relative w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white py-4 rounded-xl font-semibold hover:shadow-xl hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 overflow-hidden group'
+                                        className='relative w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white py-3 md:py-4 rounded-xl text-sm md:text-base font-semibold hover:shadow-xl hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 overflow-hidden group'
                                     >
                                         <span className='relative z-10'>{loading ? "Entrando..." : "Entrar"}</span>
                                         {/* Shimmer effect */}

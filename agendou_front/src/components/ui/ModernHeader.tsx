@@ -115,7 +115,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
                     <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
                         {/* Esquerda - Saudação */}
                         <div className="flex items-center min-w-0 flex-1">
-                            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+                            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800">
                                 {getGreeting()}, {user?.nome?.split(' ')[0] || 'Usuário'}
                             </h1>
                         </div>
@@ -159,7 +159,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
                                 {showMenu && (
                                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
                                         <div className="px-4 py-3 border-b border-gray-100">
-                                            <p className="text-sm font-semibold text-gray-800">{user?.nome}</p>
+                                            <p className="text-xs md:text-sm font-semibold text-gray-800">{user?.nome}</p>
                                             <p className="text-xs text-gray-500">{user?.email}</p>
                                         </div>
                                         
@@ -168,7 +168,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
                                                 navigate(role === 'CLIENTE' ? '/cliente/configuracoes' : '/profissional/configuracoes');
                                                 setShowMenu(false);
                                             }}
-                                            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                            className="w-full flex items-center gap-3 px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                                         >
                                             <Settings size={16} />
                                             <span>Configurações</span>
@@ -176,7 +176,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
 
                                         <button
                                             onClick={handleLogout}
-                                            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                            className="w-full flex items-center gap-3 px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm text-red-600 hover:bg-red-50 transition-colors"
                                         >
                                             <LogOut size={16} />
                                             <span>Sair</span>
@@ -189,7 +189,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
                             {actionButton && (
                                 <button
                                     onClick={actionButton.onClick}
-                                    className="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-sm hover:shadow-md text-sm font-medium"
+                                    className="hidden md:flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-sm hover:shadow-md text-xs md:text-sm font-medium"
                                 >
                                     {actionButton.icon || <Plus size={16} />}
                                     <span>{actionButton.text}</span>

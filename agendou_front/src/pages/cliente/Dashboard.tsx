@@ -124,42 +124,42 @@ export default function DashboardCliente() {
                 }}
                 role="CLIENTE"
             />
-            <div className="max-w-7xl mx-auto p-6 space-y-8">
+            <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-8">
 
                 {/* Cards Principais */}
                 <div className='grid md:grid-cols-3 gap-6'>
                     <div 
-                        className="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
+                        className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
                         onClick={() => navigate("/cliente/agendar")}
                     >
                         <Calendar size={48} className='text-blue-600 mb-4' />
-                        <h2 className='text-xl font-semibold text-gray-800'>Agendar Serviço</h2>
-                        <p className="text-gray-600 mt-2">Agende um novo serviço com um profissional</p>
+                        <h2 className='text-lg md:text-xl font-semibold text-gray-800'>Agendar Serviço</h2>
+                        <p className="text-sm md:text-base text-gray-600 mt-2">Agende um novo serviço com um profissional</p>
                     </div>
                     <div 
-                        className="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
+                        className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
                         onClick={() => navigate("/cliente/agendamentos")}
                     >
                         <Clock size={48} className='text-green-600 mb-4' />
-                        <h2 className='text-xl font-semibold text-gray-800'>Meus Agendamentos</h2>
-                        <p className="text-gray-600 mt-2">Visualize e gerencie seus agendamentos</p>
+                        <h2 className='text-lg md:text-xl font-semibold text-gray-800'>Meus Agendamentos</h2>
+                        <p className="text-sm md:text-base text-gray-600 mt-2">Visualize e gerencie seus agendamentos</p>
                     </div>
                     <div 
-                        className="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
+                        className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
                         onClick={() => navigate("/cliente/configuracoes")}
                     >
                         <User size={48} className='text-purple-600 mb-4' />
-                        <h2 className='text-xl font-semibold text-gray-800'>Meu Perfil</h2>
-                        <p className="text-gray-600 mt-2">Gerencie suas informações pessoais</p>
+                        <h2 className='text-lg md:text-xl font-semibold text-gray-800'>Meu Perfil</h2>
+                        <p className="text-sm md:text-base text-gray-600 mt-2">Gerencie suas informações pessoais</p>
                     </div>
                 </div>
 
                 {/* Seção: Sugestões do Dia */}
-                <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <Sparkles className="text-yellow-500" size={24} />
-                            <h2 className="text-2xl font-bold text-gray-800">Sugestões do Dia</h2>
+                            <h2 className="text-xl md:text-2xl font-bold text-gray-800">Sugestões do Dia</h2>
                         </div>
                         <button
                             onClick={() => navigate("/cliente/agendar")}
@@ -172,10 +172,10 @@ export default function DashboardCliente() {
 
                     {/* Filtros Rápidos */}
                     <div className="flex flex-wrap gap-2 mb-6">
-                        <span className="text-sm font-medium text-gray-700">Filtros:</span>
+                        <span className="text-xs md:text-sm font-medium text-gray-700">Filtros:</span>
                         <button
                             onClick={() => setFiltroPreco(filtroPreco === "ate50" ? null : "ate50")}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                            className={`px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${
                                 filtroPreco === "ate50"
                                     ? "bg-blue-600 text-white"
                                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -185,7 +185,7 @@ export default function DashboardCliente() {
                         </button>
                         <button
                             onClick={() => setFiltroPreco(filtroPreco === "50a100" ? null : "50a100")}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                            className={`px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${
                                 filtroPreco === "50a100"
                                     ? "bg-blue-600 text-white"
                                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -195,7 +195,7 @@ export default function DashboardCliente() {
                         </button>
                         <button
                             onClick={() => setFiltroPreco(filtroPreco === "acima100" ? null : "acima100")}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                            className={`px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${
                                 filtroPreco === "acima100"
                                     ? "bg-blue-600 text-white"
                                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -205,7 +205,7 @@ export default function DashboardCliente() {
                         </button>
                         <button
                             onClick={() => setFiltroDuracao(filtroDuracao === "ate30" ? null : "ate30")}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                            className={`px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${
                                 filtroDuracao === "ate30"
                                     ? "bg-green-600 text-white"
                                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -215,7 +215,7 @@ export default function DashboardCliente() {
                         </button>
                         <button
                             onClick={() => setFiltroDuracao(filtroDuracao === "30a60" ? null : "30a60")}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                            className={`px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${
                                 filtroDuracao === "30a60"
                                     ? "bg-green-600 text-white"
                                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -225,7 +225,7 @@ export default function DashboardCliente() {
                         </button>
                         <button
                             onClick={() => setFiltroDuracao(filtroDuracao === "acima60" ? null : "acima60")}
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                            className={`px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors ${
                                 filtroDuracao === "acima60"
                                     ? "bg-green-600 text-white"
                                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -238,7 +238,7 @@ export default function DashboardCliente() {
                     {loading ? (
                         <div className="text-center py-8">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                            <p className="text-gray-600 mt-2">Carregando sugestões...</p>
+                            <p className="text-xs md:text-sm text-gray-600 mt-2">Carregando sugestões...</p>
                         </div>
                     ) : sugestoesDoDia.length === 0 ? (
                         <div className="text-center py-8 text-gray-500">
@@ -250,7 +250,7 @@ export default function DashboardCliente() {
                             {sugestoesDoDia.map((servico) => (
                                 <div
                                     key={servico.id}
-                                    className="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-all overflow-hidden flex flex-col h-[400px]"
+                                    className="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-all overflow-hidden flex flex-col h-[320px] md:h-[400px]"
                                 >
                                     {/* Banner de Imagem no Topo - Altura Fixa */}
                                     <div className="relative h-40 bg-gradient-to-br from-blue-100 to-indigo-200 overflow-hidden">
@@ -279,8 +279,8 @@ export default function DashboardCliente() {
                                     <div className="p-4 flex flex-col flex-1">
                                         <div className="flex items-start justify-between mb-2">
                                             <div className="flex-1">
-                                                <h3 className="font-bold text-gray-800 text-lg mb-1 line-clamp-1">{servico.nome}</h3>
-                                                <p className="text-sm text-gray-600">{servico.profissional.nome}</p>
+                                                <h3 className="font-bold text-gray-800 text-base md:text-lg mb-1 line-clamp-1">{servico.nome}</h3>
+                                                <p className="text-xs md:text-sm text-gray-600">{servico.profissional.nome}</p>
                                             </div>
                                         </div>
                                         
@@ -294,12 +294,12 @@ export default function DashboardCliente() {
                                         </div>
                                         
                                         <div className="flex items-center justify-between pt-3 border-t border-gray-200 mt-auto">
-                                            <span className="text-xl font-bold text-blue-600">
+                                            <span className="text-lg md:text-xl font-bold text-blue-600">
                                                 {formatarPreco(servico.preco)}
                                             </span>
                                             <button
                                                 onClick={() => navigate(`/cliente/agendar?profissional=${servico.profissionalId}&servico=${servico.id}`)}
-                                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                                                className="px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xs md:text-sm font-medium"
                                             >
                                                 Agendar
                                             </button>
@@ -310,7 +310,7 @@ export default function DashboardCliente() {
                         </div>
                     )}
 
-                    <div className="mt-4 text-sm text-gray-600 text-center">
+                    <div className="mt-4 text-xs md:text-sm text-gray-600 text-center">
                         {servicosFiltrados.length > 0 && (
                             <p>{servicosFiltrados.length} {servicosFiltrados.length === 1 ? 'serviço encontrado' : 'serviços encontrados'}</p>
                         )}
@@ -318,11 +318,11 @@ export default function DashboardCliente() {
                 </div>
 
                 {/* Seção: Top Profissionais */}
-                <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <Star className="text-yellow-500" size={24} />
-                            <h2 className="text-2xl font-bold text-gray-800">Top Profissionais</h2>
+                            <h2 className="text-xl md:text-2xl font-bold text-gray-800">Top Profissionais</h2>
                         </div>
                         <button
                             onClick={() => navigate("/cliente/agendar")}
@@ -336,7 +336,7 @@ export default function DashboardCliente() {
                     {loading ? (
                         <div className="text-center py-8">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-                            <p className="text-gray-600 mt-2">Carregando profissionais...</p>
+                            <p className="text-xs md:text-sm text-gray-600 mt-2">Carregando profissionais...</p>
                         </div>
                     ) : topProfissionais.length === 0 ? (
                         <div className="text-center py-8 text-gray-500">
@@ -360,8 +360,8 @@ export default function DashboardCliente() {
                                                 <h3 className="font-bold text-gray-800">{profissional.nome}</h3>
                                                 <div className="flex items-center gap-1 mt-1">
                                                     <Star size={14} className="text-yellow-500 fill-current" />
-                                                    <span className="text-sm text-gray-600">4.8</span>
-                                                    <span className="text-xs text-gray-500">({servicosDoProfissional.length} serviços)</span>
+                                                <span className="text-xs md:text-sm text-gray-600">4.8</span>
+                                                <span className="text-xs text-gray-500">({servicosDoProfissional.length} serviços)</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -375,7 +375,7 @@ export default function DashboardCliente() {
                                         
                                         <button
                                             onClick={() => navigate(`/cliente/agendar?profissional=${profissional.id}`)}
-                                            className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
+                                            className="w-full px-3 py-1.5 md:px-4 md:py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-xs md:text-sm font-medium"
                                         >
                                             Ver Serviços
                                         </button>

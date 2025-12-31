@@ -97,8 +97,8 @@ function FormServico({ onClose, onCreate, onUpdate, editing }: FormServicoProps)
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm p-4">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-                <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
-                    <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                <div className="sticky top-0 bg-white border-b border-gray-200 p-4 md:p-6 flex justify-between items-center">
+                    <h3 className="text-xl md:text-2xl font-bold text-gray-800 flex items-center gap-2">
                         <Package className="text-blue-600" size={24} />
                         {editing ? "Editar Serviço" : "Adicionar Serviço"}
                     </h3>
@@ -110,7 +110,7 @@ function FormServico({ onClose, onCreate, onUpdate, editing }: FormServicoProps)
                     </button>
                 </div>
                 
-                <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                <form onSubmit={handleSubmit} className="p-4 md:p-6 space-y-4">
                     <Input
                         label="Nome do Serviço"
                         name="nome"
@@ -121,7 +121,7 @@ function FormServico({ onClose, onCreate, onUpdate, editing }: FormServicoProps)
                     />
                     
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
                             Descrição (opcional)
                         </label>
                         <textarea
@@ -347,10 +347,10 @@ export default function MeusServicos() {
 
     if (!profissionalId || profissionalId === 0) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6 flex items-center justify-center">
-                <div className="bg-white rounded-xl shadow-lg p-8 max-w-md text-center">
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-6 flex items-center justify-center">
+                <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 max-w-md text-center">
                     <AlertCircle className="mx-auto text-red-500 mb-4" size={48} />
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">
                         Acesso Restrito
                     </h2>
                     <p className="text-gray-600">
@@ -366,7 +366,7 @@ export default function MeusServicos() {
             <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                    <p className="text-lg text-gray-700">Carregando serviços...</p>
+                    <p className="text-base md:text-lg text-gray-700">Carregando serviços...</p>
                 </div>
             </div>
         );
@@ -426,7 +426,7 @@ export default function MeusServicos() {
                 {servicos.length === 0 ? (
                     <div className="bg-white rounded-xl shadow-lg p-12 text-center">
                         <Package size={64} className="mx-auto text-gray-400 mb-4" />
-                        <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                        <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">
                             Nenhum serviço cadastrado
                         </h3>
                         <p className="text-gray-600 mb-6">
@@ -453,7 +453,7 @@ export default function MeusServicos() {
                                 <div className="p-6">
                                     <div className="flex justify-between items-start mb-4">
                                         <div className="flex-1">
-                                            <h3 className="text-xl font-bold text-gray-800 mb-2">
+                                            <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-2">
                                                 {servico.nome}
                                             </h3>
                                             {servico.descricao && (
@@ -495,7 +495,7 @@ export default function MeusServicos() {
                                         </div>
                                         <div className="flex items-center gap-2 text-gray-700">
                                             <DollarSign size={18} className="text-green-600" />
-                                            <span className="text-2xl font-bold text-green-600">
+                                            <span className="text-xl md:text-2xl font-bold text-green-600">
                                                 {formatarPreco(servico.preco)}
                                             </span>
                                         </div>
@@ -506,7 +506,7 @@ export default function MeusServicos() {
                                             setEditing(servico);
                                             setShowForm(true);
                                         }}
-                                        className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium"
+                                        className="mt-4 w-full flex items-center justify-center gap-2 px-3 py-1.5 md:px-4 md:py-2 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-xs md:text-sm font-medium"
                                     >
                                         <Edit2 size={18} />
                                         Editar Serviço

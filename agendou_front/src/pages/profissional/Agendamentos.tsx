@@ -140,7 +140,7 @@ export default function AgendamentosProfissional() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <p className="text-lg">Carregando agendamentos...</p>
+                <p className="text-base md:text-lg">Carregando agendamentos...</p>
             </div>
         );
     }
@@ -153,7 +153,7 @@ export default function AgendamentosProfissional() {
                 </div>
                 <button
                     onClick={carregar}
-                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    className="mt-4 px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs md:text-sm"
                 >
                     Tentar novamente
                 </button>
@@ -189,7 +189,7 @@ export default function AgendamentosProfissional() {
                                         onChange={(e) => setFiltroNome(e.target.value)}
                                         onKeyPress={handleKeyPress}
                                         placeholder="Nome do cliente..."
-                                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-2.5 py-1.5 md:px-3 md:py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                     />
                                 </div>
                                 <div className="min-w-[150px]">
@@ -199,7 +199,7 @@ export default function AgendamentosProfissional() {
                                         value={filtroData}
                                         onChange={(e) => setFiltroData(e.target.value)}
                                         onKeyPress={handleKeyPress}
-                                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-2.5 py-1.5 md:px-3 md:py-2 text-xs md:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                     />
                                 </div>
                                 <button
@@ -214,7 +214,7 @@ export default function AgendamentosProfissional() {
                             {/* Botão Atualizar */}
                             <div className="flex items-center gap-2">
                                 {loadingFiltro && (
-                                    <div className="text-sm text-blue-600 flex items-center gap-2">
+                                    <div className="text-xs md:text-sm text-blue-600 flex items-center gap-2">
                                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
                                         <span className="hidden sm:inline">Carregando...</span>
                                     </div>
@@ -231,8 +231,8 @@ export default function AgendamentosProfissional() {
                 </div>
 
                 {agendamentos.length === 0 ? (
-                    <div className="bg-white rounded-lg shadow-md p-8 text-center">
-                        <p className="text-gray-600 text-lg">Nenhum agendamento encontrado.</p>
+                    <div className="bg-white rounded-lg shadow-md p-6 md:p-8 text-center">
+                        <p className="text-gray-600 text-base md:text-lg">Nenhum agendamento encontrado.</p>
                     </div>
                 ) : (
                     <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -273,12 +273,12 @@ export default function AgendamentosProfissional() {
                                                         {a.cliente?.nome || "N/A"}
                                                     </div>
                                                     {a.cliente?.email && (
-                                                        <div className="text-sm text-gray-500">
+                                                        <div className="text-xs md:text-sm text-gray-500">
                                                             {a.cliente.email}
                                                         </div>
                                                     )}
                                                     {a.cliente?.telefone && (
-                                                        <div className="text-sm text-gray-500">
+                                                        <div className="text-xs md:text-sm text-gray-500">
                                                             {a.cliente.telefone}
                                                         </div>
                                                     )}
@@ -288,7 +288,7 @@ export default function AgendamentosProfissional() {
                                                         {a.servico?.nome || "N/A"}
                                                     </div>
                                                     {a.servico?.preco && (
-                                                        <div className="text-sm text-gray-500">
+                                                        <div className="text-xs md:text-sm text-gray-500">
                                                             R$ {a.servico.preco.toFixed(2)}
                                                         </div>
                                                     )}
@@ -308,7 +308,7 @@ export default function AgendamentosProfissional() {
                                                     <select
                                                         value={a.status}
                                                         onChange={(e) => atualizarStatus(a.id, e.target.value)}
-                                                        className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                        className="border border-gray-300 rounded-lg px-2.5 py-1.5 md:px-3 md:py-2 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                                     >
                                                         <option value="PENDENTE">Pendente</option>
                                                         <option value="EM_ANDAMENTO">Em Andamento</option>

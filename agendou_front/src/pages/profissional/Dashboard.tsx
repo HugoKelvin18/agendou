@@ -93,59 +93,59 @@ export default function DashboardProfissional() {
                 }}
                 role="PROFISSIONAL"
             />
-            <div className="max-w-7xl mx-auto p-6 space-y-8">
+            <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-8">
 
                 {/* Cards Principais */}
                 <div className='grid md:grid-cols-2 lg:grid-cols-5 gap-6'>
                     <div 
-                        className="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
+                        className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
                         onClick={() => navigate("/profissional/agendamentos")}
                     >
                         <Calendar size={48} className='text-blue-600 mb-4' />
-                        <h2 className='text-xl font-semibold text-gray-800'>Agenda</h2>
-                        <p className="text-gray-600 mt-2">Visualize seus agendamentos</p>
+                        <h2 className='text-lg md:text-xl font-semibold text-gray-800'>Agenda</h2>
+                        <p className="text-sm md:text-base text-gray-600 mt-2">Visualize seus agendamentos</p>
                     </div>
                     <div 
-                        className="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
+                        className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
                         onClick={() => navigate("/profissional/agendar")}
                     >
                         <Scissors size={48} className='text-orange-600 mb-4' />
-                        <h2 className='text-xl font-semibold text-gray-800'>Meus Serviços</h2>
-                        <p className="text-gray-600 mt-2">Gerencie seus serviços oferecidos</p>
+                        <h2 className='text-lg md:text-xl font-semibold text-gray-800'>Meus Serviços</h2>
+                        <p className="text-sm md:text-base text-gray-600 mt-2">Gerencie seus serviços oferecidos</p>
                     </div>
                     <div 
-                        className="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
+                        className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
                         onClick={() => navigate("/profissional/disponibilidades")}
                     >
                         <Clock size={48} className='text-green-600 mb-4' />
-                        <h2 className='text-xl font-semibold text-gray-800'>Disponibilidade</h2>
-                        <p className="text-gray-600 mt-2">Configure seus horários disponíveis</p>
+                        <h2 className='text-lg md:text-xl font-semibold text-gray-800'>Disponibilidade</h2>
+                        <p className="text-sm md:text-base text-gray-600 mt-2">Configure seus horários disponíveis</p>
                     </div>
                     <div 
                         className="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer bg-gradient-to-br from-green-50 to-emerald-50 border-green-200"
                         onClick={() => navigate("/profissional/faturamento")}
                     >
                         <DollarSign size={48} className='text-green-600 mb-4' />
-                        <h2 className='text-xl font-semibold text-gray-800'>Faturamento</h2>
-                        <p className="text-gray-600 mt-2">Análise de receitas e métricas</p>
+                        <h2 className='text-lg md:text-xl font-semibold text-gray-800'>Faturamento</h2>
+                        <p className="text-sm md:text-base text-gray-600 mt-2">Análise de receitas e métricas</p>
                     </div>
                     <div 
-                        className="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
+                        className="bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-all cursor-pointer"
                         onClick={() => navigate("/profissional/configuracoes")}
                     >
                         <User size={48} className='text-purple-600 mb-4' />
-                        <h2 className='text-xl font-semibold text-gray-800'>Meu Perfil</h2>
-                        <p className="text-gray-600 mt-2">Gerencie suas informações</p>
+                        <h2 className='text-lg md:text-xl font-semibold text-gray-800'>Meu Perfil</h2>
+                        <p className="text-sm md:text-base text-gray-600 mt-2">Gerencie suas informações</p>
                     </div>
                 </div>
 
                 {/* Seção: Meus Serviços (Edição Rápida) */}
-                <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
                             <Package className="text-orange-500" size={24} />
-                            <h2 className="text-2xl font-bold text-gray-800">Meus Serviços</h2>
-                            <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
+                            <h2 className="text-xl md:text-2xl font-bold text-gray-800">Meus Serviços</h2>
+                            <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs md:text-sm font-medium">
                                 {servicosAtivos} {servicosAtivos === 1 ? 'ativo' : 'ativos'}
                             </span>
                         </div>
@@ -161,16 +161,16 @@ export default function DashboardProfissional() {
                     {loading ? (
                         <div className="text-center py-8">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto"></div>
-                            <p className="text-gray-600 mt-2">Carregando serviços...</p>
+                            <p className="text-xs md:text-sm text-gray-600 mt-2">Carregando serviços...</p>
                         </div>
                     ) : servicos.length === 0 ? (
                         <div className="text-center py-12 bg-gradient-to-br from-orange-50 to-amber-50 rounded-lg border-2 border-dashed border-orange-300">
                             <Package size={64} className="mx-auto mb-4 text-orange-400" />
-                            <h3 className="text-xl font-bold text-gray-800 mb-2">Crie seu primeiro serviço</h3>
-                            <p className="text-gray-600 mb-6">Comece oferecendo seus serviços aos clientes</p>
+                            <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-2">Crie seu primeiro serviço</h3>
+                            <p className="text-sm md:text-base text-gray-600 mb-6">Comece oferecendo seus serviços aos clientes</p>
                             <button
                                 onClick={() => navigate("/profissional/agendar")}
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium shadow-lg hover:shadow-xl"
+                                className="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-xs md:text-sm font-medium shadow-lg hover:shadow-xl"
                             >
                                 <Plus size={20} />
                                 Criar Primeiro Serviço
@@ -181,7 +181,7 @@ export default function DashboardProfissional() {
                             <div className="mb-4 flex justify-end">
                                 <button
                                     onClick={() => navigate("/profissional/agendar")}
-                                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                                    className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xs md:text-sm font-medium"
                                 >
                                     <Plus size={18} />
                                     Novo Serviço
@@ -197,8 +197,8 @@ export default function DashboardProfissional() {
                                         {/* Cabeçalho */}
                                         <div className="flex items-start justify-between mb-3">
                                             <div className="flex-1">
-                                                <h3 className="font-bold text-gray-800 text-lg mb-1">{servico.nome}</h3>
-                                                <div className="flex items-center gap-3 text-sm text-gray-600">
+                                                <h3 className="font-bold text-gray-800 text-base md:text-lg mb-1">{servico.nome}</h3>
+                                                <div className="flex items-center gap-3 text-xs md:text-sm text-gray-600">
                                                     <span className="flex items-center gap-1">
                                                         <Clock size={14} />
                                                         {formatarDuracao(servico.duracao)}
@@ -219,14 +219,14 @@ export default function DashboardProfissional() {
                                         <div className="flex gap-2 pt-3 border-t border-orange-200">
                                             <button
                                                 onClick={() => navigate(`/profissional/agendar?editar=${servico.id}`)}
-                                                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-sm font-medium"
+                                                className="flex-1 flex items-center justify-center gap-2 px-2 py-1.5 md:px-3 md:py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors text-xs md:text-sm font-medium"
                                             >
                                                 <Edit2 size={16} />
                                                 Editar
                                             </button>
                                             <button
                                                 onClick={() => navigate("/profissional/agendar")}
-                                                className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
+                                                className="px-2 py-1.5 md:px-3 md:py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-xs md:text-sm font-medium"
                                                 title="Ativar/Desativar (em breve)"
                                             >
                                                 •••
@@ -240,7 +240,7 @@ export default function DashboardProfissional() {
                                 <div className="mt-4 text-center">
                                     <button
                                         onClick={() => navigate("/profissional/agendar")}
-                                        className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+                                        className="text-blue-600 hover:text-blue-700 font-medium text-xs md:text-sm"
                                     >
                                         Ver todos os {servicos.length} serviços
                                     </button>

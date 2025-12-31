@@ -150,17 +150,17 @@ export default function AgendamentosCliente() {
             <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                    <p className="text-lg text-gray-700">Carregando agendamentos...</p>
+                    <p className="text-base md:text-lg text-gray-700">Carregando agendamentos...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-6">
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Header */}
-                <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
                     <div className="flex items-center gap-4 mb-2">
                         <button
                             onClick={() => navigate('/cliente/dashboard')}
@@ -169,7 +169,7 @@ export default function AgendamentosCliente() {
                             <ArrowLeft size={24} className="text-gray-600" />
                         </button>
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-800 mb-2 flex items-center gap-3">
+                            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 flex items-center gap-3">
                                 <Calendar className="text-blue-600" size={32} />
                                 Meus Agendamentos
                             </h1>
@@ -183,7 +183,7 @@ export default function AgendamentosCliente() {
                 {agendamentos.length === 0 ? (
                     <div className="bg-white rounded-xl shadow-lg p-12 text-center">
                         <Calendar size={64} className="mx-auto text-gray-400 mb-4" />
-                        <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                        <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">
                             Nenhum agendamento encontrado
                         </h3>
                         <p className="text-gray-600 mb-6">
@@ -191,7 +191,7 @@ export default function AgendamentosCliente() {
                         </p>
                         <button
                             onClick={() => window.location.href = "/cliente/agendar"}
-                            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                            className="px-4 py-2 md:px-6 md:py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl text-xs md:text-sm font-medium"
                         >
                             Agendar Serviço
                         </button>
@@ -208,12 +208,12 @@ export default function AgendamentosCliente() {
                                     key={a.id}
                                     className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all border border-gray-100 overflow-hidden"
                                 >
-                                    <div className="p-6">
+                                    <div className="p-4 md:p-6">
                                         <div className="flex justify-between items-start mb-4">
                                             <div className="flex-1">
                                                 <div className="flex items-center gap-3 mb-2">
                                                     <Package className="text-blue-600" size={24} />
-                                                    <h3 className="text-xl font-bold text-gray-800">
+                                                    <h3 className="text-lg md:text-xl font-bold text-gray-800">
                                                         {a.servico?.nome}
                                                     </h3>
                                                 </div>
@@ -257,8 +257,8 @@ export default function AgendamentosCliente() {
                                         {a.servico?.preco && (
                                             <div className="mt-4 pt-4 border-t border-gray-100">
                                                 <div className="flex items-center gap-2 text-gray-700">
-                                                    <span className="text-sm text-gray-500">Valor do serviço:</span>
-                                                    <span className="text-lg font-bold text-green-600">
+                                                    <span className="text-xs md:text-sm text-gray-500">Valor do serviço:</span>
+                                                    <span className="text-base md:text-lg font-bold text-green-600">
                                                         {new Intl.NumberFormat('pt-BR', {
                                                             style: 'currency',
                                                             currency: 'BRL'
@@ -281,7 +281,7 @@ export default function AgendamentosCliente() {
                                                     <button
                                                         onClick={() => handleCancelar(a.id)}
                                                         disabled={!podeCancelar(a)}
-                                                        className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+                                                        className={`px-3 py-1.5 md:px-4 md:py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-xs md:text-sm ${
                                                             podeCancelar(a)
                                                                 ? "bg-red-100 text-red-700 hover:bg-red-200"
                                                                 : "bg-gray-100 text-gray-400 cursor-not-allowed"

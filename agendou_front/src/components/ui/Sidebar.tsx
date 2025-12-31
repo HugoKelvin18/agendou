@@ -55,7 +55,7 @@ export default function Sidebar ({ role }: SidebarProps) {
                                 : "hover:bg-[#111] hover:shadow-[0_0_10px_#d4af37]"}`}
                         >
                         <Icon size={20} className="text-[d4af37]" />
-                        <span className="text-sm font-medium">{item.name}</span>
+                        <span className="text-xs md:text-sm font-medium">{item.name}</span>
                         </Link>
                     )
                 })}
@@ -68,7 +68,7 @@ export default function Sidebar ({ role }: SidebarProps) {
                     onClick={logout}
                     className="w-full flex items-center gap-3 p-3 rounded-lg transition-all text-red-500 hover:bg=[#111] hover:shadow=[0_0_10px_#d4af37">
                         <LogOut size={20} />
-                        <span className="text-sm font-medium">Sair</span>
+                        <span className="text-xs md:text-sm font-medium">Sair</span>
                 </button>
             </div>
         </aside>

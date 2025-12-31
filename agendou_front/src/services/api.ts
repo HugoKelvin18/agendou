@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_PORT = (import.meta as any).env?.VITE_BACKEND_PORT || 3333;
+const BACKEND_PORT = (import.meta as any).env?.VITE_BACKEND_PORT || 3001;
 const BACKEND_URL = (import.meta as any).env?.VITE_BACKEND_URL || `http://localhost:${BACKEND_PORT}`;
 
 //Cria a instância principal da API

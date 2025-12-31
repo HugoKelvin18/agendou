@@ -234,6 +234,14 @@ export const cancelarCliente = async (req: AuthRequest, res: Response) => {
             return res.status(400).json({ message: "Agendamento já está cancelado" });
         }
 
+        if (agendamento.status === "CONCLUIDO") {
+            return res.status(400).json({ message: "Não é possível cancelar um agendamento concluído" });
+        }
+
+        if (agendamento.status === "EM_ANDAMENTO") {
+            return res.status(400).json({ message: "Não é possível cancelar um agendamento em andamento" });
+        }
+
         // Validar 2 horas antes
         const dataHoraAgendamento = new Date(agendamento.data);
         const [hora, minuto] = agendamento.hora.split(":").map(Number);

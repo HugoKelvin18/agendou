@@ -92,7 +92,7 @@ export default function AgendamentosCliente() {
     // Função para verificar se pode cancelar (>= 2h antes)
     const podeCancelar = (agendamento: Agendamento): boolean => {
         const statusUpper = agendamento.status.toUpperCase();
-        if (statusUpper === "CANCELADO" || statusUpper === "CONCLUIDO") {
+        if (statusUpper === "CANCELADO" || statusUpper === "CONCLUIDO" || statusUpper === "EM_ANDAMENTO" || statusUpper === "ANDAMENTO") {
             return false;
         }
 
@@ -106,6 +106,13 @@ export default function AgendamentosCliente() {
 
     // Função para calcular mensagem quando não pode cancelar
     const mensagemNaoPodeCancelar = (agendamento: Agendamento): string => {
+        const statusUpper = agendamento.status.toUpperCase();
+        
+        // Se o agendamento está em andamento, não pode cancelar
+        if (statusUpper === "EM_ANDAMENTO" || statusUpper === "ANDAMENTO") {
+            return "Não é possível cancelar um agendamento em andamento";
+        }
+        
         const dataHoraAgendamento = combinarDataHora(agendamento);
         const agora = new Date();
         const diffMs = dataHoraAgendamento.getTime() - agora.getTime();
@@ -269,7 +276,7 @@ export default function AgendamentosCliente() {
                                         )}
 
                                         {/* Botão Cancelar */}
-                                        {a.status.toUpperCase() !== "CANCELADO" && a.status.toUpperCase() !== "CONCLUIDO" && (
+                                        {a.status.toUpperCase() !== "CANCELADO" && a.status.toUpperCase() !== "CONCLUIDO" && a.status.toUpperCase() !== "EM_ANDAMENTO" && a.status.toUpperCase() !== "ANDAMENTO" && (
                                             <div className="mt-4 pt-4 border-t border-gray-100">
                                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                                                     {!podeCancelar(a) && (

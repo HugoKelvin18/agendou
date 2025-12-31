@@ -375,7 +375,6 @@ export default function DashboardCliente() {
                         </div>
                     )}
                 </div>
-            </div>
         </div>
     );
 }

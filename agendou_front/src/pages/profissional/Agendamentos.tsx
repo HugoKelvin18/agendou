@@ -235,8 +235,9 @@ export default function AgendamentosProfissional() {
                         <p className="text-gray-600 text-lg">Nenhum agendamento encontrado.</p>
                     </div>
                 ) : (
-                    {/* Versão Desktop - Tabela */}
-                    <div className="hidden md:block bg-white rounded-lg shadow-md overflow-hidden">
+                    <>
+                        {/* Versão Desktop - Tabela */}
+                        <div className="hidden md:block bg-white rounded-lg shadow-md overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-100">

@@ -27,7 +27,6 @@ model Usuario {
   agendamentosProfissional Agendamento[]     @relation("ProfissionalAgendamentos")
   disponibilidades         Disponibilidade[] @relation("ProfissionalDisponibilidades")
   notificacoesLidas        NotificacaoLida[]
-  codigosAcessoUsados      CodigoAcesso[]    @relation("CodigosAcessoUsados")
 
   @@map("usuarios")
 }
@@ -104,16 +103,10 @@ model CodigoAcesso {
   id         Int       @id @default(autoincrement())
   codigo     String    @unique
   ativo      Boolean   @default(true)
-  usado      Boolean   @default(false)
-  usadoPorId Int? // ID do usuário que usou o código
-  usadoEm    DateTime?
   expiraEm   DateTime? // Opcional: data de expiração
   descricao  String? // Opcional: descrição do código
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
-
-  // Relações
-  usadoPor Usuario? @relation("CodigosAcessoUsados", fields: [usadoPorId], references: [id], onDelete: SetNull)
 
   @@map("codigos_acesso")
 }

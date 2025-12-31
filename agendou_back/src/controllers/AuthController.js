@@ -72,10 +72,6 @@ export const register = async (req, res) => {
                 return res.status(403).json({ message: "Código de acesso está inativo" });
             }
 
-            if (codigo.usado) {
-                return res.status(403).json({ message: "Código de acesso já foi utilizado" });
-            }
-
             // Verificar se expirou
             if (codigo.expiraEm && new Date() > codigo.expiraEm) {
                 return res.status(403).json({ message: "Código de acesso expirado" });
@@ -94,51 +90,17 @@ export const register = async (req, res) => {
         // Hash da senha
         const senhaHash = await bcrypt.hash(senha, 10);
 
-        // Criar usuário e marcar código como usado (se for profissional)
-        let novoUsuario;
-        
-        if (role === "PROFISSIONAL" && codigoAcesso) {
-            // Usar transação para criar usuário e marcar código como usado
-            const resultado = await prisma.$transaction(async (tx) => {
-                // Criar usuário
-                const usuario = await tx.usuario.create({
-                    data: {
-                        nome,
-                        email,
-                        senha: senhaHash,
-                        telefone: telefone || null,
-                        role,
-                        mensagemPublica: null
-                    }
-                });
-
-                // Marcar código como usado
-                await tx.codigoAcesso.update({
-                    where: { codigo: codigoAcesso.trim() },
-                    data: {
-                        usado: true,
-                        usadoPorId: usuario.id,
-                        usadoEm: new Date()
-                    }
-                });
-
-                return usuario;
-            });
-
-            novoUsuario = resultado;
-        } else {
-            // Criar usuário normalmente (cliente)
-            novoUsuario = await prisma.usuario.create({
-                data: {
-                    nome,
-                    email,
-                    senha: senhaHash,
-                    telefone: telefone || null,
-                    role,
-                    mensagemPublica: null
-                }
-            });
-        }
+        // Criar usuário
+        const novoUsuario = await prisma.usuario.create({
+            data: {
+                nome,
+                email,
+                senha: senhaHash,
+                telefone: telefone || null,
+                role,
+                mensagemPublica: null
+            }
+        });
 
         // Gerar token
         const token = jwt.sign(

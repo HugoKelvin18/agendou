@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { servicosService } from "../../services/servicoService";
 import { agendamentosApi } from "../../services/agendamentoProfissionalService";
+import ModernHeader from "../../components/ui/ModernHeader";
 
 interface Servico {
     id: number;
@@ -83,7 +84,16 @@ export default function DashboardProfissional() {
     const servicosAtivos = servicos.length;
 
     return (
-        <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
+        <div className="min-h-screen bg-gray-50">
+            <ModernHeader
+                actionButton={{
+                    text: "Adicionar serviço",
+                    onClick: () => navigate("/profissional/agendar"),
+                    icon: <Plus size={18} />
+                }}
+                role="PROFISSIONAL"
+            />
+            <div className="max-w-7xl mx-auto p-6 space-y-8">
 
                 {/* Cards Principais */}
                 <div className='grid md:grid-cols-2 lg:grid-cols-5 gap-6'>
@@ -239,6 +249,7 @@ export default function DashboardProfissional() {
                         </>
                     )}
                 </div>
+            </div>
         </div>
     );
 }

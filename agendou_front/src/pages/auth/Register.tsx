@@ -71,10 +71,7 @@ export default function Register() {
                 // Em projetos Vite com TypeScript, pode ser necessário:
                 // declare global { interface ImportMeta { env: any } } 
                 // Mas para evitar erro de tipagem/durante o build, pode-se usar:
-                // Obter URL do backend (mesma lógica do api.ts)
-                const backendUrlEnv = (import.meta as any).env?.VITE_BACKEND_URL;
-                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                const backendUrl = backendUrlEnv || (isLocalhost ? "http://localhost:3001" : "URL não configurada");
+                const backendUrl = (import.meta as any).env?.VITE_BACKEND_URL || "http://localhost:3001";
                 errorMessage = `Não foi possível conectar ao servidor em ${backendUrl}. Verifique se o backend está rodando.`;
                 console.error("Detalhes do erro de conexão:", {
                     erro: err.message,

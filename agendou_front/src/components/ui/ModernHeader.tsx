@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bell, User, LogOut, Settings, ChevronDown, Plus, Search, Menu } from 'lucide-react';
+import { Bell, User, LogOut, Settings, ChevronDown, Plus, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import NotificationDrawer from './NotificationDrawer';
@@ -21,13 +21,12 @@ interface ModernHeaderProps {
         icon?: React.ReactNode;
     };
     role?: 'CLIENTE' | 'PROFISSIONAL';
-    onMenuClick?: () => void;
 }
 
 const ModernHeader: React.FC<ModernHeaderProps> = ({ 
     actionButton,
-    role = 'CLIENTE',
-    onMenuClick
+    agendamentosHoje = 0,
+    role = 'CLIENTE'
 }) => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
@@ -114,19 +113,9 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
             <header className="sticky top-0 z-30 w-full backdrop-blur-sm bg-white/90 border-b border-gray-200/60 shadow-sm">
                 <div className="px-4 md:px-6 py-3">
                     <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-                        {/* Esquerda - Menu Mobile + Saudação */}
-                        <div className="flex items-center gap-3 min-w-0 flex-1">
-                            {/* Botão Hamburger para Mobile */}
-                            {onMenuClick && (
-                                <button
-                                    onClick={onMenuClick}
-                                    className="md:hidden p-2 rounded-lg hover:bg-gray-100/60 transition-colors"
-                                    aria-label="Abrir menu"
-                                >
-                                    <Menu size={24} className="text-gray-600" />
-                                </button>
-                            )}
-                            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 truncate">
+                        {/* Esquerda - Saudação */}
+                        <div className="flex items-center min-w-0 flex-1">
+                            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
                                 {getGreeting()}, {user?.nome?.split(' ')[0] || 'Usuário'}
                             </h1>
                         </div>
@@ -196,26 +185,15 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
                                 )}
                             </div>
 
-                            {/* Botão de Ação Principal - Visível em mobile como ícone, desktop como botão completo */}
+                            {/* Botão de Ação Principal */}
                             {actionButton && (
-                                <>
-                                    {/* Versão Mobile - Apenas ícone */}
-                                    <button
-                                        onClick={actionButton.onClick}
-                                        className="md:hidden p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-sm"
-                                        aria-label={actionButton.text}
-                                    >
-                                        {actionButton.icon || <Plus size={20} />}
-                                    </button>
-                                    {/* Versão Desktop - Botão completo */}
-                                    <button
-                                        onClick={actionButton.onClick}
-                                        className="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-sm hover:shadow-md text-sm font-medium"
-                                    >
-                                        {actionButton.icon || <Plus size={16} />}
-                                        <span>{actionButton.text}</span>
-                                    </button>
-                                </>
+                                <button
+                                    onClick={actionButton.onClick}
+                                    className="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-sm hover:shadow-md text-sm font-medium"
+                                >
+                                    {actionButton.icon || <Plus size={16} />}
+                                    <span>{actionButton.text}</span>
+                                </button>
                             )}
                         </div>
                     </div>

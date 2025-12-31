@@ -164,7 +164,7 @@ export default function Faturamento() {
     const temDados = resumo.totalServicos > 0 || agendamentos.length > 0 || porServico.length > 0;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
+        <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-6">
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Header */}
                 <div className="bg-white rounded-xl shadow-lg p-6">
@@ -329,13 +329,11 @@ export default function Faturamento() {
                 )}
 
                 {/* Tabela de Agendamentos */}
-                <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
+                <div className="bg-white rounded-xl shadow-lg p-6">
                     <h2 className="text-xl font-bold text-gray-800 mb-4">
                         Detalhamento dos Serviços ({agendamentos.length})
                     </h2>
-                    
-                    {/* Versão Desktop - Tabela */}
-                    <div className="hidden md:block overflow-x-auto">
+                    <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 <tr>
@@ -383,36 +381,6 @@ export default function Faturamento() {
                             <div className="text-center py-8 text-gray-500">
                                 Nenhum serviço concluído no período selecionado
                             </div>
-                        )}
-                    </div>
-
-                    {/* Versão Mobile - Cards */}
-                    <div className="md:hidden space-y-4">
-                        {agendamentos.length === 0 ? (
-                            <div className="text-center py-8 text-gray-500">
-                                Nenhum serviço concluído no período selecionado
-                            </div>
-                        ) : (
-                            agendamentos.map((ag) => (
-                                <div key={ag.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                                    <div className="space-y-2">
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <h3 className="font-semibold text-gray-900">{ag.servico}</h3>
-                                                <p className="text-sm text-gray-500">{ag.cliente}</p>
-                                            </div>
-                                            <span className="text-lg font-bold text-green-600">
-                                                {formatarMoeda(ag.preco)}
-                                            </span>
-                                        </div>
-                                        <div className="flex justify-between text-sm text-gray-600 pt-2 border-t border-gray-200">
-                                            <span>{formatarData(ag.data)}</span>
-                                            <span>{ag.hora}</span>
-                                            <span>{ag.duracao}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
                         )}
                     </div>
                 </div>

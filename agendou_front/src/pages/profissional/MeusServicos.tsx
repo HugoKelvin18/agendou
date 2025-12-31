@@ -97,7 +97,7 @@ function FormServico({ onClose, onCreate, onUpdate, editing }: FormServicoProps)
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm p-4">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-                <div className="sticky top-0 bg-white border-b border-gray-200 p-4 sm:p-6 flex justify-between items-center">
+                <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
                     <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
                         <Package className="text-blue-600" size={24} />
                         {editing ? "Editar Serviço" : "Adicionar Serviço"}

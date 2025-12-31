@@ -41,8 +41,8 @@ export default function AppLayout({ role, actionButton }: AppLayoutProps) {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            {/* Sidebar Desktop - sempre visível em telas grandes */}
+        <>
+            {/* Sidebar Desktop - apenas estrutura fixa, sem background que interfira */}
             <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col md:z-20">
                 <Sidebar role={role} />
             </div>
@@ -67,23 +67,25 @@ export default function AppLayout({ role, actionButton }: AppLayoutProps) {
                 </>
             )}
 
-            {/* Main Content Area */}
+            {/* Main Content Area - Desktop: apenas margem para sidebar, Mobile: container completo */}
             <div className="md:pl-64">
-                {/* Header com botão hamburger para mobile */}
-                <ModernHeader 
-                    role={role}
-                    actionButton={actionButton}
-                    onMenuClick={toggleSidebar}
-                />
+                {/* Header - Desktop: fixo no topo sem background que interfira, Mobile: completo */}
+                <div className="md:relative md:z-10">
+                    <ModernHeader 
+                        role={role}
+                        actionButton={actionButton}
+                        onMenuClick={toggleSidebar}
+                    />
+                </div>
 
-                {/* Page Content */}
-                <main className="p-4 sm:p-6 pb-20 md:pb-6">
+                {/* Page Content - Desktop: sem padding (páginas já têm), Mobile: com padding e espaço para bottom nav */}
+                <main className="pb-20 md:pb-0">
                     <Outlet />
                 </main>
             </div>
 
-            {/* Mobile Bottom Navigation */}
+            {/* Mobile Bottom Navigation - apenas no mobile */}
             <MobileNav role={role} />
-        </div>
+        </>
     );
 }

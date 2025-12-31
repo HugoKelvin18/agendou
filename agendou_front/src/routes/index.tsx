@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { PrivateRoute } from "./PrivateRoutes";
+import { DashboardClienteRoute, DashboardProfissionalRoute } from "./RouteWrappers";
 
 // Rotas públicas
 import Login from "../pages/auth/Login";
@@ -34,9 +35,9 @@ export default function AppRoutes() {
             <Route 
                 path="/cliente/dashboard" 
                 element={
-                    <PrivateRoute role="CLIENTE">
+                    <DashboardClienteRoute>
                         <DashboardCliente />
-                    </PrivateRoute>
+                    </DashboardClienteRoute>
                 } 
             />
             <Route 
@@ -68,9 +69,9 @@ export default function AppRoutes() {
             <Route 
                 path="/profissional/dashboard" 
                 element={
-                    <PrivateRoute role="PROFISSIONAL">
+                    <DashboardProfissionalRoute>
                         <DashboardProfissional />
-                    </PrivateRoute>
+                    </DashboardProfissionalRoute>
                 } 
             />
             <Route 

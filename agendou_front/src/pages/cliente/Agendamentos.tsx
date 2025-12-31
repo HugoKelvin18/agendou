@@ -157,8 +157,8 @@ export default function AgendamentosCliente() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-            <div className="max-w-7xl mx-auto space-y-6">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+            <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
                 {/* Header */}
                 <div className="bg-white rounded-xl shadow-lg p-6">
                     <div className="flex items-center gap-4 mb-2">

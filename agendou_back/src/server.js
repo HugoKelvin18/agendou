@@ -7,12 +7,27 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS: coloque aqui o domínio do seu front na Vercel
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://127.0.0.1:5173",
-  "https://agendou-2026.vercel.app" // troque se mudar
-];
+// ✅ CORS: lê origens permitidas de variável de ambiente ou usa fallback
+// Em produção, defina CORS_ORIGINS no .env com URLs separadas por vírgula
+// Exemplo: CORS_ORIGINS=https://agendou-2026.vercel.app,https://seu-dominio.vercel.app
+const corsOriginsEnv = process.env.CORS_ORIGINS;
+
+let allowedOrigins;
+
+if (corsOriginsEnv) {
+  // Se CORS_ORIGINS está definida, usar ela (separada por vírgula)
+  allowedOrigins = corsOriginsEnv.split(',').map(origin => origin.trim());
+  console.log(`✅ CORS configurado com origens do ambiente: ${allowedOrigins.join(', ')}`);
+} else {
+  // Fallback para desenvolvimento local
+  allowedOrigins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://agendou-2026.vercel.app",
+    "https://agendou-seven.vercel.app"
+  ];
+  console.log(`⚠️ CORS_ORIGINS não definida, usando fallback (desenvolvimento local)`);
+}
 
 app.use(
   cors({
@@ -21,6 +36,12 @@ app.use(
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) return callback(null, true);
+
+      // Log para debug (apenas em desenvolvimento)
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(`⚠️ CORS bloqueado para origem: ${origin}`);
+        console.warn(`   Origens permitidas: ${allowedOrigins.join(', ')}`);
+      }
 
       return callback(new Error(`CORS bloqueado para: ${origin}`));
     },

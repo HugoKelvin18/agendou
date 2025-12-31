@@ -5,7 +5,6 @@ import { useAuth } from "../../hooks/useAuth";
 import { servicosService } from "../../services/servicoService";
 import { listarAgendamentoCliente } from "../../services/agendamentoClienteService";
 import api from "../../services/api";
-import ModernHeader from "../../components/ui/ModernHeader";
 
 interface Servico {
     id: number;
@@ -115,16 +114,7 @@ export default function DashboardCliente() {
     const topProfissionais = profissionais.slice(0, 4);
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <ModernHeader
-                actionButton={{
-                    text: "Novo agendamento",
-                    onClick: () => navigate("/cliente/agendar"),
-                    icon: <Plus size={18} />
-                }}
-                role="CLIENTE"
-            />
-            <div className="max-w-7xl mx-auto p-6 space-y-8">
+        <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
 
                 {/* Cards Principais */}
                 <div className='grid md:grid-cols-3 gap-6'>

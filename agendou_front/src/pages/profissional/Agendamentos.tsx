@@ -162,9 +162,9 @@ export default function AgendamentosProfissional() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div className="min-h-screen bg-gray-50">
             <div className="max-w-7xl mx-auto">
-                <div className="mb-6">
+                <div className="mb-4 sm:mb-6">
                     {/* Header com título, filtros e botões */}
                     <div className="bg-white rounded-lg shadow-md p-4 mb-4">
                         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -235,7 +235,8 @@ export default function AgendamentosProfissional() {
                         <p className="text-gray-600 text-lg">Nenhum agendamento encontrado.</p>
                     </div>
                 ) : (
-                    <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                    {/* Versão Desktop - Tabela */}
+                    <div className="hidden md:block bg-white rounded-lg shadow-md overflow-hidden">
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-100">
@@ -320,9 +321,79 @@ export default function AgendamentosProfissional() {
                                         );
                                     })}
                                 </tbody>
-                            </table>
+                                </table>
+                            </div>
                         </div>
-                    </div>
+
+                        {/* Versão Mobile - Cards */}
+                        <div className="md:hidden space-y-4">
+                            {agendamentos.map(a => {
+                                const dataFormatada = typeof a.data === 'string' 
+                                    ? new Date(a.data).toLocaleDateString("pt-BR")
+                                    : new Date(a.data).toLocaleDateString("pt-BR");
+                                
+                                return (
+                                    <div key={a.id} className="bg-white rounded-lg shadow-md p-4 border border-gray-200">
+                                        <div className="space-y-3">
+                                            <div className="flex items-start justify-between">
+                                                <div>
+                                                    <h3 className="font-semibold text-gray-900 text-lg">
+                                                        {a.cliente?.nome || "N/A"}
+                                                    </h3>
+                                                    {a.cliente?.email && (
+                                                        <p className="text-sm text-gray-500 mt-1">{a.cliente.email}</p>
+                                                    )}
+                                                    {a.cliente?.telefone && (
+                                                        <p className="text-sm text-gray-500">{a.cliente.telefone}</p>
+                                                    )}
+                                                </div>
+                                                <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(a.status)}`}>
+                                                    {statusParaExibicao(a.status)}
+                                                </span>
+                                            </div>
+                                            
+                                            <div className="border-t border-gray-200 pt-3 space-y-2">
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="text-gray-500">Serviço:</span>
+                                                    <span className="font-medium text-gray-900">{a.servico?.nome || "N/A"}</span>
+                                                </div>
+                                                {a.servico?.preco && (
+                                                    <div className="flex justify-between text-sm">
+                                                        <span className="text-gray-500">Valor:</span>
+                                                        <span className="font-medium text-gray-900">R$ {a.servico.preco.toFixed(2)}</span>
+                                                    </div>
+                                                )}
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="text-gray-500">Data:</span>
+                                                    <span className="font-medium text-gray-900">{dataFormatada}</span>
+                                                </div>
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="text-gray-500">Hora:</span>
+                                                    <span className="font-medium text-gray-900">{a.hora}</span>
+                                                </div>
+                                            </div>
+
+                                            <div className="pt-3 border-t border-gray-200">
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Alterar Status
+                                                </label>
+                                                <select
+                                                    value={a.status}
+                                                    onChange={(e) => atualizarStatus(a.id, e.target.value)}
+                                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                                >
+                                                    <option value="PENDENTE">Pendente</option>
+                                                    <option value="EM_ANDAMENTO">Em Andamento</option>
+                                                    <option value="CONCLUIDO">Concluído</option>
+                                                    <option value="CANCELADO">Cancelado</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </>
                 )}
             </div>
         </div>

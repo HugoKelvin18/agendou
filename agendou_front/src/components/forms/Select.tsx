@@ -28,7 +28,7 @@ const Select: React.FC<SelectProps> = ({
   return (
     <div className="flex flex-col gap-1">
       {label && (
-        <label htmlFor={name} className="font-medium text-gray-700">
+        <label htmlFor={name} className="font-medium text-xs md:text-sm text-gray-700">
           {label}
         </label>
       )}
@@ -38,7 +38,7 @@ const Select: React.FC<SelectProps> = ({
         name={name}
         value={value}
         onChange={onChange}
-        className={`border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+        className={`border rounded px-2.5 py-1.5 md:px-3 md:py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base ${
           error ? "border-red-500" : "border-gray-300"
         } ${className}`}
         {...props}
@@ -52,7 +52,7 @@ const Select: React.FC<SelectProps> = ({
           </option>
         ))}
       </select>
-      {error && <span className="text-sm text-red-600">{error}</span>}
+      {error && <span className="text-xs md:text-sm text-red-600">{error}</span>}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bell, User, LogOut, Settings, ChevronDown, Plus, Search } from 'lucide-react';
+import { Bell, User, LogOut, Settings, ChevronDown, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import NotificationDrawer from './NotificationDrawer';
@@ -25,7 +25,6 @@ interface ModernHeaderProps {
 
 const ModernHeader: React.FC<ModernHeaderProps> = ({ 
     actionButton,
-    agendamentosHoje = 0,
     role = 'CLIENTE'
 }) => {
     const { user, logout } = useAuth();

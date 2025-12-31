@@ -35,8 +35,8 @@ export default function Sidebar ({ role }: SidebarProps) {
             <div>
                 {/* Logo */}
             <div className="flex items-center gap-2 mb-12">
-                <Scissors size={28} className="text-[#d4af37" />
-                <h1 className="text-x1 font-bold text-[#d4af37]">Agendou</h1>
+                <Scissors size={28} className="text-[#d4af37]" />
+                <h1 className="text-xl font-bold text-[#d4af37]">Agendou</h1>
             </div>
 
             {/* NAV */}
@@ -54,7 +54,7 @@ export default function Sidebar ({ role }: SidebarProps) {
                                 ? "bg-[#151515] border-l-4 border-[#d4af37]"
                                 : "hover:bg-[#111] hover:shadow-[0_0_10px_#d4af37]"}`}
                         >
-                        <Icon size={20} className="text-[d4af37]" />
+                        <Icon size={20} className="text-[#d4af37]" />
                         <span className="text-xs md:text-sm font-medium">{item.name}</span>
                         </Link>
                     )
@@ -66,7 +66,7 @@ export default function Sidebar ({ role }: SidebarProps) {
             <div className="mt-auto">
                 <button
                     onClick={logout}
-                    className="w-full flex items-center gap-3 p-3 rounded-lg transition-all text-red-500 hover:bg=[#111] hover:shadow=[0_0_10px_#d4af37">
+                    className="w-full flex items-center gap-3 p-3 rounded-lg transition-all text-red-500 hover:bg-[#111] hover:shadow-[0_0_10px_#d4af37]">
                         <LogOut size={20} />
                         <span className="text-xs md:text-sm font-medium">Sair</span>
                 </button>

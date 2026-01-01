@@ -159,7 +159,7 @@ export default function FaturamentoGraficos() {
             <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
-                    <p className="text-lg text-gray-700">Carregando gráficos...</p>
+                    <p className="text-base md:text-lg text-gray-700">Carregando gráficos...</p>
                 </div>
             </div>
         );
@@ -168,7 +168,7 @@ export default function FaturamentoGraficos() {
     if (error) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
-                <div className="bg-white rounded-xl shadow-lg p-8 max-w-md">
+                <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 max-w-md">
                     <div className="flex items-center gap-2 text-red-600 mb-4">
                         <AlertCircle size={24} />
                         <p className="font-semibold">Erro</p>
@@ -176,7 +176,7 @@ export default function FaturamentoGraficos() {
                     <p className="text-red-600 text-center mb-4">{error}</p>
                     <button
                         onClick={() => carregarFaturamento(periodo)}
-                        className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                        className="w-full px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
                     >
                         Tentar novamente
                     </button>
@@ -189,10 +189,10 @@ export default function FaturamentoGraficos() {
         return (
             <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
                 <div className="text-center">
-                    <p className="text-lg text-gray-700 mb-4">Nenhum dado disponível</p>
+                    <p className="text-base md:text-lg text-gray-700 mb-4">Nenhum dado disponível</p>
                     <button
                         onClick={() => navigate('/profissional/faturamento')}
-                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                        className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
                     >
                         Voltar para Faturamento
                     </button>
@@ -238,10 +238,10 @@ export default function FaturamentoGraficos() {
     }));
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-6">
+        <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-4 md:p-6">
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Header */}
-                <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
                     <div className="flex justify-between items-center mb-4">
                         <div className="flex items-center gap-4">
                             <button
@@ -251,10 +251,10 @@ export default function FaturamentoGraficos() {
                                 <ArrowLeft size={24} className="text-gray-600" />
                             </button>
                             <div>
-                                <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
                                     Gráficos e Análises
                                 </h1>
-                                <p className="text-gray-600">
+                                <p className="text-sm md:text-base text-gray-600">
                                     Visualização detalhada dos serviços concluídos
                                 </p>
                             </div>
@@ -278,63 +278,63 @@ export default function FaturamentoGraficos() {
 
                     {/* Cards de Resumo */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-                        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-6 text-white shadow-lg">
+                        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-4 md:p-6 text-white shadow-lg">
                             <div className="flex items-center justify-between mb-2">
-                                <DollarSign size={32} />
-                                <span className="text-2xl font-bold">
+                                <DollarSign size={28} className="md:w-8 md:h-8" />
+                                <span className="text-xl md:text-2xl font-bold">
                                     {formatarMoeda(resumo.totalReceita)}
                                 </span>
                             </div>
-                            <p className="text-blue-100 text-sm">Receita Total</p>
+                            <p className="text-blue-100 text-xs md:text-sm">Receita Total</p>
                         </div>
 
-                        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg p-6 text-white shadow-lg">
+                        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg p-4 md:p-6 text-white shadow-lg">
                             <div className="flex items-center justify-between mb-2">
-                                <Package size={32} />
-                                <span className="text-2xl font-bold">
+                                <Package size={28} className="md:w-8 md:h-8" />
+                                <span className="text-xl md:text-2xl font-bold">
                                     {resumo.totalServicos}
                                 </span>
                             </div>
-                            <p className="text-green-100 text-sm">Serviços Concluídos</p>
+                            <p className="text-green-100 text-xs md:text-sm">Serviços Concluídos</p>
                         </div>
 
-                        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-6 text-white shadow-lg">
+                        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-4 md:p-6 text-white shadow-lg">
                             <div className="flex items-center justify-between mb-2">
-                                <TrendingUp size={32} />
-                                <span className="text-2xl font-bold">
+                                <TrendingUp size={28} className="md:w-8 md:h-8" />
+                                <span className="text-xl md:text-2xl font-bold">
                                     {resumo.totalServicos > 0
                                         ? formatarMoeda(resumo.totalReceita / resumo.totalServicos)
                                         : formatarMoeda(0)}
                                 </span>
                             </div>
-                            <p className="text-purple-100 text-sm">Ticket Médio</p>
+                            <p className="text-purple-100 text-xs md:text-sm">Ticket Médio</p>
                         </div>
 
-                        <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg p-6 text-white shadow-lg">
+                        <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg p-4 md:p-6 text-white shadow-lg">
                             <div className="flex items-center justify-between mb-2">
-                                <Calendar size={32} />
-                                <span className="text-2xl font-bold">
+                                <Calendar size={28} className="md:w-8 md:h-8" />
+                                <span className="text-xl md:text-2xl font-bold">
                                     {porServico.length}
                                 </span>
                             </div>
-                            <p className="text-orange-100 text-sm">Tipos de Serviços</p>
+                            <p className="text-orange-100 text-xs md:text-sm">Tipos de Serviços</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Mensagem quando não há dados */}
                 {!temDados && (
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-center">
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 md:p-6 text-center">
                         <AlertCircle size={48} className="mx-auto text-yellow-600 mb-4" />
-                        <p className="text-yellow-800 text-lg font-semibold mb-2">
+                        <p className="text-yellow-800 text-base md:text-lg font-semibold mb-2">
                             Nenhum serviço concluído encontrado
                         </p>
-                        <p className="text-yellow-600 text-sm mb-4">
+                        <p className="text-yellow-600 text-xs md:text-sm mb-4">
                             Os gráficos aparecerão quando houver serviços concluídos no período selecionado.
                         </p>
                         <button
                             onClick={() => navigate('/profissional/faturamento')}
-                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                            className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
                         >
                             Voltar para Faturamento
                         </button>
@@ -346,11 +346,12 @@ export default function FaturamentoGraficos() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {/* Gráfico de Receita ao Longo do Tempo */}
                         {dadosGraficoLinha.length > 0 && (
-                            <div className="bg-white rounded-xl shadow-lg p-6 pl-8">
-                                <h2 className="text-xl font-bold text-gray-800 mb-4">
+                            <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 md:pl-8">
+                                <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-4">
                                     Receita ao Longo do Tempo
                                 </h2>
-                                <ResponsiveContainer width="100%" height={300}>
+                                <div className="h-64 md:h-[300px]">
+                                <ResponsiveContainer width="100%" height="100%">
                                     <LineChart 
                                         data={dadosGraficoLinha}
                                         margin={{ left: 10, right: 10, top: 5, bottom: 5 }}
@@ -385,16 +386,18 @@ export default function FaturamentoGraficos() {
                                         />
                                     </LineChart>
                                 </ResponsiveContainer>
+                                </div>
                             </div>
                         )}
 
                         {/* Gráfico de Pizza - Receita por Serviço */}
                         {dadosGraficoPizza.length > 0 && (
-                            <div className="bg-white rounded-xl shadow-lg p-6">
-                                <h2 className="text-xl font-bold text-gray-800 mb-4">
+                            <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
+                                <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-4">
                                     Distribuição de Receita por Tipo de Serviço
                                 </h2>
-                                <ResponsiveContainer width="100%" height={300}>
+                                <div className="h-64 md:h-[300px]">
+                                <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
                                         <Pie
                                             data={dadosGraficoPizza}
@@ -413,16 +416,18 @@ export default function FaturamentoGraficos() {
                                         <Tooltip content={<CustomTooltip />} />
                                     </PieChart>
                                 </ResponsiveContainer>
+                                </div>
                             </div>
                         )}
 
                         {/* Gráfico de Barras - Quantidade por Serviço */}
                         {dadosGraficoBarrasServico.length > 0 && (
-                            <div className="bg-white rounded-xl shadow-lg p-6 pl-8">
-                                <h2 className="text-xl font-bold text-gray-800 mb-4">
+                            <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 md:pl-8">
+                                <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-4">
                                     Quantidade de Serviços por Tipo
                                 </h2>
-                                <ResponsiveContainer width="100%" height={300}>
+                                <div className="h-64 md:h-[300px]">
+                                <ResponsiveContainer width="100%" height="100%">
                                     <BarChart 
                                         data={dadosGraficoBarrasServico}
                                         margin={{ left: 10, right: 10, top: 5, bottom: 5 }}
@@ -444,16 +449,18 @@ export default function FaturamentoGraficos() {
                                         <Bar dataKey="receita" fill="#3B82F6" name="Receita (R$)" />
                                     </BarChart>
                                 </ResponsiveContainer>
+                                </div>
                             </div>
                         )}
 
                         {/* Gráfico de Barras - Receita Mensal */}
                         {dadosGraficoBarrasMes.length > 0 && (
-                            <div className="bg-white rounded-xl shadow-lg p-6 pl-8">
-                                <h2 className="text-xl font-bold text-gray-800 mb-4">
+                            <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 md:pl-8">
+                                <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-4">
                                     Receita e Quantidade Mensal
                                 </h2>
-                                <ResponsiveContainer width="100%" height={300}>
+                                <div className="h-64 md:h-[300px]">
+                                <ResponsiveContainer width="100%" height="100%">
                                     <BarChart 
                                         data={dadosGraficoBarrasMes}
                                         margin={{ left: 10, right: 10, top: 5, bottom: 5 }}
@@ -475,6 +482,7 @@ export default function FaturamentoGraficos() {
                                         <Bar dataKey="receita" fill="#8B5CF6" name="Receita (R$)" />
                                     </BarChart>
                                 </ResponsiveContainer>
+                                </div>
                             </div>
                         )}
                     </div>

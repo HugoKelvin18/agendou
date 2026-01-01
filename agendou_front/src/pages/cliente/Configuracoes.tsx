@@ -156,10 +156,10 @@ export default function ConfiguracoesCliente() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-6">
             <div className="max-w-4xl mx-auto space-y-6">
                 {/* Header */}
-                <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <button
@@ -169,11 +169,11 @@ export default function ConfiguracoesCliente() {
                                 <ArrowLeft size={24} className="text-gray-600" />
                             </button>
                             <div>
-                                <h1 className="text-3xl font-bold text-gray-800 mb-2 flex items-center gap-3">
+                                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 flex items-center gap-3">
                                     <User className="text-blue-600" size={32} />
                                     Configurações
                                 </h1>
-                                <p className="text-gray-600">Gerencie suas informações pessoais e segurança</p>
+                                <p className="text-sm md:text-base text-gray-600">Gerencie suas informações pessoais e segurança</p>
                             </div>
                         </div>
                     </div>
@@ -216,7 +216,7 @@ export default function ConfiguracoesCliente() {
                         {!editandoPerfil && (
                             <button
                                 onClick={() => setEditandoPerfil(true)}
-                                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                className="flex items-center gap-2 px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                             >
                                 <Edit2 size={18} />
                                 Editar
@@ -265,7 +265,7 @@ export default function ConfiguracoesCliente() {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                    className="flex items-center gap-2 px-3 py-1.5 text-xs md:px-6 md:py-2 md:text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                                 >
                                     <Save size={18} />
                                     Salvar
@@ -300,7 +300,7 @@ export default function ConfiguracoesCliente() {
                         {!editandoSenha && (
                             <button
                                 onClick={() => setEditandoSenha(true)}
-                                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                                className="flex items-center gap-2 px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
                             >
                                 <Edit2 size={18} />
                                 Alterar Senha
@@ -420,7 +420,7 @@ export default function ConfiguracoesCliente() {
                                 </button>
                                 <button
                                     type="submit"
-                                    className="flex items-center gap-2 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                                    className="flex items-center gap-2 px-3 py-1.5 text-xs md:px-6 md:py-2 md:text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
                                 >
                                     <Save size={18} />
                                     Salvar
@@ -438,7 +438,7 @@ export default function ConfiguracoesCliente() {
                 <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-red-200">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-2">
+                            <h2 className="text-lg md:text-xl font-bold text-gray-800 flex items-center gap-2 mb-2">
                                 <LogOut className="text-red-600" size={24} />
                                 Sair da Conta
                             </h2>

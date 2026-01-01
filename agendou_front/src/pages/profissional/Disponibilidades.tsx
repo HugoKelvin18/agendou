@@ -110,10 +110,10 @@ export default function Disponibilidades() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-6">
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
-                <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+                <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 mb-6">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center gap-4">
                             <button
@@ -123,19 +123,19 @@ export default function Disponibilidades() {
                                 <ArrowLeft size={24} className="text-gray-600" />
                             </button>
                             <div>
-                                <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
                                     Minhas Disponibilidades
                                 </h1>
-                                <p className="text-gray-600">
+                                <p className="text-sm md:text-base text-gray-600">
                                     Gerencie seus horários disponíveis para atendimento
                                 </p>
                             </div>
                         </div>
                         <button
                             onClick={() => setShowForm(!showForm)}
-                            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+                            className="flex items-center gap-2 px-3 py-1.5 text-xs md:px-6 md:py-3 md:text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg font-medium"
                         >
-                            <Plus size={20} />
+                            <Plus size={18} className="md:w-5 md:h-5" />
                             Nova Disponibilidade
                         </button>
                     </div>
@@ -190,14 +190,14 @@ export default function Disponibilidades() {
                                         setForm({ data: "", horaInicio: "", horaFim: "" });
                                         setError("");
                                     }}
-                                    className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                                    className="px-3 py-1.5 text-xs md:px-6 md:py-2 md:text-sm border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium"
                                     disabled={submitting}
                                 >
                                     Cancelar
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="px-3 py-1.5 text-xs md:px-6 md:py-2 md:text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                                     disabled={submitting}
                                 >
                                     {submitting ? "Salvando..." : "Adicionar"}
@@ -228,13 +228,13 @@ export default function Disponibilidades() {
                     <div className="space-y-4">
                         {datasOrdenadas.map((dataKey) => (
                             <div key={dataKey} className="bg-white rounded-xl shadow-lg overflow-hidden">
-                                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
-                                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 md:px-6 py-3 md:py-4">
+                                    <h3 className="text-lg md:text-xl font-bold text-white flex items-center gap-2">
                                         <Calendar size={24} />
                                         {dataKey}
                                     </h3>
                                 </div>
-                                <div className="p-6">
+                                <div className="p-4 md:p-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                         {disponibilidadesPorData[dataKey]
                                             .sort((a, b) => a.horaInicio - b.horaInicio)

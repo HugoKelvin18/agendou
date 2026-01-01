@@ -114,7 +114,7 @@ export default function Disponibilidades() {
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 mb-6">
-                    <div className="flex justify-between items-center">
+                    <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                         <div className="flex items-center gap-4">
                             <button
                                 onClick={() => navigate('/profissional/dashboard')}
@@ -133,7 +133,7 @@ export default function Disponibilidades() {
                         </div>
                         <button
                             onClick={() => setShowForm(!showForm)}
-                            className="flex items-center gap-2 px-3 py-1.5 text-xs md:px-6 md:py-3 md:text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg font-medium"
+                            className="self-start md:self-auto flex items-center gap-2 px-3 py-1.5 text-xs md:px-6 md:py-3 md:text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg font-medium"
                         >
                             <Plus size={18} className="md:w-5 md:h-5" />
                             Nova Disponibilidade

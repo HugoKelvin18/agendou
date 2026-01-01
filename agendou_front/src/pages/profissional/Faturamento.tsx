@@ -168,7 +168,7 @@ export default function Faturamento() {
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Header */}
                 <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
                         <div className="flex items-center gap-4">
                             <button
                                 onClick={() => navigate('/profissional/dashboard')}
@@ -185,13 +185,13 @@ export default function Faturamento() {
                                 </p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3 flex-wrap">
-                            <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-2">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                            <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-2 w-full sm:w-auto">
                                 <Filter size={20} className="text-gray-600" />
                                 <select
                                     value={periodo}
                                     onChange={(e) => setPeriodo(e.target.value as any)}
-                                    className="bg-transparent border-none outline-none text-gray-700 font-medium cursor-pointer"
+                                    className="bg-transparent border-none outline-none text-xs md:text-sm text-gray-700 font-medium cursor-pointer w-full sm:w-auto"
                                 >
                                     <option value="dia">Hoje</option>
                                     <option value="mes">Este Mês</option>
@@ -219,7 +219,7 @@ export default function Faturamento() {
                                 title={temDados ? "Ver gráficos detalhados" : "Nenhum dado disponível para gráficos"}
                             >
                                 <BarChart3 size={18} />
-                                <span>Ver Gráficos</span>
+                                <span className="hidden sm:inline">Ver Gráficos</span>
                             </button>
                         </div>
                     </div>
@@ -228,7 +228,7 @@ export default function Faturamento() {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
                         <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-4 md:p-6 text-white shadow-lg">
                             <div className="flex items-center justify-between mb-2">
-                                <DollarSign size={28} className="md:w-8 md:h-8" />
+                                <DollarSign size={24} className="w-6 h-6 md:w-8 md:h-8" />
                                 <span className="text-xl md:text-2xl font-bold">
                                     {formatarMoeda(resumo.totalReceita)}
                                 </span>
@@ -238,7 +238,7 @@ export default function Faturamento() {
 
                         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg p-4 md:p-6 text-white shadow-lg">
                             <div className="flex items-center justify-between mb-2">
-                                <Package size={28} className="md:w-8 md:h-8" />
+                                <Package size={24} className="w-6 h-6 md:w-8 md:h-8" />
                                 <span className="text-xl md:text-2xl font-bold">
                                     {resumo.totalServicos}
                                 </span>
@@ -248,7 +248,7 @@ export default function Faturamento() {
 
                         <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-4 md:p-6 text-white shadow-lg">
                             <div className="flex items-center justify-between mb-2">
-                                <TrendingUp size={28} className="md:w-8 md:h-8" />
+                                <TrendingUp size={24} className="w-6 h-6 md:w-8 md:h-8" />
                                 <span className="text-xl md:text-2xl font-bold">
                                     {resumo.totalServicos > 0
                                         ? formatarMoeda(resumo.totalReceita / resumo.totalServicos)
@@ -260,7 +260,7 @@ export default function Faturamento() {
 
                         <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg p-4 md:p-6 text-white shadow-lg">
                             <div className="flex items-center justify-between mb-2">
-                                <Calendar size={28} className="md:w-8 md:h-8" />
+                                <Calendar size={24} className="w-6 h-6 md:w-8 md:h-8" />
                                 <span className="text-xl md:text-2xl font-bold">
                                     {porServico.length}
                                 </span>
@@ -297,7 +297,7 @@ export default function Faturamento() {
                 {/* Resumo Rápido */}
                 {temDados && (
                     <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
-                        <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-4">
+                        <h2 className="text-base md:text-lg lg:text-xl font-bold text-gray-800 mb-4">
                             Resumo Executivo
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -337,19 +337,19 @@ export default function Faturamento() {
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="px-3 py-2 md:px-6 md:py-3 text-left text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Data/Hora
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="px-3 py-2 md:px-6 md:py-3 text-left text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Cliente
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="px-3 py-2 md:px-6 md:py-3 text-left text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Serviço
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="px-3 py-2 md:px-6 md:py-3 text-left text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Duração
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th className="px-3 py-2 md:px-6 md:py-3 text-left text-[10px] md:text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Valor
                                     </th>
                                 </tr>
@@ -357,20 +357,20 @@ export default function Faturamento() {
                             <tbody className="bg-white divide-y divide-gray-200">
                                 {agendamentos.map((ag) => (
                                     <tr key={ag.id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <td className="px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-900">
                                             <div>{formatarData(ag.data)}</div>
-                                            <div className="text-gray-500 text-xs">{ag.hora}</div>
+                                            <div className="text-gray-500 text-[10px] md:text-xs">{ag.hora}</div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <td className="px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-900">
                                             {ag.cliente}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <td className="px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-900">
                                             {ag.servico}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <td className="px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-900">
                                             {ag.duracao}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
+                                        <td className="px-3 py-2 md:px-6 md:py-4 whitespace-nowrap text-xs md:text-sm font-semibold text-green-600">
                                             {formatarMoeda(ag.preco)}
                                         </td>
                                     </tr>

@@ -69,6 +69,15 @@ export default function FaturamentoGraficos() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [periodo, setPeriodo] = useState<'dia' | 'mes' | 'ano' | 'tudo'>(periodoFromUrl as any);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const carregarFaturamento = useCallback(async (periodoAtual: 'dia' | 'mes' | 'ano' | 'tudo') => {
         try {
@@ -242,7 +251,7 @@ export default function FaturamentoGraficos() {
             <div className="max-w-7xl mx-auto space-y-6">
                 {/* Header */}
                 <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
                         <div className="flex items-center gap-4">
                             <button
                                 onClick={() => navigate('/profissional/faturamento')}
@@ -260,12 +269,12 @@ export default function FaturamentoGraficos() {
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-2">
+                            <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-2 w-full sm:w-auto">
                                 <Filter size={20} className="text-gray-600" />
                                 <select
                                     value={periodo}
                                     onChange={(e) => setPeriodo(e.target.value as any)}
-                                    className="bg-transparent border-none outline-none text-gray-700 font-medium cursor-pointer"
+                                    className="bg-transparent border-none outline-none text-xs md:text-sm text-gray-700 font-medium cursor-pointer w-full sm:w-auto"
                                 >
                                     <option value="dia">Hoje</option>
                                     <option value="mes">Este Mês</option>
@@ -280,7 +289,7 @@ export default function FaturamentoGraficos() {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
                         <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-4 md:p-6 text-white shadow-lg">
                             <div className="flex items-center justify-between mb-2">
-                                <DollarSign size={28} className="md:w-8 md:h-8" />
+                                <DollarSign size={24} className="w-6 h-6 md:w-8 md:h-8" />
                                 <span className="text-xl md:text-2xl font-bold">
                                     {formatarMoeda(resumo.totalReceita)}
                                 </span>
@@ -290,7 +299,7 @@ export default function FaturamentoGraficos() {
 
                         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg p-4 md:p-6 text-white shadow-lg">
                             <div className="flex items-center justify-between mb-2">
-                                <Package size={28} className="md:w-8 md:h-8" />
+                                <Package size={24} className="w-6 h-6 md:w-8 md:h-8" />
                                 <span className="text-xl md:text-2xl font-bold">
                                     {resumo.totalServicos}
                                 </span>
@@ -300,7 +309,7 @@ export default function FaturamentoGraficos() {
 
                         <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg p-4 md:p-6 text-white shadow-lg">
                             <div className="flex items-center justify-between mb-2">
-                                <TrendingUp size={28} className="md:w-8 md:h-8" />
+                                <TrendingUp size={24} className="w-6 h-6 md:w-8 md:h-8" />
                                 <span className="text-xl md:text-2xl font-bold">
                                     {resumo.totalServicos > 0
                                         ? formatarMoeda(resumo.totalReceita / resumo.totalServicos)
@@ -312,7 +321,7 @@ export default function FaturamentoGraficos() {
 
                         <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg p-4 md:p-6 text-white shadow-lg">
                             <div className="flex items-center justify-between mb-2">
-                                <Calendar size={28} className="md:w-8 md:h-8" />
+                                <Calendar size={24} className="w-6 h-6 md:w-8 md:h-8" />
                                 <span className="text-xl md:text-2xl font-bold">
                                     {porServico.length}
                                 </span>
@@ -359,9 +368,9 @@ export default function FaturamentoGraficos() {
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis 
                                             dataKey="data" 
-                                            angle={-45}
-                                            textAnchor="end"
-                                            height={80}
+                                            angle={isMobile ? 0 : -45}
+                                            textAnchor={isMobile ? "middle" : "end"}
+                                            height={isMobile ? 60 : 80}
                                             interval={0}
                                         />
                                         <YAxis 
@@ -404,7 +413,7 @@ export default function FaturamentoGraficos() {
                                             cx="50%"
                                             cy="50%"
                                             labelLine={false}
-                                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                                            label={({ name, percent }) => `${name}: ${((percent || 0) * 100).toFixed(0)}%`}
                                             outerRadius={100}
                                             fill="#8884d8"
                                             dataKey="value"
@@ -468,9 +477,9 @@ export default function FaturamentoGraficos() {
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis 
                                             dataKey="mes"
-                                            angle={-45}
-                                            textAnchor="end"
-                                            height={100}
+                                            angle={isMobile ? 0 : -45}
+                                            textAnchor={isMobile ? "middle" : "end"}
+                                            height={isMobile ? 60 : 100}
                                         />
                                         <YAxis 
                                             tickFormatter={(value) => formatarMoeda(value)}

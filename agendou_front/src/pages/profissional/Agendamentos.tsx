@@ -45,6 +45,26 @@ export default function AgendamentosProfissional() {
     const [filtroNome, setFiltroNome] = useState("");
     const [filtroData, setFiltroData] = useState("");
 
+    // Função auxiliar para combinar data e hora do agendamento
+    const combinarDataHora = (agendamento: Agendamento): Date => {
+        const dataAgendamento = new Date(agendamento.data);
+        // Pegar apenas a parte da data (ano, mês, dia) sem hora
+        const ano = dataAgendamento.getFullYear();
+        const mes = dataAgendamento.getMonth();
+        const dia = dataAgendamento.getDate();
+        
+        // Parsear a hora (formato "HH:MM")
+        const horaParts = agendamento.hora.split(':');
+        if (horaParts.length === 2) {
+            const horas = parseInt(horaParts[0], 10);
+            const minutos = parseInt(horaParts[1], 10);
+            return new Date(ano, mes, dia, horas, minutos, 0, 0);
+        }
+        
+        // Fallback: usar a data/hora original
+        return dataAgendamento;
+    };
+
     //Carregar agendamentos do profissional
     const carregar = async (ehFiltro = false) => {
         try {
@@ -58,7 +78,16 @@ export default function AgendamentosProfissional() {
                 clienteNome: filtroNome.trim() || undefined, 
                 data: filtroData || undefined 
             });
-            setAgendamentos(res || []);
+            const agendamentosCarregados = res || [];
+            
+            // Ordenar por data+hora descendente (mais recentes primeiro)
+            const agendamentosOrdenados = [...agendamentosCarregados].sort((a, b) => {
+                const dataHoraA = combinarDataHora(a);
+                const dataHoraB = combinarDataHora(b);
+                return dataHoraB.getTime() - dataHoraA.getTime();
+            });
+            
+            setAgendamentos(agendamentosOrdenados);
         } catch (err: any) {
             console.error(err);
             const errorMsg = err.response?.data?.message || err.response?.data?.error || "Erro ao carregar agendamentos";
@@ -152,7 +181,7 @@ export default function AgendamentosProfissional() {
                     {error}
                 </div>
                 <button
-                    onClick={carregar}
+                    onClick={() => carregar(false)}
                     className="mt-4 px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs md:text-sm"
                 >
                     Tentar novamente

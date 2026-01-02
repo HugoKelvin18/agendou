@@ -29,7 +29,16 @@ export default function AgendamentosCliente() {
         try {
             if (user?.id) {
                 const res = await listarAgendamentoCliente(user.id);
-                setAgendamentos(res || []);
+                const agendamentosCarregados = res || [];
+                
+                // Ordenar por data+hora descendente (mais recentes primeiro)
+                const agendamentosOrdenados = [...agendamentosCarregados].sort((a, b) => {
+                    const dataHoraA = combinarDataHora(a);
+                    const dataHoraB = combinarDataHora(b);
+                    return dataHoraB.getTime() - dataHoraA.getTime();
+                });
+                
+                setAgendamentos(agendamentosOrdenados);
             }
         } catch (err) {
             console.error(err);

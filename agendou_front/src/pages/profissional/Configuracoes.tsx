@@ -255,12 +255,12 @@ export default function ConfiguracoesProfissional() {
                     </div>
                 )}
 
-                {/* Dados Pessoais */}
+                {/* Dados de Cadastro */}
                 <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-xl md:text-2xl font-bold text-gray-800 flex items-center gap-2">
                             <User className="text-blue-600" size={24} />
-                            Dados Pessoais
+                            Dados de Cadastro
                         </h2>
                         {!editandoPerfil && (
                             <button

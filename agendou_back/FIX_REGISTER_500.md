@@ -12,14 +12,15 @@ O erro 500 no endpoint `/auth/register` está ocorrendo porque:
 
 ## Solução
 
-### Passo 1: Criar a Migration Localmente
+### Passo 1: Migration Já Criada
 
+A migration `20250115120000_add_profissional_contact_location_fields` já foi criada e está no repositório. Ela adiciona todas as novas colunas ao banco de dados.
+
+Se precisar criar uma nova migration no futuro:
 ```bash
 cd agendou_back
-npx prisma migrate dev --name add_profissional_contact_location_fields
+npx prisma migrate dev --name nome_da_migration
 ```
-
-Isso vai criar uma nova migration SQL que adiciona as novas colunas.
 
 ### Passo 2: Aplicar a Migration no Render
 
@@ -68,3 +69,21 @@ O tratamento de erros foi melhorado no `AuthController.js` para mostrar mais det
 Após aplicar as migrations, teste novamente o registro. O erro deve desaparecer.
 
 Se o erro persistir, verifique os logs do Render para ver a mensagem de erro específica do Prisma.
+
+## Importante: Build Command no Render
+
+Para garantir que as migrations sejam aplicadas automaticamente no Render, configure o **Build Command** no painel do serviço:
+
+```bash
+npm install && npx prisma generate && npx prisma migrate deploy
+```
+
+Isso garantirá que:
+1. As dependências sejam instaladas
+2. O Prisma Client seja gerado
+3. As migrations pendentes sejam aplicadas ao banco
+
+**Start Command** deve continuar sendo:
+```bash
+npm start
+```

@@ -132,14 +132,21 @@ const Login: React.FC = () => {
                                         <input 
                                             id="login-senha"
                                             name="senha"
-                                            type="password"
+                                            type={mostrarSenha ? "text" : "password"}
                                             value={senha}
                                             onChange={(e) => setSenha(e.currentTarget.value)} 
                                             onFocus={() => setFocusedSenha(true)}
                                             onBlur={() => setFocusedSenha(false)}
                                             required 
-                                            className='w-full pl-12 pr-4 pt-5 md:pt-6 pb-2 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm md:text-base'
+                                            className='w-full pl-12 pr-12 pt-5 md:pt-6 pb-2 bg-white/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm md:text-base'
                                         />
+                                        <button
+                                            type="button"
+                                            onClick={() => setMostrarSenha(!mostrarSenha)}
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors z-10"
+                                        >
+                                            {mostrarSenha ? <EyeOff size={20} /> : <Eye size={20} />}
+                                        </button>
                                         <label 
                                             htmlFor="login-senha" 
                                             className={`absolute left-12 transition-all duration-200 pointer-events-none ${

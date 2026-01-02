@@ -158,7 +158,7 @@ export default function AgendamentosProfissional() {
             const errorMsg = err.response?.data?.message || err.response?.data?.error || "Não foi possível atualizar o status";
             alert(`Erro: ${errorMsg}`);
             // Recarregar para garantir sincronização
-            carregar();
+            carregar(false);
         }
     };
 

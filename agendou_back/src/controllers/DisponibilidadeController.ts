@@ -49,6 +49,18 @@ function dataStringParaLocal(dataString: string): Date | null {
 // Listar disponibilidades
 export const listar = async (req: Request, res: Response) => {
     try {
+        // Limpar disponibilidades com data passada
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0);
+        
+        await prisma.disponibilidade.deleteMany({
+            where: {
+                data: {
+                    lt: hoje
+                }
+            }
+        });
+
         const { profissionalId, data } = req.query;
 
         const where: any = {};
@@ -82,6 +94,19 @@ export const listar = async (req: Request, res: Response) => {
 export const listarPorProfissional = async (req: AuthRequest, res: Response) => {
     try {
         const profissionalId = req.userId!;
+
+        // Limpar disponibilidades com data passada para este profissional
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0);
+        
+        await prisma.disponibilidade.deleteMany({
+            where: {
+                profissionalId,
+                data: {
+                    lt: hoje
+                }
+            }
+        });
 
         const disponibilidades = await prisma.disponibilidade.findMany({
             where: { profissionalId },
@@ -220,7 +245,10 @@ export const horariosDisponiveis = async (req: Request, res: Response) => {
                     lte: rangeData.fim
                 },
                 disponivel: true
-            }
+            },
+            orderBy: [
+                { horaInicio: "asc" }
+            ]
         });
 
         // Buscar agendamentos do dia usando range
@@ -280,6 +308,15 @@ export const horariosDisponiveis = async (req: Request, res: Response) => {
 
                 currentMin += intervalo;
             }
+        });
+
+        // Ordenar horários antes de retornar
+        horarios.sort((a, b) => {
+            const [hA, mA] = a.split(":").map(Number);
+            const [hB, mB] = b.split(":").map(Number);
+            const minutosA = hA * 60 + mA;
+            const minutosB = hB * 60 + mB;
+            return minutosA - minutosB;
         });
 
         res.json(horarios);

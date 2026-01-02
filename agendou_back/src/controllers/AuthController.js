@@ -119,6 +119,21 @@ export const register = async (req, res) => {
         });
     } catch (err) {
         console.error("Erro no cadastro:", err);
-        res.status(500).json({ message: "Erro ao cadastrar usuário" });
+        console.error("Detalhes do erro:", {
+            message: err.message,
+            code: err.code,
+            meta: err.meta
+        });
+        
+        // Retornar erro mais detalhado em desenvolvimento
+        const errorMessage = process.env.NODE_ENV === 'production' 
+            ? "Erro ao cadastrar usuário" 
+            : err.message || "Erro ao cadastrar usuário";
+            
+        res.status(500).json({ 
+            message: errorMessage,
+            error: process.env.NODE_ENV !== 'production' ? err.message : undefined,
+            code: process.env.NODE_ENV !== 'production' ? err.code : undefined
+        });
     }
 };

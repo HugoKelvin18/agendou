@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import api from "../../services/api";
 
 export default function Register() {
@@ -14,6 +15,7 @@ export default function Register() {
     });
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [mostrarSenha, setMostrarSenha] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -147,16 +149,25 @@ export default function Register() {
 
                     <div>
                         <label htmlFor="register-senha" className="block text-gray-700 text-sm font-semibold mb-2">Senha</label>
-                        <input 
-                            id="register-senha"
-                            type="password" 
-                            name="senha" 
-                            value={form.senha}
-                            placeholder="Digite sua senha" 
-                            onChange={handleChange} 
-                            required 
-                            className="w-full p-2.5 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
-                        />
+                        <div className="relative">
+                            <input 
+                                id="register-senha"
+                                type={mostrarSenha ? "text" : "password"} 
+                                name="senha" 
+                                value={form.senha}
+                                placeholder="Digite sua senha" 
+                                onChange={handleChange} 
+                                required 
+                                className="w-full p-2.5 md:p-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setMostrarSenha(!mostrarSenha)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                            >
+                                {mostrarSenha ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
                     </div>
 
                     <div>

@@ -11,38 +11,29 @@ datasource db {
 }
 
 model Usuario {
-  id              Int      @id @default(autoincrement())
-  nome            String
-  email           String   @unique
-  senha           String
-  telefone        String?
-  role            Role     @default(CLIENTE)
-  mensagemPublica String?
-  
-  // Localização
-  cidade          String?
-  bairro          String?
-  endereco        String?
-  numero          String?
-  complemento     String?
-  uf              String?
-  cep             String?
-  
-  // Contatos adicionais
-  whatsapp        String?
-  emailPublico    String?
-  
-  // Redes sociais
-  instagram       String?
-  facebook        String?
-  tiktok          String?
-  site            String?
-  linkedin        String?
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  // Relações
+  id                       Int               @id @default(autoincrement())
+  nome                     String
+  email                    String            @unique
+  senha                    String
+  telefone                 String?
+  role                     Role              @default(CLIENTE)
+  mensagemPublica          String?
+  cidade                   String?
+  bairro                   String?
+  endereco                 String?
+  numero                   String?
+  complemento              String?
+  uf                       String?
+  cep                      String?
+  whatsapp                 String?
+  emailPublico             String?
+  instagram                String?
+  facebook                 String?
+  tiktok                   String?
+  site                     String?
+  linkedin                 String?
+  createdAt                DateTime          @default(now())
+  updatedAt                DateTime          @updatedAt
   servicos                 Servico[]         @relation("ProfissionalServicos")
   agendamentosCliente      Agendamento[]     @relation("ClienteAgendamentos")
   agendamentosProfissional Agendamento[]     @relation("ProfissionalAgendamentos")
@@ -121,13 +112,13 @@ model NotificacaoLida {
 }
 
 model CodigoAcesso {
-  id         Int       @id @default(autoincrement())
-  codigo     String    @unique
-  ativo      Boolean   @default(true)
-  expiraEm   DateTime? // Opcional: data de expiração
-  descricao  String? // Opcional: descrição do código
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id        Int       @id @default(autoincrement())
+  codigo    String    @unique
+  ativo     Boolean   @default(true)
+  expiraEm  DateTime? // Opcional: data de expiração
+  descricao String? // Opcional: descrição do código
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("codigos_acesso")
 }

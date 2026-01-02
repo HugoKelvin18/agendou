@@ -63,8 +63,6 @@ export const updatePerfil = async (req: AuthRequest, res: Response) => {
         if (nome) dadosUpdate.nome = nome;
         if (telefone !== undefined) dadosUpdate.telefone = telefone;
         if (mensagemPublica !== undefined) dadosUpdate.mensagemPublica = mensagemPublica;
-        
-        // Localização
         if (cidade !== undefined) dadosUpdate.cidade = cidade;
         if (bairro !== undefined) dadosUpdate.bairro = bairro;
         if (endereco !== undefined) dadosUpdate.endereco = endereco;
@@ -72,12 +70,8 @@ export const updatePerfil = async (req: AuthRequest, res: Response) => {
         if (complemento !== undefined) dadosUpdate.complemento = complemento;
         if (uf !== undefined) dadosUpdate.uf = uf;
         if (cep !== undefined) dadosUpdate.cep = cep;
-        
-        // Contatos
         if (whatsapp !== undefined) dadosUpdate.whatsapp = whatsapp;
         if (emailPublico !== undefined) dadosUpdate.emailPublico = emailPublico;
-        
-        // Redes sociais
         if (instagram !== undefined) dadosUpdate.instagram = instagram;
         if (facebook !== undefined) dadosUpdate.facebook = facebook;
         if (tiktok !== undefined) dadosUpdate.tiktok = tiktok;

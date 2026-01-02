@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, User, Sparkles, Star, ChevronRight, Package, Plus } from "lucide-react";
+import { Calendar, Clock, User, Sparkles, Star, ChevronRight, Package, Plus, MapPin, Phone, Mail, Instagram, Facebook, Globe, Linkedin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { servicosService } from "../../services/servicoService";
@@ -26,6 +26,21 @@ interface Profissional {
     nome: string;
     email: string;
     telefone?: string;
+    mensagemPublica?: string;
+    cidade?: string;
+    bairro?: string;
+    endereco?: string;
+    numero?: string;
+    complemento?: string;
+    uf?: string;
+    cep?: string;
+    whatsapp?: string;
+    emailPublico?: string;
+    instagram?: string;
+    facebook?: string;
+    tiktok?: string;
+    site?: string;
+    linkedin?: string;
 }
 
 export default function DashboardCliente() {
@@ -317,16 +332,16 @@ export default function DashboardCliente() {
                     </div>
                 </div>
 
-                {/* Seção: Top Profissionais */}
+                {/* Seção: Informações dos Profissionais */}
                 <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
-                            <Star className="text-yellow-500" size={24} />
-                            <h2 className="text-xl md:text-2xl font-bold text-gray-800">Top Profissionais</h2>
+                            <MapPin className="text-blue-600" size={24} />
+                            <h2 className="text-xl md:text-2xl font-bold text-gray-800">Contato e Localização</h2>
                         </div>
                         <button
                             onClick={() => navigate("/cliente/agendar")}
-                            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium"
+                            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm md:text-base"
                         >
                             Ver todos
                             <ChevronRight size={20} />
@@ -346,36 +361,136 @@ export default function DashboardCliente() {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                             {topProfissionais.map((profissional) => {
-                                const servicosDoProfissional = servicos.filter(s => s.profissionalId === profissional.id);
+                                const temLocalizacao = profissional.cidade || profissional.bairro || profissional.endereco;
+                                const temContatos = profissional.whatsapp || profissional.emailPublico || profissional.telefone;
+                                const temRedes = profissional.instagram || profissional.facebook || profissional.site || profissional.linkedin || profissional.tiktok;
+                                const temInfo = temLocalizacao || temContatos || temRedes;
+                                
                                 return (
                                     <div
                                         key={profissional.id}
-                                        className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-200 hover:shadow-lg transition-all"
+                                        className="bg-white rounded-xl border border-gray-200 p-4 md:p-5 hover:shadow-lg transition-all"
                                     >
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <div className="w-12 h-12 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold text-lg">
-                                                {profissional.nome.charAt(0).toUpperCase()}
-                                            </div>
-                                            <div className="flex-1">
-                                                <h3 className="font-bold text-gray-800">{profissional.nome}</h3>
-                                                <div className="flex items-center gap-1 mt-1">
-                                                    <Star size={14} className="text-yellow-500 fill-current" />
-                                                <span className="text-xs md:text-sm text-gray-600">4.8</span>
-                                                <span className="text-xs text-gray-500">({servicosDoProfissional.length} serviços)</span>
+                                        <div className="mb-4 pb-4 border-b border-gray-200">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-base md:text-lg">
+                                                    {profissional.nome.charAt(0).toUpperCase()}
                                                 </div>
+                                                <h3 className="font-bold text-base md:text-lg text-gray-800">{profissional.nome}</h3>
                                             </div>
                                         </div>
-                                        
-                                        <p className="text-xs text-gray-600 mb-3">
-                                            {servicosDoProfissional.length > 0 
-                                                ? `${servicosDoProfissional[0].nome} e mais`
-                                                : 'Sem serviços cadastrados'
-                                            }
-                                        </p>
-                                        
+
+                                        {!temInfo ? (
+                                            <div className="text-center py-4 text-gray-500 text-sm">
+                                                <p>Informações de contato não disponíveis</p>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-4">
+                                                {/* Localização */}
+                                                {temLocalizacao && (
+                                                    <div>
+                                                        <div className="flex items-center gap-2 mb-2">
+                                                            <MapPin className="text-green-600" size={16} />
+                                                            <h4 className="text-xs md:text-sm font-semibold text-gray-700">Localização</h4>
+                                                        </div>
+                                                        <div className="text-xs md:text-sm text-gray-600 space-y-1 pl-6">
+                                                            {profissional.cidade && profissional.uf && (
+                                                                <p>{profissional.cidade}, {profissional.uf}</p>
+                                                            )}
+                                                            {profissional.bairro && (
+                                                                <p>{profissional.bairro}</p>
+                                                            )}
+                                                            {(profissional.endereco || profissional.numero) && (
+                                                                <p>
+                                                                    {[profissional.endereco, profissional.numero, profissional.complemento].filter(Boolean).join(", ")}
+                                                                </p>
+                                                            )}
+                                                            {profissional.cep && (
+                                                                <p>CEP: {profissional.cep}</p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {/* Contatos */}
+                                                {temContatos && (
+                                                    <div>
+                                                        <div className="flex items-center gap-2 mb-2">
+                                                            <Phone className="text-blue-600" size={16} />
+                                                            <h4 className="text-xs md:text-sm font-semibold text-gray-700">Contatos</h4>
+                                                        </div>
+                                                        <div className="text-xs md:text-sm text-gray-600 space-y-1 pl-6">
+                                                            {profissional.whatsapp && (
+                                                                <p className="flex items-center gap-1">
+                                                                    <Phone size={12} className="text-green-600" />
+                                                                    {profissional.whatsapp}
+                                                                </p>
+                                                            )}
+                                                            {profissional.emailPublico && (
+                                                                <p className="flex items-center gap-1">
+                                                                    <Mail size={12} className="text-blue-600" />
+                                                                    {profissional.emailPublico}
+                                                                </p>
+                                                            )}
+                                                            {profissional.telefone && !profissional.whatsapp && (
+                                                                <p className="flex items-center gap-1">
+                                                                    <Phone size={12} className="text-gray-600" />
+                                                                    {profissional.telefone}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {/* Redes Sociais */}
+                                                {temRedes && (
+                                                    <div>
+                                                        <div className="flex items-center gap-2 mb-2">
+                                                            <Globe className="text-purple-600" size={16} />
+                                                            <h4 className="text-xs md:text-sm font-semibold text-gray-700">Redes Sociais</h4>
+                                                        </div>
+                                                        <div className="text-xs md:text-sm space-y-1 pl-6">
+                                                            {profissional.instagram && (
+                                                                <a href={`https://instagram.com/${profissional.instagram.replace(/^@/, '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-pink-600 hover:text-pink-700 hover:underline">
+                                                                    <Instagram size={12} />
+                                                                    {profissional.instagram}
+                                                                </a>
+                                                            )}
+                                                            {profissional.facebook && (
+                                                                <a href={profissional.facebook.startsWith("http") ? profissional.facebook : `https://${profissional.facebook}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-blue-600 hover:text-blue-700 hover:underline">
+                                                                    <Facebook size={12} />
+                                                                    {profissional.facebook}
+                                                                </a>
+                                                            )}
+                                                            {profissional.tiktok && (
+                                                                <a href={`https://tiktok.com/@${profissional.tiktok.replace(/^@/, '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-gray-800 hover:text-gray-900 hover:underline">
+                                                                    <div className="w-3 h-3 bg-black rounded-sm flex items-center justify-center">
+                                                                        <span className="text-white text-[8px] font-bold">T</span>
+                                                                    </div>
+                                                                    {profissional.tiktok}
+                                                                </a>
+                                                            )}
+                                                            {profissional.site && (
+                                                                <a href={profissional.site.startsWith("http") ? profissional.site : `https://${profissional.site}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-blue-600 hover:text-blue-700 hover:underline">
+                                                                    <Globe size={12} />
+                                                                    {profissional.site}
+                                                                </a>
+                                                            )}
+                                                            {profissional.linkedin && (
+                                                                <a href={profissional.linkedin.startsWith("http") ? profissional.linkedin : `https://${profissional.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-blue-700 hover:text-blue-800 hover:underline">
+                                                                    <Linkedin size={12} />
+                                                                    {profissional.linkedin}
+                                                                </a>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
                                         <button
                                             onClick={() => navigate(`/cliente/agendar?profissional=${profissional.id}`)}
-                                            className="w-full px-3 py-1.5 md:px-4 md:py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-xs md:text-sm font-medium"
+                                            className="w-full mt-4 px-3 py-1.5 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xs md:text-sm font-medium"
                                         >
                                             Ver Serviços
                                         </button>

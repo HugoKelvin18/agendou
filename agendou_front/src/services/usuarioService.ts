@@ -7,6 +7,20 @@ export interface Usuario {
     telefone?: string;
     mensagemPublica?: string;
     role: "CLIENTE" | "PROFISSIONAL";
+    cidade?: string;
+    bairro?: string;
+    endereco?: string;
+    numero?: string;
+    complemento?: string;
+    uf?: string;
+    cep?: string;
+    whatsapp?: string;
+    emailPublico?: string;
+    instagram?: string;
+    facebook?: string;
+    tiktok?: string;
+    site?: string;
+    linkedin?: string;
     createdAt?: string;
 }
 
@@ -14,6 +28,20 @@ export interface UpdatePerfilData {
     nome: string;
     telefone?: string;
     mensagemPublica?: string;
+    cidade?: string;
+    bairro?: string;
+    endereco?: string;
+    numero?: string;
+    complemento?: string;
+    uf?: string;
+    cep?: string;
+    whatsapp?: string;
+    emailPublico?: string;
+    instagram?: string;
+    facebook?: string;
+    tiktok?: string;
+    site?: string;
+    linkedin?: string;
 }
 
 export interface AlterarSenhaData {

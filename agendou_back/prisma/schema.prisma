@@ -18,6 +18,27 @@ model Usuario {
   telefone        String?
   role            Role     @default(CLIENTE)
   mensagemPublica String?
+  
+  // Localização
+  cidade          String?
+  bairro          String?
+  endereco        String?
+  numero          String?
+  complemento     String?
+  uf              String?
+  cep             String?
+  
+  // Contatos adicionais
+  whatsapp        String?
+  emailPublico    String?
+  
+  // Redes sociais
+  instagram       String?
+  facebook        String?
+  tiktok          String?
+  site            String?
+  linkedin        String?
+  
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

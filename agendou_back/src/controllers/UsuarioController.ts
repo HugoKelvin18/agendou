@@ -20,6 +20,20 @@ export const getPerfil = async (req: AuthRequest, res: Response) => {
                 telefone: true,
                 role: true,
                 mensagemPublica: true,
+                cidade: true,
+                bairro: true,
+                endereco: true,
+                numero: true,
+                complemento: true,
+                uf: true,
+                cep: true,
+                whatsapp: true,
+                emailPublico: true,
+                instagram: true,
+                facebook: true,
+                tiktok: true,
+                site: true,
+                linkedin: true,
                 createdAt: true
             }
         });
@@ -38,12 +52,37 @@ export const getPerfil = async (req: AuthRequest, res: Response) => {
 export const updatePerfil = async (req: AuthRequest, res: Response) => {
     try {
         const usuarioId = req.userId!;
-        const { nome, telefone, mensagemPublica } = req.body;
+        const { 
+            nome, telefone, mensagemPublica,
+            cidade, bairro, endereco, numero, complemento, uf, cep,
+            whatsapp, emailPublico,
+            instagram, facebook, tiktok, site, linkedin
+        } = req.body;
 
         const dadosUpdate: any = {};
         if (nome) dadosUpdate.nome = nome;
         if (telefone !== undefined) dadosUpdate.telefone = telefone;
         if (mensagemPublica !== undefined) dadosUpdate.mensagemPublica = mensagemPublica;
+        
+        // Localização
+        if (cidade !== undefined) dadosUpdate.cidade = cidade;
+        if (bairro !== undefined) dadosUpdate.bairro = bairro;
+        if (endereco !== undefined) dadosUpdate.endereco = endereco;
+        if (numero !== undefined) dadosUpdate.numero = numero;
+        if (complemento !== undefined) dadosUpdate.complemento = complemento;
+        if (uf !== undefined) dadosUpdate.uf = uf;
+        if (cep !== undefined) dadosUpdate.cep = cep;
+        
+        // Contatos
+        if (whatsapp !== undefined) dadosUpdate.whatsapp = whatsapp;
+        if (emailPublico !== undefined) dadosUpdate.emailPublico = emailPublico;
+        
+        // Redes sociais
+        if (instagram !== undefined) dadosUpdate.instagram = instagram;
+        if (facebook !== undefined) dadosUpdate.facebook = facebook;
+        if (tiktok !== undefined) dadosUpdate.tiktok = tiktok;
+        if (site !== undefined) dadosUpdate.site = site;
+        if (linkedin !== undefined) dadosUpdate.linkedin = linkedin;
 
         const usuario = await prisma.usuario.update({
             where: { id: usuarioId },
@@ -55,6 +94,20 @@ export const updatePerfil = async (req: AuthRequest, res: Response) => {
                 telefone: true,
                 role: true,
                 mensagemPublica: true,
+                cidade: true,
+                bairro: true,
+                endereco: true,
+                numero: true,
+                complemento: true,
+                uf: true,
+                cep: true,
+                whatsapp: true,
+                emailPublico: true,
+                instagram: true,
+                facebook: true,
+                tiktok: true,
+                site: true,
+                linkedin: true,
                 createdAt: true
             }
         });
@@ -112,7 +165,21 @@ export const listarProfissionais = async (req: Request, res: Response) => {
                 nome: true,
                 email: true,
                 telefone: true,
-                mensagemPublica: true
+                mensagemPublica: true,
+                cidade: true,
+                bairro: true,
+                endereco: true,
+                numero: true,
+                complemento: true,
+                uf: true,
+                cep: true,
+                whatsapp: true,
+                emailPublico: true,
+                instagram: true,
+                facebook: true,
+                tiktok: true,
+                site: true,
+                linkedin: true
             }
         });
 

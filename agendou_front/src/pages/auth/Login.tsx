@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from "react";
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from "../../hooks/useAuth";
-import { Mail, Lock, Shield, Sparkles } from 'lucide-react';
+import { Mail, Lock, Shield, Sparkles, Eye, EyeOff } from 'lucide-react';
 
 const Login: React.FC = () => {
     const { login } = useAuth();
@@ -14,6 +14,7 @@ const Login: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [focusedEmail, setFocusedEmail] = useState(false);
     const [focusedSenha, setFocusedSenha] = useState(false);
+    const [mostrarSenha, setMostrarSenha] = useState(false);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();

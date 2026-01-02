@@ -245,12 +245,24 @@ export const horariosDisponiveis = async (req: Request, res: Response) => {
         // Gerar horários disponíveis
         const horarios: string[] = [];
         const duracaoMinutos = servico.duracao;
+        
+        // Verificar se a data é hoje
+        const hoje = new Date();
+        const hojeString = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
+        const ehHoje = data === hojeString;
+        const minutosAgora = ehHoje ? (hoje.getHours() * 60 + hoje.getMinutes()) : -1;
 
         disponibilidades.forEach(disp => {
             const intervalo = disp.intervaloMin || 30;
             let currentMin = disp.horaInicio;
 
             while (currentMin + duracaoMinutos <= disp.horaFim) {
+                // Se for hoje, filtrar horários passados
+                if (ehHoje && currentMin <= minutosAgora) {
+                    currentMin += intervalo;
+                    continue;
+                }
+                
                 // Verificar se o horário não está ocupado
                 let disponivel = true;
                 for (let i = 0; i < duracaoMinutos; i += intervalo) {

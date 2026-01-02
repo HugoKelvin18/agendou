@@ -40,6 +40,35 @@ const minutosParaFormatoSelect = (minutos: number | string): string => {
     return `${horas}h${mins}min`;
 };
 
+// Função auxiliar para converter formato de texto ("1h30min") para minutos (número)
+const formatoTextoParaMinutos = (texto: string): number => {
+    if (!texto || typeof texto !== 'string') {
+        return 0;
+    }
+    
+    // Se já for um número (string numérica), retornar como número
+    const numero = parseInt(texto, 10);
+    if (!isNaN(numero) && texto.trim() === numero.toString()) {
+        return numero;
+    }
+    
+    let totalMinutos = 0;
+    
+    // Extrair horas (padrão: "1h", "2h", etc)
+    const horasMatch = texto.match(/(\d+)h/);
+    if (horasMatch) {
+        totalMinutos += parseInt(horasMatch[1], 10) * 60;
+    }
+    
+    // Extrair minutos (padrão: "30min", "15 min", etc)
+    const minutosMatch = texto.match(/(\d+)\s*min/);
+    if (minutosMatch) {
+        totalMinutos += parseInt(minutosMatch[1], 10);
+    }
+    
+    return totalMinutos || 0;
+};
+
 function FormServico({ onClose, onCreate, onUpdate, editing }: FormServicoProps) {
     const [nome, setNome] = useState(editing?.nome || "");
     const [descricao, setDescricao] = useState(editing?.descricao || "");
@@ -69,10 +98,19 @@ function FormServico({ onClose, onCreate, onUpdate, editing }: FormServicoProps)
         
         try {
             const precoFormatado = preco.replace(",", ".");
+            // Converter duração de texto ("1h30min") para minutos (número)
+            const duracaoMinutos = formatoTextoParaMinutos(duracao);
+            
+            if (duracaoMinutos <= 0) {
+                setErrors({ duracao: "Duração inválida" });
+                setSubmitting(false);
+                return;
+            }
+            
             const dadosServico = { 
                 nome: nome.trim(), 
                 descricao: descricao.trim() || undefined,
-                duracao, 
+                duracao: duracaoMinutos, 
                 preco: parseFloat(precoFormatado),
                 imagemUrl: imagemUrl.trim() || undefined
             };

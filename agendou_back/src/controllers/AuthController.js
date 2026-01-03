@@ -137,68 +137,7 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: "Campos obrigatórios: nome, email, senha, role" });
         }
 
-        // businessId é obrigatório
-        const businessIdFinal = businessId || parseInt(req.headers["x-business-id"] || "0");
-        if (!businessIdFinal || businessIdFinal === 0) {
-            return res.status(400).json({ message: "businessId é obrigatório" });
-        }
-
-        // Validar se business existe e está ativo
-        const business = await prisma.business.findUnique({
-            where: { id: businessIdFinal }
-        });
-
-        if (!business || !business.ativo) {
-            return res.status(404).json({ message: "Negócio não encontrado ou inativo" });
-        }
-
-        // Verificar bloqueio e inadimplência
-        const hoje = new Date();
-        const toleranciaDias = business.toleranciaDias || 5;
-
-        // Verificar se está bloqueado
-        if (business.statusPagamento === "BLOQUEADO") {
-            return res.status(403).json({ 
-                message: "Acesso bloqueado. Entre em contato com o suporte para regularizar sua situação.",
-                code: "BUSINESS_BLOCKED",
-                dataBloqueio: business.dataBloqueio
-            });
-        }
-
-        // Verificar se está cancelado
-        if (business.statusPagamento === "CANCELADO") {
-            return res.status(403).json({ 
-                message: "Assinatura cancelada. Entre em contato com o suporte.",
-                code: "BUSINESS_CANCELLED"
-            });
-        }
-
-        // Verificar inadimplência (vencimento + tolerância)
-        if (business.vencimento) {
-            const vencimento = new Date(business.vencimento);
-            const diasAtraso = Math.floor((hoje - vencimento) / (1000 * 60 * 60 * 24));
-            
-            // Se está inadimplente e passou da tolerância, bloquear
-            if (business.statusPagamento === "INADIMPLENTE" && diasAtraso > toleranciaDias) {
-                // Bloquear automaticamente
-                await prisma.business.update({
-                    where: { id: businessIdFinal },
-                    data: {
-                        statusPagamento: "BLOQUEADO",
-                        dataBloqueio: hoje
-                    }
-                });
-                
-                return res.status(403).json({ 
-                    message: `Acesso bloqueado por inadimplência. Vencimento há ${diasAtraso} dias. Entre em contato com o suporte para regularizar.`,
-                    code: "BUSINESS_OVERDUE_BLOCKED",
-                    diasAtraso,
-                    vencimento: business.vencimento
-                });
-            }
-        }
-
-        // Se for ADMIN, validar código de acesso especial
+        // Se for ADMIN, validar código de acesso especial (ANTES de validar businessId)
         if (role === "ADMIN") {
             if (!codigoAcesso) {
                 return res.status(400).json({ message: "Código de acesso é obrigatório para administradores" });
@@ -264,6 +203,67 @@ export const register = async (req, res) => {
                 token,
                 user: usuarioSemSenha
             });
+        }
+
+        // Para CLIENTE e PROFISSIONAL, businessId é obrigatório
+        const businessIdFinal = businessId || parseInt(req.headers["x-business-id"] || "0");
+        if (!businessIdFinal || businessIdFinal === 0) {
+            return res.status(400).json({ message: "businessId é obrigatório" });
+        }
+
+        // Validar se business existe e está ativo
+        const business = await prisma.business.findUnique({
+            where: { id: businessIdFinal }
+        });
+
+        if (!business || !business.ativo) {
+            return res.status(404).json({ message: "Negócio não encontrado ou inativo" });
+        }
+
+        // Verificar bloqueio e inadimplência
+        const hoje = new Date();
+        const toleranciaDias = business.toleranciaDias || 5;
+
+        // Verificar se está bloqueado
+        if (business.statusPagamento === "BLOQUEADO") {
+            return res.status(403).json({ 
+                message: "Acesso bloqueado. Entre em contato com o suporte para regularizar sua situação.",
+                code: "BUSINESS_BLOCKED",
+                dataBloqueio: business.dataBloqueio
+            });
+        }
+
+        // Verificar se está cancelado
+        if (business.statusPagamento === "CANCELADO") {
+            return res.status(403).json({ 
+                message: "Assinatura cancelada. Entre em contato com o suporte.",
+                code: "BUSINESS_CANCELLED"
+            });
+        }
+
+        // Verificar inadimplência (vencimento + tolerância)
+        if (business.vencimento) {
+            const vencimento = new Date(business.vencimento);
+            const diasAtraso = Math.floor((hoje - vencimento) / (1000 * 60 * 60 * 24));
+            
+            // Se está inadimplente e passou da tolerância, bloquear
+            if (business.statusPagamento === "INADIMPLENTE" && diasAtraso > toleranciaDias) {
+                // Bloquear automaticamente
+                await prisma.business.update({
+                    where: { id: businessIdFinal },
+                    data: {
+                        statusPagamento: "BLOQUEADO",
+                        dataBloqueio: hoje
+                    }
+                });
+                
+                return res.status(403).json({ 
+                    message: `Acesso bloqueado por inadimplência. Vencimento há ${diasAtraso} dias. Entre em contato com o suporte para regularizar.`,
+                    code: "BUSINESS_OVERDUE_BLOCKED",
+                    diasAtraso,
+                    vencimento: business.vencimento
+                });
+            }
         }
 
         // Validar código de acesso se for profissional

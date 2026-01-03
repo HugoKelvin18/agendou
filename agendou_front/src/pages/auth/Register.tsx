@@ -28,9 +28,9 @@ export default function Register() {
         setLoading(true);
 
         try {
-            // Validação: Se for profissional, código de acesso é obrigatório
-            if (form.role === "PROFISSIONAL" && !form.codigoAcesso.trim()) {
-                setError("Código de acesso é obrigatório para profissionais.");
+            // Validação: Se for profissional ou admin, código de acesso é obrigatório
+            if ((form.role === "PROFISSIONAL" || form.role === "ADMIN") && !form.codigoAcesso.trim()) {
+                setError(`Código de acesso é obrigatório para ${form.role === "ADMIN" ? "administradores" : "profissionais"}.`);
                 setLoading(false);
                 return;
             }
@@ -44,8 +44,8 @@ export default function Register() {
                 role: form.role
             };
 
-            // Adiciona codigoAcesso se for profissional
-            if (form.role === "PROFISSIONAL") {
+            // Adiciona codigoAcesso se for profissional ou admin
+            if (form.role === "PROFISSIONAL" || form.role === "ADMIN") {
                 dadosParaEnvio.codigoAcesso = form.codigoAcesso.trim();
             }
 
@@ -181,20 +181,23 @@ export default function Register() {
                         >
                             <option value="CLIENTE">Sou cliente</option>
                             <option value="PROFISSIONAL">Sou profissional</option>
+                            <option value="ADMIN">Sou administrador</option>
                         </select>
                     </div>
 
-                    {form.role === 'PROFISSIONAL' && (
+                    {(form.role === 'PROFISSIONAL' || form.role === 'ADMIN') && (
                         <div>
-                            <label htmlFor="register-codigoAcesso" className="block text-gray-700 text-sm font-semibold mb-2">Código de Acesso</label>
+                            <label htmlFor="register-codigoAcesso" className="block text-gray-700 text-sm font-semibold mb-2">
+                                Código de Acesso {form.role === 'ADMIN' ? '(Admin)' : ''}
+                            </label>
                             <input
                                 id="register-codigoAcesso"
                                 name="codigoAcesso"
                                 type="text"
                                 value={form.codigoAcesso}
-                                placeholder="Código de Acesso do Estabelecimento"
+                                placeholder={form.role === 'ADMIN' ? "Código de Acesso Admin (ex: ADMIN2026)" : "Código de Acesso do Estabelecimento"}
                                 onChange={handleChange}
-                                required={form.role === 'PROFISSIONAL'}
+                                required={form.role === 'PROFISSIONAL' || form.role === 'ADMIN'}
                                 className="w-full p-2.5 md:p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
                             />
                         </div>

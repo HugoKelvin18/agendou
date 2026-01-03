@@ -54,6 +54,8 @@ export default function BusinessDetail() {
             setActionLoading(true);
             await adminService.liberarBusiness(parseInt(id!));
             await carregarBusiness();
+            // Voltar para o dashboard após atualizar
+            navigate("/admin/dashboard");
         } catch (err) {
             console.error("Erro ao liberar:", err);
             alert("Erro ao liberar business");

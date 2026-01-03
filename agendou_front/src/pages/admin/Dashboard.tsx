@@ -1,16 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { Building2, DollarSign, AlertTriangle, CheckCircle, XCircle, Clock, Settings } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Building2, DollarSign, AlertTriangle, CheckCircle, XCircle, Clock, Settings, RefreshCw } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { adminService, BusinessAdmin } from "../../services/adminService";
 import ModernHeader from "../../components/ui/ModernHeader";
 
 export default function DashboardAdmin() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [businesses, setBusinesses] = useState<BusinessAdmin[]>([]);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         carregarBusinesses();
+    }, []);
+
+    // Recarregar quando voltar de outra página
+    useEffect(() => {
+        if (location.pathname === "/admin/dashboard") {
+            carregarBusinesses();
+        }
+    }, [location.pathname]);
+
+    // Atualizar quando a janela recebe foco (usuário volta para a aba)
+    useEffect(() => {
+        const handleFocus = () => {
+            carregarBusinesses();
+        };
+
+        window.addEventListener('focus', handleFocus);
+        return () => window.removeEventListener('focus', handleFocus);
     }, []);
 
     const carregarBusinesses = async () => {
@@ -22,7 +41,13 @@ export default function DashboardAdmin() {
             console.error("Erro ao carregar businesses:", err);
         } finally {
             setLoading(false);
+            setRefreshing(false);
         }
+    };
+
+    const handleRefresh = async () => {
+        setRefreshing(true);
+        await carregarBusinesses();
     };
 
     // Calcular estatísticas
@@ -60,13 +85,23 @@ export default function DashboardAdmin() {
                         <h1 className="text-3xl font-bold text-gray-900">Painel Administrativo</h1>
                         <p className="mt-2 text-gray-600">Gerencie businesses, planos e cobranças</p>
                     </div>
-                    <button
-                        onClick={() => navigate("/admin/configuracoes")}
-                        className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 flex items-center gap-2"
-                    >
-                        <Settings className="w-4 h-4" />
-                        Configurações
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={handleRefresh}
+                            disabled={refreshing || loading}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        >
+                            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+                            Atualizar
+                        </button>
+                        <button
+                            onClick={() => navigate("/admin/configuracoes")}
+                            className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 flex items-center gap-2"
+                        >
+                            <Settings className="w-4 h-4" />
+                            Configurações
+                        </button>
+                    </div>
                 </div>
 
                 {/* Cards de Estatísticas */}

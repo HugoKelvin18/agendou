@@ -25,6 +25,7 @@ import ConfiguracoesProfissional from "../pages/profissional/Configuracoes";
 // Rotas privadas - Admin
 import DashboardAdmin from "../pages/admin/Dashboard";
 import BusinessDetail from "../pages/admin/BusinessDetail";
+import ConfiguracoesAdmin from "../pages/admin/Configuracoes";
 
 export default function AppRoutes() {
     return (
@@ -140,6 +141,14 @@ export default function AppRoutes() {
                 element={
                     <PrivateRoute role="ADMIN">
                         <BusinessDetail />
+                    </PrivateRoute>
+                } 
+            />
+            <Route 
+                path="/admin/configuracoes" 
+                element={
+                    <PrivateRoute role="ADMIN">
+                        <ConfiguracoesAdmin />
                     </PrivateRoute>
                 } 
             />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Building2, Users, DollarSign, AlertTriangle, CheckCircle, XCircle, Clock } from "lucide-react";
+import { Building2, DollarSign, AlertTriangle, CheckCircle, XCircle, Clock, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { adminService, BusinessAdmin } from "../../services/adminService";
 import ModernHeader from "../../components/ui/ModernHeader";
@@ -30,7 +30,6 @@ export default function DashboardAdmin() {
     const businessesAtivos = businesses.filter(b => b.statusPagamento === "ATIVO").length;
     const businessesBloqueados = businesses.filter(b => b.statusPagamento === "BLOQUEADO").length;
     const businessesInadimplentes = businesses.filter(b => b.statusPagamento === "INADIMPLENTE").length;
-    const totalUsuarios = businesses.reduce((acc, b) => acc + b.metricas.totalUsuarios, 0);
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -56,13 +55,22 @@ export default function DashboardAdmin() {
         <div className="min-h-screen bg-gray-50">
             <ModernHeader />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">Painel Administrativo</h1>
-                    <p className="mt-2 text-gray-600">Gerencie businesses, planos e cobranças</p>
+                <div className="mb-8 flex items-center justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-900">Painel Administrativo</h1>
+                        <p className="mt-2 text-gray-600">Gerencie businesses, planos e cobranças</p>
+                    </div>
+                    <button
+                        onClick={() => navigate("/admin/configuracoes")}
+                        className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 flex items-center gap-2"
+                    >
+                        <Settings className="w-4 h-4" />
+                        Configurações
+                    </button>
                 </div>
 
                 {/* Cards de Estatísticas */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <div className="bg-white rounded-lg shadow p-6">
                         <div className="flex items-center justify-between">
                             <div>
@@ -90,16 +98,6 @@ export default function DashboardAdmin() {
                                 <p className="text-2xl font-bold text-red-600 mt-1">{businessesBloqueados}</p>
                             </div>
                             <XCircle className="w-8 h-8 text-red-500" />
-                        </div>
-                    </div>
-
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-600">Total de Usuários</p>
-                                <p className="text-2xl font-bold text-gray-900 mt-1">{totalUsuarios}</p>
-                            </div>
-                            <Users className="w-8 h-8 text-purple-500" />
                         </div>
                     </div>
                 </div>

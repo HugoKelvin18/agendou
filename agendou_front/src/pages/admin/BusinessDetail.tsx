@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Building2, DollarSign, Users, Package, Calendar, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Building2, DollarSign, AlertTriangle } from "lucide-react";
 import { adminService, BusinessAdmin } from "../../services/adminService";
 import ModernHeader from "../../components/ui/ModernHeader";
 
@@ -122,56 +122,6 @@ export default function BusinessDetail() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-gray-600">Usuários</p>
-                                <p className="text-2xl font-bold">{business.metricas.totalUsuarios}</p>
-                                {business.limiteUsuarios && (
-                                    <p className="text-xs text-gray-500">Limite: {business.limiteUsuarios}</p>
-                                )}
-                            </div>
-                            <Users className="w-8 h-8 text-blue-500" />
-                        </div>
-                    </div>
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-gray-600">Profissionais</p>
-                                <p className="text-2xl font-bold">{business.metricas.totalProfissionais}</p>
-                                {business.limiteProfissionais && (
-                                    <p className="text-xs text-gray-500">Limite: {business.limiteProfissionais}</p>
-                                )}
-                            </div>
-                            <Users className="w-8 h-8 text-green-500" />
-                        </div>
-                    </div>
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-gray-600">Serviços</p>
-                                <p className="text-2xl font-bold">{business.metricas.totalServicos}</p>
-                                {business.limiteServicos && (
-                                    <p className="text-xs text-gray-500">Limite: {business.limiteServicos}</p>
-                                )}
-                            </div>
-                            <Package className="w-8 h-8 text-purple-500" />
-                        </div>
-                    </div>
-                    <div className="bg-white rounded-lg shadow p-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-gray-600">Agendamentos (Mês)</p>
-                                <p className="text-2xl font-bold">{business.metricas.agendamentosMes}</p>
-                                {business.limiteAgendamentos && (
-                                    <p className="text-xs text-gray-500">Limite: {business.limiteAgendamentos}</p>
-                                )}
-                            </div>
-                            <Calendar className="w-8 h-8 text-orange-500" />
-                        </div>
-                    </div>
-                </div>
 
                 <div className="bg-white rounded-lg shadow p-6">
                     <h2 className="text-lg font-semibold mb-4">Ações</h2>

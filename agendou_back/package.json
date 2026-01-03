@@ -8,6 +8,8 @@
     "start": "tsx src/server.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
+    "deploy": "node scripts/deploy.js",
+    "resolve-migration": "node scripts/resolve-failed-migration.js",
     "seed": "node prisma/seed.js",
     "init-admin": "node scripts/init-admin.js"
   },

@@ -40,6 +40,8 @@ export default function BusinessDetail() {
             setActionLoading(true);
             await adminService.bloquearBusiness(parseInt(id!));
             await carregarBusiness();
+            // Voltar para o dashboard após atualizar
+            navigate("/admin/dashboard");
         } catch (err) {
             console.error("Erro ao bloquear:", err);
             alert("Erro ao bloquear business");
@@ -76,6 +78,7 @@ export default function BusinessDetail() {
             alert("Mensagem enviada com sucesso!");
             setMensagemForm({ mensagem: "" });
             setShowMensagem(false);
+            await carregarBusiness(); // Recarregar dados
         } catch (err: any) {
             console.error("Erro ao enviar mensagem:", err);
             alert(err.response?.data?.message || "Erro ao enviar mensagem");
@@ -98,7 +101,7 @@ export default function BusinessDetail() {
             alert("Plano atualizado com sucesso!");
             setPlanoForm({ plano: "", limiteProfissionais: "" });
             setShowPlano(false);
-            await carregarBusiness();
+            await carregarBusiness(); // Recarregar dados
         } catch (err: any) {
             console.error("Erro ao alterar plano:", err);
             alert(err.response?.data?.message || "Erro ao alterar plano");

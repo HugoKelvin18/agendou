@@ -174,6 +174,7 @@ model Business {
   agendamentos         Agendamento[]
   codigosAcesso        CodigoAcesso[]
   solicitacoesSuporte  SolicitacaoSuporte[]
+  mensagensSuporte     MensagemSuporte[]
 
   @@index([slug])
   @@index([dominio])
@@ -229,4 +230,19 @@ model SolicitacaoSuporte {
   @@index([usuarioId])
   @@index([status])
   @@map("solicitacoes_suporte")
+}
+
+model MensagemSuporte {
+  id          Int      @id @default(autoincrement())
+  businessId Int
+  mensagem   String   // Mensagem do admin para os profissionais
+  criadoEm   DateTime @default(now())
+  criadoPor  Int?     // ID do admin que criou a mensagem (opcional)
+
+  // Relações
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+  @@index([criadoEm])
+  @@map("mensagens_suporte")
 }

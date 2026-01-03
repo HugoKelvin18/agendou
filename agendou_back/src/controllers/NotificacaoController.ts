@@ -242,6 +242,34 @@ export const listarProfissional = async (req: AuthRequest, res: Response) => {
             });
         }
 
+        // Buscar mensagens do suporte (últimas 30 dias)
+        const dataLimiteMensagens = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        const mensagensSuporte = await prisma.mensagemSuporte.findMany({
+            where: {
+                businessId: businessId,
+                criadoEm: { gte: dataLimiteMensagens }
+            },
+            orderBy: {
+                criadoEm: "desc"
+            },
+            take: 10
+        });
+
+        // Adicionar notificações de mensagens do suporte
+        for (const msg of mensagensSuporte) {
+            const msgId = `suporte-msg-${msg.id}`;
+            notificacoes.push({
+                id: msgId,
+                type: "message",
+                title: "Mensagem do Suporte",
+                message: msg.mensagem,
+                time: formatarTempoRelativo(msg.criadoEm),
+                timestamp: msg.criadoEm.getTime(),
+                read: idsLidas.has(msgId),
+                actionUrl: `/profissional/configuracoes`
+            });
+        }
+
         // Ordenar por timestamp (mais recentes primeiro)
         notificacoes.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 

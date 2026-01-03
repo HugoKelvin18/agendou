@@ -460,6 +460,7 @@ export const enviarMensagemBusiness = async (req: AuthRequest, res: Response) =>
     try {
         const { id } = req.params;
         const { mensagem } = req.body;
+        const adminId = req.userId!;
 
         if (!mensagem || !mensagem.trim()) {
             return res.status(400).json({ message: "Mensagem é obrigatória" });
@@ -486,11 +487,19 @@ export const enviarMensagemBusiness = async (req: AuthRequest, res: Response) =>
             return res.status(404).json({ message: "Business não encontrado" });
         }
 
-        // Aqui você pode implementar envio de email ou notificação
-        // Por enquanto, apenas retornar sucesso
+        // Criar mensagem de suporte no banco
+        const mensagemSuporte = await prisma.mensagemSuporte.create({
+            data: {
+                businessId: business.id,
+                mensagem: mensagem.trim(),
+                criadoPor: adminId
+            }
+        });
+
         res.json({
             message: "Mensagem enviada com sucesso",
-            destinatarios: business.usuarios.length
+            destinatarios: business.usuarios.length,
+            mensagemId: mensagemSuporte.id
         });
     } catch (err: any) {
         console.error("Erro ao enviar mensagem:", err);

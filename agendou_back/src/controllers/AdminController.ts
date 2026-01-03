@@ -10,7 +10,9 @@ interface AuthRequest extends Request {
 // Listar todos os businesses com métricas
 export const listarBusinesses = async (req: AuthRequest, res: Response) => {
     try {
+        // Buscar TODOS os businesses, sem filtro de ativo
         const businesses = await prisma.business.findMany({
+            where: {}, // Sem filtros - retorna todos
             select: {
                 id: true,
                 nome: true,

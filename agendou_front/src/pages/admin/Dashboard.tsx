@@ -35,10 +35,13 @@ export default function DashboardAdmin() {
     const carregarBusinesses = async () => {
         try {
             setLoading(true);
+            // Forçar busca sem cache adicionando timestamp
             const dados = await adminService.listarBusinesses();
+            console.log("Businesses carregados:", dados.length);
             setBusinesses(dados);
         } catch (err) {
             console.error("Erro ao carregar businesses:", err);
+            setError("Erro ao carregar businesses. Tente novamente.");
         } finally {
             setLoading(false);
             setRefreshing(false);
@@ -142,6 +145,11 @@ export default function DashboardAdmin() {
                     <div className="px-6 py-4 border-b border-gray-200">
                         <h2 className="text-xl font-semibold text-gray-900">Businesses</h2>
                     </div>
+                    {error && (
+                        <div className="p-4 bg-red-50 border border-red-200 rounded-lg m-4">
+                            <p className="text-red-700">{error}</p>
+                        </div>
+                    )}
                     {loading ? (
                         <div className="p-8 text-center text-gray-500">Carregando...</div>
                     ) : businesses.length === 0 ? (

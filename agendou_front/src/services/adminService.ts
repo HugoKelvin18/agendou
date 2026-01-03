@@ -34,7 +34,8 @@ export interface BusinessAdmin extends BusinessMetricas {
 export const adminService = {
     // Listar todos os businesses
     listarBusinesses: async (): Promise<BusinessAdmin[]> => {
-        const response = await api.get("/admin/businesses");
+        // Adicionar timestamp para evitar cache
+        const response = await api.get(`/admin/businesses?t=${Date.now()}`);
         return response.data;
     },
 

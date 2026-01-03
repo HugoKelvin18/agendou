@@ -40,26 +40,55 @@ async function initAdmin() {
 
         // 2. Criar código de acesso admin padrão se não existir
         const codigoPadrao = 'ADMIN2026';
-        const codigoExistente = await prisma.codigoAcesso.findFirst({
-            where: {
-                businessId: adminBusiness.id,
-                codigo: codigoPadrao
-            }
-        });
-
-        if (!codigoExistente) {
-            console.log(`🔑 Criando código de acesso admin padrão: ${codigoPadrao}...`);
-            await prisma.codigoAcesso.create({
-                data: {
-                    businessId: adminBusiness.id,
-                    codigo: codigoPadrao,
-                    descricao: 'Código de acesso padrão para criar administradores',
-                    ativo: true
+        
+        try {
+            const codigoExistente = await prisma.codigoAcesso.findUnique({
+                where: {
+                    businessId_codigo: {
+                        businessId: adminBusiness.id,
+                        codigo: codigoPadrao
+                    }
                 }
             });
-            console.log(`✅ Código de acesso ${codigoPadrao} criado com sucesso!\n`);
-        } else {
-            console.log(`✅ Código de acesso ${codigoPadrao} já existe\n`);
+
+            if (!codigoExistente) {
+                console.log(`🔑 Criando código de acesso admin padrão: ${codigoPadrao}...`);
+                await prisma.codigoAcesso.create({
+                    data: {
+                        businessId: adminBusiness.id,
+                        codigo: codigoPadrao,
+                        descricao: 'Código de acesso padrão para criar administradores',
+                        ativo: true
+                    }
+                });
+                console.log(`✅ Código de acesso ${codigoPadrao} criado com sucesso!\n`);
+            } else {
+                console.log(`✅ Código de acesso ${codigoPadrao} já existe\n`);
+            }
+        } catch (codigoError) {
+            // Se findUnique falhar (índice não existe ainda), tentar findFirst
+            console.log(`⚠️  Tentando método alternativo para verificar código...`);
+            const codigoExistente = await prisma.codigoAcesso.findFirst({
+                where: {
+                    businessId: adminBusiness.id,
+                    codigo: codigoPadrao
+                }
+            });
+
+            if (!codigoExistente) {
+                console.log(`🔑 Criando código de acesso admin padrão: ${codigoPadrao}...`);
+                await prisma.codigoAcesso.create({
+                    data: {
+                        businessId: adminBusiness.id,
+                        codigo: codigoPadrao,
+                        descricao: 'Código de acesso padrão para criar administradores',
+                        ativo: true
+                    }
+                });
+                console.log(`✅ Código de acesso ${codigoPadrao} criado com sucesso!\n`);
+            } else {
+                console.log(`✅ Código de acesso ${codigoPadrao} já existe\n`);
+            }
         }
 
         console.log('📋 Resumo:');

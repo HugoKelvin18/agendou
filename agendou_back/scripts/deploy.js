@@ -31,11 +31,16 @@ async function deploy() {
 
         console.log('🔧 Inicializando sistema admin...');
         try {
-            execSync('npm run init-admin', { stdio: 'inherit' });
+            execSync('npm run init-admin', { 
+                stdio: 'inherit',
+                env: { ...process.env, NODE_ENV: process.env.NODE_ENV || 'production' }
+            });
             console.log('✅ Sistema admin inicializado');
         } catch (initError) {
-            // Se falhar, apenas logar mas não bloquear o deploy
-            console.log('⚠️  Aviso: Não foi possível inicializar sistema admin. Execute manualmente: npm run init-admin');
+            // Logar erro completo para debug
+            console.error('❌ Erro ao inicializar sistema admin:', initError.message);
+            console.log('⚠️  Tentando continuar... Execute manualmente se necessário: npm run init-admin');
+            // Não bloquear o deploy, mas avisar claramente
         }
 
         console.log('✅ Deploy concluído com sucesso!');

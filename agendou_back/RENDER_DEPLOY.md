@@ -10,15 +10,32 @@ Foi criado um script `deploy.js` que resolve automaticamente migrações falhada
 
 ### Configuração no Render.com
 
-1. **Build Command:**
-   ```
-   npm install && npm run deploy
-   ```
+**IMPORTANTE**: Altere o Build Command no Render para:
 
-2. **Start Command:**
-   ```
-   npm start
-   ```
+```
+cd agendou_back && npm install && npm run deploy
+```
+
+Ou se o Render já estiver configurado para a pasta `agendou_back`:
+
+```
+npm install && npm run deploy
+```
+
+**Start Command:**
+```
+npm start
+```
+
+### Comando Alternativo (Se o script não funcionar)
+
+Se preferir usar um comando direto no Build Command:
+
+```
+cd agendou_back && npm install && npx prisma generate && (npx prisma migrate resolve --rolled-back 20250115200000_add_multi_tenant_business || npx prisma migrate resolve --applied 20250115200000_add_multi_tenant_business || true) && npx prisma migrate deploy
+```
+
+O `|| true` garante que o build continue mesmo se a migração já foi resolvida.
 
 ### O que o script faz:
 

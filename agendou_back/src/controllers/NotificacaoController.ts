@@ -25,12 +25,14 @@ function formatarTempoRelativo(data: Date): string {
 export const listarCliente = async (req: AuthRequest, res: Response) => {
     try {
         const clienteId = req.userId!;
+        const businessId = req.businessId!; // Garantido pelo middleware validateBusiness
 
         // 1. Buscar agendamentos pendentes recentes (últimos 30 dias)
         const dataLimite = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
         const agendamentosRecentes = await prisma.agendamento.findMany({
             where: {
                 clienteId,
+                businessId: businessId, // Filtrar por businessId
                 status: "PENDENTE",
                 criadoEm: { gte: dataLimite }
             },
@@ -46,6 +48,7 @@ export const listarCliente = async (req: AuthRequest, res: Response) => {
         const cancelamentos = await prisma.agendamento.findMany({
             where: {
                 clienteId,
+                businessId: businessId, // Filtrar por businessId
                 status: "CANCELADO",
                 atualizadoEm: {
                     gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
@@ -158,12 +161,14 @@ export const listarCliente = async (req: AuthRequest, res: Response) => {
 export const listarProfissional = async (req: AuthRequest, res: Response) => {
     try {
         const profissionalId = req.userId!;
+        const businessId = req.businessId!; // Garantido pelo middleware validateBusiness
 
         // Buscar agendamentos novos (últimos 30 dias)
         const dataLimite = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
         const agendamentosNovos = await prisma.agendamento.findMany({
             where: {
                 profissionalId,
+                businessId: businessId, // Filtrar por businessId
                 status: "PENDENTE",
                 criadoEm: { gte: dataLimite }
             },
@@ -179,6 +184,7 @@ export const listarProfissional = async (req: AuthRequest, res: Response) => {
         const cancelamentos = await prisma.agendamento.findMany({
             where: {
                 profissionalId,
+                businessId: businessId, // Filtrar por businessId
                 status: "CANCELADO",
                 atualizadoEm: {
                     gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)

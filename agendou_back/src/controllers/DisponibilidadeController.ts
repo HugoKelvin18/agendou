@@ -5,10 +5,14 @@ interface AuthRequest extends Request {
     userId?: number;
     userRole?: string;
     businessId?: number;
+    body: any;
+    params: any;
+    query: any;
 }
 
 interface BusinessRequest extends Request {
     businessId?: number;
+    query: any;
 }
 
 // Função auxiliar para criar range de data local (evita problemas de timezone)
@@ -54,19 +58,20 @@ function dataStringParaLocal(dataString: string): Date | null {
 // Listar disponibilidades
 export const listar = async (req: BusinessRequest, res: Response) => {
     try {
-        // Limpar disponibilidades com data passada
+        const businessId = req.businessId!; // Garantido pelo middleware validateBusiness
+        
+        // Limpar disponibilidades com data passada APENAS do business atual
         const hoje = new Date();
         hoje.setHours(0, 0, 0, 0);
         
         await prisma.disponibilidade.deleteMany({
             where: {
+                businessId: businessId, // CRÍTICO: Filtrar por businessId para evitar limpeza global
                 data: {
                     lt: hoje
                 }
             }
         });
-
-        const businessId = req.businessId!; // Garantido pelo middleware validateBusiness
 
         const { profissionalId, data } = req.query;
 

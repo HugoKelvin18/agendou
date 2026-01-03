@@ -5,6 +5,9 @@ interface AuthRequest extends Request {
     userId?: number;
     userRole?: string;
     businessId?: number;
+    body: any;
+    params: any;
+    query: any;
 }
 
 const HOURS_2_MS = 2 * 60 * 60 * 1000; // 2 horas em milissegundos
@@ -93,6 +96,7 @@ export const criarCliente = async (req: AuthRequest, res: Response) => {
         const disponibilidade = await prisma.disponibilidade.findFirst({
             where: {
                 profissionalId,
+                businessId: req.businessId!, // CRÍTICO: Filtrar por businessId para isolamento
                 data: {
                     gte: rangeData.inicio,
                     lte: rangeData.fim

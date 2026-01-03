@@ -64,7 +64,6 @@ export const listarCliente = async (req: AuthRequest, res: Response) => {
 
         // 3. Buscar mensagens públicas de profissionais do mesmo business (últimos 30 dias)
         const dataLimiteMensagens = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-        const businessId = req.businessId!; // Garantido pelo middleware authenticateToken
         
         const profissionaisComMensagem = await prisma.usuario.findMany({
             where: {

@@ -29,6 +29,15 @@ async function deploy() {
         console.log('📦 Aplicando migrações...');
         execSync('npx prisma migrate deploy', { stdio: 'inherit' });
 
+        console.log('🔧 Inicializando sistema admin...');
+        try {
+            execSync('npm run init-admin', { stdio: 'inherit' });
+            console.log('✅ Sistema admin inicializado');
+        } catch (initError) {
+            // Se falhar, apenas logar mas não bloquear o deploy
+            console.log('⚠️  Aviso: Não foi possível inicializar sistema admin. Execute manualmente: npm run init-admin');
+        }
+
         console.log('✅ Deploy concluído com sucesso!');
     } catch (error) {
         console.error('❌ Erro no deploy:', error);

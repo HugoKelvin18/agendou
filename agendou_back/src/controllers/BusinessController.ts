@@ -32,7 +32,17 @@ export const resolverBusiness = async (req: Request, res: Response) => {
                 nome: true,
                 slug: true,
                 dominio: true,
-                ativo: true
+                ativo: true,
+                plano: true,
+                statusPagamento: true,
+                vencimento: true,
+                ultimoPagamento: true,
+                dataBloqueio: true,
+                toleranciaDias: true,
+                limiteUsuarios: true,
+                limiteProfissionais: true,
+                limiteServicos: true,
+                limiteAgendamentos: true
             }
         });
 
@@ -58,6 +68,16 @@ export const listar = async (req: AuthRequest, res: Response) => {
                 slug: true,
                 dominio: true,
                 ativo: true,
+                plano: true,
+                statusPagamento: true,
+                vencimento: true,
+                ultimoPagamento: true,
+                dataBloqueio: true,
+                toleranciaDias: true,
+                limiteUsuarios: true,
+                limiteProfissionais: true,
+                limiteServicos: true,
+                limiteAgendamentos: true,
                 createdAt: true,
                 updatedAt: true
             },
@@ -112,7 +132,10 @@ export const criar = async (req: AuthRequest, res: Response) => {
                 nome,
                 slug,
                 dominio: dominio || null,
-                ativo: true
+                ativo: true,
+                plano: "FREE", // Plano padrão
+                statusPagamento: "ATIVO",
+                toleranciaDias: 5
             },
             select: {
                 id: true,
@@ -120,6 +143,16 @@ export const criar = async (req: AuthRequest, res: Response) => {
                 slug: true,
                 dominio: true,
                 ativo: true,
+                plano: true,
+                statusPagamento: true,
+                vencimento: true,
+                ultimoPagamento: true,
+                dataBloqueio: true,
+                toleranciaDias: true,
+                limiteUsuarios: true,
+                limiteProfissionais: true,
+                limiteServicos: true,
+                limiteAgendamentos: true,
                 createdAt: true
             }
         });
@@ -135,7 +168,7 @@ export const criar = async (req: AuthRequest, res: Response) => {
 export const atualizar = async (req: AuthRequest, res: Response) => {
     try {
         const { id } = req.params;
-        const { nome, slug, dominio, ativo } = req.body;
+        const { nome, slug, dominio, ativo, plano, statusPagamento, vencimento, ultimoPagamento, dataBloqueio, toleranciaDias, limiteUsuarios, limiteProfissionais, limiteServicos, limiteAgendamentos } = req.body;
 
         const business = await prisma.business.findUnique({
             where: { id: parseInt(id) }
@@ -148,6 +181,16 @@ export const atualizar = async (req: AuthRequest, res: Response) => {
         const dadosUpdate: any = {};
         if (nome !== undefined) dadosUpdate.nome = nome;
         if (ativo !== undefined) dadosUpdate.ativo = ativo;
+        if (plano !== undefined) dadosUpdate.plano = plano;
+        if (statusPagamento !== undefined) dadosUpdate.statusPagamento = statusPagamento;
+        if (vencimento !== undefined) dadosUpdate.vencimento = vencimento ? new Date(vencimento) : null;
+        if (ultimoPagamento !== undefined) dadosUpdate.ultimoPagamento = ultimoPagamento ? new Date(ultimoPagamento) : null;
+        if (dataBloqueio !== undefined) dadosUpdate.dataBloqueio = dataBloqueio ? new Date(dataBloqueio) : null;
+        if (toleranciaDias !== undefined) dadosUpdate.toleranciaDias = toleranciaDias;
+        if (limiteUsuarios !== undefined) dadosUpdate.limiteUsuarios = limiteUsuarios;
+        if (limiteProfissionais !== undefined) dadosUpdate.limiteProfissionais = limiteProfissionais;
+        if (limiteServicos !== undefined) dadosUpdate.limiteServicos = limiteServicos;
+        if (limiteAgendamentos !== undefined) dadosUpdate.limiteAgendamentos = limiteAgendamentos;
 
         // Validar slug se fornecido
         if (slug !== undefined) {
@@ -190,6 +233,16 @@ export const atualizar = async (req: AuthRequest, res: Response) => {
                 slug: true,
                 dominio: true,
                 ativo: true,
+                plano: true,
+                statusPagamento: true,
+                vencimento: true,
+                ultimoPagamento: true,
+                dataBloqueio: true,
+                toleranciaDias: true,
+                limiteUsuarios: true,
+                limiteProfissionais: true,
+                limiteServicos: true,
+                limiteAgendamentos: true,
                 updatedAt: true
             }
         });

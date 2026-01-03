@@ -4,6 +4,7 @@ import { prisma } from "../lib/prisma.js";
 interface AuthRequest extends Request {
     userId?: number;
     userRole?: string;
+    businessId?: number;
 }
 
 // Função auxiliar para formatar tempo relativo
@@ -58,12 +59,14 @@ export const listarCliente = async (req: AuthRequest, res: Response) => {
             take: 10
         });
 
-        // 3. Buscar mensagens públicas de TODOS os profissionais (últimos 30 dias)
+        // 3. Buscar mensagens públicas de profissionais do mesmo business (últimos 30 dias)
         const dataLimiteMensagens = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        const businessId = req.businessId!; // Garantido pelo middleware authenticateToken
         
         const profissionaisComMensagem = await prisma.usuario.findMany({
             where: {
                 role: "PROFISSIONAL",
+                businessId: businessId, // Filtrar por businessId do cliente
                 mensagemPublica: { not: null },
                 updatedAt: {
                     gte: dataLimiteMensagens

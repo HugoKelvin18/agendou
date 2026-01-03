@@ -6,7 +6,7 @@ export interface User {
     nome: string;
     email: string;
     telefone?: string;
-    role: "CLIENTE" | "PROFISSIONAL";
+    role: "CLIENTE" | "PROFISSIONAL" | "ADMIN";
 }
 
 interface AuthContextType {

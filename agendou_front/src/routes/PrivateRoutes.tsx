@@ -4,7 +4,7 @@ import { useAuth } from "../hooks/useAuth";
 
 interface PrivateRouteProps {
     children: React.ReactNode;
-    role?: "CLIENTE" | "PROFISSIONAL";
+    role?: "CLIENTE" | "PROFISSIONAL" | "ADMIN";
 }
 
 export function PrivateRoute({ children, role }: PrivateRouteProps) {

@@ -8,6 +8,10 @@ interface AuthRequest extends Request {
     businessId?: number;
 }
 
+interface BusinessRequest extends Request {
+    businessId?: number;
+}
+
 export const getPerfil = async (req: AuthRequest, res: Response) => {
     try {
         const usuarioId = req.userId!;
@@ -167,13 +171,9 @@ export const alterarSenha = async (req: AuthRequest, res: Response) => {
     }
 };
 
-export const listarProfissionais = async (req: Request, res: Response) => {
+export const listarProfissionais = async (req: BusinessRequest, res: Response) => {
     try {
-        const businessId = parseInt(req.query.businessId as string || req.headers["x-business-id"] as string || "0");
-        
-        if (!businessId || businessId === 0) {
-            return res.status(400).json({ message: "businessId é obrigatório" });
-        }
+        const businessId = req.businessId!; // Garantido pelo middleware validateBusiness
 
         const profissionais = await prisma.usuario.findMany({
             where: { 

@@ -7,14 +7,14 @@ interface AuthRequest extends Request {
     businessId?: number;
 }
 
+interface BusinessRequest extends Request {
+    businessId?: number;
+}
+
 // Listar todos os serviços
-export const listar = async (req: Request, res: Response) => {
+export const listar = async (req: BusinessRequest, res: Response) => {
     try {
-        const businessId = parseInt(req.query.businessId as string || req.headers["x-business-id"] as string || "0");
-        
-        if (!businessId || businessId === 0) {
-            return res.status(400).json({ message: "businessId é obrigatório" });
-        }
+        const businessId = req.businessId!; // Garantido pelo middleware validateBusiness
 
         const servicos = await prisma.servico.findMany({
             where: { 
@@ -34,14 +34,10 @@ export const listar = async (req: Request, res: Response) => {
 };
 
 // Listar serviços por profissional
-export const listarPorProfissional = async (req: Request, res: Response) => {
+export const listarPorProfissional = async (req: BusinessRequest, res: Response) => {
     try {
         const { id } = req.params;
-        const businessId = parseInt(req.query.businessId as string || req.headers["x-business-id"] as string || "0");
-        
-        if (!businessId || businessId === 0) {
-            return res.status(400).json({ message: "businessId é obrigatório" });
-        }
+        const businessId = req.businessId!; // Garantido pelo middleware validateBusiness
 
         const servicos = await prisma.servico.findMany({
             where: {

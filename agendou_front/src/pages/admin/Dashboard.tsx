@@ -1,0 +1,193 @@
+import React, { useState, useEffect } from 'react';
+import { Building2, Users, DollarSign, AlertTriangle, CheckCircle, XCircle, Clock } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { adminService, BusinessAdmin } from "../../services/adminService";
+import ModernHeader from "../../components/ui/ModernHeader";
+
+export default function DashboardAdmin() {
+    const navigate = useNavigate();
+    const [businesses, setBusinesses] = useState<BusinessAdmin[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        carregarBusinesses();
+    }, []);
+
+    const carregarBusinesses = async () => {
+        try {
+            setLoading(true);
+            const dados = await adminService.listarBusinesses();
+            setBusinesses(dados);
+        } catch (err) {
+            console.error("Erro ao carregar businesses:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Calcular estatísticas
+    const totalBusinesses = businesses.length;
+    const businessesAtivos = businesses.filter(b => b.statusPagamento === "ATIVO").length;
+    const businessesBloqueados = businesses.filter(b => b.statusPagamento === "BLOQUEADO").length;
+    const businessesInadimplentes = businesses.filter(b => b.statusPagamento === "INADIMPLENTE").length;
+    const totalUsuarios = businesses.reduce((acc, b) => acc + b.metricas.totalUsuarios, 0);
+
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case "ATIVO": return "text-green-600 bg-green-50";
+            case "INADIMPLENTE": return "text-yellow-600 bg-yellow-50";
+            case "BLOQUEADO": return "text-red-600 bg-red-50";
+            case "CANCELADO": return "text-gray-600 bg-gray-50";
+            default: return "text-gray-600 bg-gray-50";
+        }
+    };
+
+    const getStatusIcon = (status: string) => {
+        switch (status) {
+            case "ATIVO": return <CheckCircle className="w-4 h-4" />;
+            case "INADIMPLENTE": return <Clock className="w-4 h-4" />;
+            case "BLOQUEADO": return <XCircle className="w-4 h-4" />;
+            case "CANCELADO": return <XCircle className="w-4 h-4" />;
+            default: return null;
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <ModernHeader />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="mb-8">
+                    <h1 className="text-3xl font-bold text-gray-900">Painel Administrativo</h1>
+                    <p className="mt-2 text-gray-600">Gerencie businesses, planos e cobranças</p>
+                </div>
+
+                {/* Cards de Estatísticas */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div className="bg-white rounded-lg shadow p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-600">Total de Businesses</p>
+                                <p className="text-2xl font-bold text-gray-900 mt-1">{totalBusinesses}</p>
+                            </div>
+                            <Building2 className="w-8 h-8 text-blue-500" />
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-600">Businesses Ativos</p>
+                                <p className="text-2xl font-bold text-green-600 mt-1">{businessesAtivos}</p>
+                            </div>
+                            <CheckCircle className="w-8 h-8 text-green-500" />
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-600">Bloqueados</p>
+                                <p className="text-2xl font-bold text-red-600 mt-1">{businessesBloqueados}</p>
+                            </div>
+                            <XCircle className="w-8 h-8 text-red-500" />
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-lg shadow p-6">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-600">Total de Usuários</p>
+                                <p className="text-2xl font-bold text-gray-900 mt-1">{totalUsuarios}</p>
+                            </div>
+                            <Users className="w-8 h-8 text-purple-500" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Lista de Businesses */}
+                <div className="bg-white rounded-lg shadow">
+                    <div className="px-6 py-4 border-b border-gray-200">
+                        <h2 className="text-xl font-semibold text-gray-900">Businesses</h2>
+                    </div>
+                    {loading ? (
+                        <div className="p-8 text-center text-gray-500">Carregando...</div>
+                    ) : businesses.length === 0 ? (
+                        <div className="p-8 text-center text-gray-500">Nenhum business encontrado</div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Business
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Plano
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Status
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Vencimento
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Uso
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Ações
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {businesses.map((business) => (
+                                        <tr key={business.id} className="hover:bg-gray-50">
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div>
+                                                    <div className="text-sm font-medium text-gray-900">{business.nome}</div>
+                                                    <div className="text-sm text-gray-500">{business.slug}</div>
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className="text-sm text-gray-900">{business.plano || "FREE"}</span>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(business.statusPagamento)}`}>
+                                                    {getStatusIcon(business.statusPagamento)}
+                                                    {business.statusPagamento}
+                                                </span>
+                                                {business.metricas.diasAtraso !== null && business.metricas.diasAtraso > 0 && (
+                                                    <div className="text-xs text-red-600 mt-1">
+                                                        {business.metricas.diasAtraso} dias em atraso
+                                                    </div>
+                                                )}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                {business.vencimento 
+                                                    ? new Date(business.vencimento).toLocaleDateString("pt-BR")
+                                                    : "-"
+                                                }
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                <div>Usuários: {business.metricas.totalUsuarios}</div>
+                                                <div>Profissionais: {business.metricas.totalProfissionais}</div>
+                                                <div>Serviços: {business.metricas.totalServicos}</div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <button
+                                                    onClick={() => navigate(`/admin/businesses/${business.id}`)}
+                                                    className="text-blue-600 hover:text-blue-900"
+                                                >
+                                                    Ver detalhes
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}

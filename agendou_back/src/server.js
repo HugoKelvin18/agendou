@@ -80,6 +80,7 @@ import agendamentoRoutes from "./routes/agendamentos.js";
 import servicoRoutes from "./routes/servicos.js";
 import disponibilidadeRoutes from "./routes/disponibilidades.js";
 import notificacaoRoutes from "./routes/notificacoes.js";
+import adminRoutes from "./routes/admin.js";
 
 app.use("/auth", authRoutes);
 app.use("/", businessRoutes); // Rotas públicas de business em /public/business
@@ -88,6 +89,7 @@ app.use("/agendamentos", agendamentoRoutes);
 app.use("/servicos", servicoRoutes);
 app.use("/disponibilidades", disponibilidadeRoutes);
 app.use("/notificacoes", notificacaoRoutes);
+app.use("/admin", adminRoutes); // Rotas administrativas
 
 // Render usa PORT dinamica
 const PORT = process.env.PORT || 3001;

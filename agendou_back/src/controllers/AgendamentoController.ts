@@ -93,7 +93,6 @@ export const criarCliente = async (req: AuthRequest, res: Response) => {
         const disponibilidade = await prisma.disponibilidade.findFirst({
             where: {
                 profissionalId,
-                businessId: req.businessId!,
                 data: {
                     gte: rangeData.inicio,
                     lte: rangeData.fim
@@ -112,6 +111,7 @@ export const criarCliente = async (req: AuthRequest, res: Response) => {
         const agendamentoExistente = await prisma.agendamento.findFirst({
             where: {
                 profissionalId,
+                businessId: req.businessId!,
                 data: {
                     gte: rangeData.inicio,
                     lte: rangeData.fim
@@ -127,6 +127,7 @@ export const criarCliente = async (req: AuthRequest, res: Response) => {
 
         const agendamento = await prisma.agendamento.create({
             data: {
+                businessId: req.businessId!,
                 clienteId,
                 profissionalId,
                 servicoId,
@@ -154,7 +155,10 @@ export const listarCliente = async (req: AuthRequest, res: Response) => {
         const clienteId = req.userId!;
 
         const agendamentos = await prisma.agendamento.findMany({
-            where: { clienteId },
+            where: { 
+                clienteId,
+                businessId: req.businessId!
+            },
             include: {
                 servico: true,
                 profissional: { select: { nome: true, telefone: true } }
@@ -178,7 +182,10 @@ export const listarProfissional = async (req: AuthRequest, res: Response) => {
         const profissionalId = req.userId!;
         const { clienteNome, data } = req.query;
 
-        const where: any = { profissionalId };
+        const where: any = { 
+            profissionalId,
+            businessId: req.businessId!
+        };
 
         if (clienteNome) {
             where.cliente = {
@@ -225,7 +232,8 @@ export const cancelarCliente = async (req: AuthRequest, res: Response) => {
         const agendamento = await prisma.agendamento.findFirst({
             where: {
                 id: parseInt(id),
-                clienteId
+                clienteId,
+                businessId: req.businessId!
             }
         });
 
@@ -285,7 +293,8 @@ export const atualizarStatus = async (req: AuthRequest, res: Response) => {
         const agendamento = await prisma.agendamento.findFirst({
             where: {
                 id: parseInt(id),
-                profissionalId
+                profissionalId,
+                businessId: req.businessId!
             }
         });
 
@@ -339,6 +348,7 @@ export const faturamento = async (req: AuthRequest, res: Response) => {
         const agendamentos = await prisma.agendamento.findMany({
             where: {
                 profissionalId,
+                businessId: req.businessId!,
                 status: "CONCLUIDO",
                 data: { gte: dataInicio }
             },

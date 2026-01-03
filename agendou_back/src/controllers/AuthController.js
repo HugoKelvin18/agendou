@@ -12,19 +12,9 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Email e senha são obrigatórios" });
         }
 
-        // businessId é obrigatório (pode vir do body ou header)
-        const businessIdFinal = businessId || parseInt(req.headers["x-business-id"] || "0");
-        if (!businessIdFinal || businessIdFinal === 0) {
-            return res.status(400).json({ message: "businessId é obrigatório" });
-        }
-
+        // Buscar usuário por email (único globalmente agora)
         const usuario = await prisma.usuario.findUnique({
-            where: { 
-                businessId_email: {
-                    businessId: businessIdFinal,
-                    email: email
-                }
-            }
+            where: { email }
         });
 
         if (!usuario) {
@@ -35,6 +25,89 @@ export const login = async (req, res) => {
 
         if (!senhaValida) {
             return res.status(401).json({ message: "Email ou senha incorretos" });
+        }
+
+        // Se for ADMIN, não precisa validar business
+        if (usuario.role === "ADMIN") {
+            const token = jwt.sign(
+                { userId: usuario.id, role: usuario.role, businessId: null },
+                JWT_SECRET,
+                { expiresIn: "7d" }
+            );
+
+            const { senha: _, ...usuarioSemSenha } = usuario;
+
+            return res.json({
+                token,
+                user: usuarioSemSenha
+            });
+        }
+
+        // Para CLIENTE e PROFISSIONAL, validar business
+        const businessIdFinal = businessId || usuario.businessId || parseInt(req.headers["x-business-id"] || "0");
+        
+        if (!businessIdFinal || businessIdFinal === 0) {
+            return res.status(400).json({ message: "businessId é obrigatório" });
+        }
+
+        // Verificar se businessId do usuário corresponde
+        if (usuario.businessId !== businessIdFinal) {
+            return res.status(403).json({ message: "Usuário não pertence a este negócio" });
+        }
+
+        // Verificar bloqueio do business antes de autenticar
+        const business = await prisma.business.findUnique({
+            where: { id: businessIdFinal }
+        });
+
+        if (!business || !business.ativo) {
+            return res.status(404).json({ message: "Negócio não encontrado ou inativo" });
+        }
+
+        // Verificar bloqueio e inadimplência
+        const hoje = new Date();
+        const toleranciaDias = business.toleranciaDias || 5;
+
+        // Verificar se está bloqueado
+        if (business.statusPagamento === "BLOQUEADO") {
+            return res.status(403).json({ 
+                message: "Acesso bloqueado. Entre em contato com o suporte para regularizar sua situação.",
+                code: "BUSINESS_BLOCKED",
+                dataBloqueio: business.dataBloqueio
+            });
+        }
+
+        // Verificar se está cancelado
+        if (business.statusPagamento === "CANCELADO") {
+            return res.status(403).json({ 
+                message: "Assinatura cancelada. Entre em contato com o suporte.",
+                code: "BUSINESS_CANCELLED"
+            });
+        }
+
+        // Verificar inadimplência (vencimento + tolerância)
+        if (business.vencimento) {
+            const vencimento = new Date(business.vencimento);
+            const diasAtraso = Math.floor((hoje - vencimento) / (1000 * 60 * 60 * 24));
+            
+            // Se está inadimplente e passou da tolerância, bloquear
+            if (business.statusPagamento === "INADIMPLENTE" && diasAtraso > toleranciaDias) {
+                // Bloquear automaticamente
+                await prisma.business.update({
+                    where: { id: businessIdFinal },
+                    data: {
+                        statusPagamento: "BLOQUEADO",
+                        dataBloqueio: hoje
+                    }
+                });
+                
+                return res.status(403).json({ 
+                    message: `Acesso bloqueado por inadimplência. Vencimento há ${diasAtraso} dias. Entre em contato com o suporte para regularizar.`,
+                    code: "BUSINESS_OVERDUE_BLOCKED",
+                    diasAtraso,
+                    vencimento: business.vencimento
+                });
+            }
         }
 
         const token = jwt.sign(
@@ -79,6 +152,120 @@ export const register = async (req, res) => {
             return res.status(404).json({ message: "Negócio não encontrado ou inativo" });
         }
 
+        // Verificar bloqueio e inadimplência
+        const hoje = new Date();
+        const toleranciaDias = business.toleranciaDias || 5;
+
+        // Verificar se está bloqueado
+        if (business.statusPagamento === "BLOQUEADO") {
+            return res.status(403).json({ 
+                message: "Acesso bloqueado. Entre em contato com o suporte para regularizar sua situação.",
+                code: "BUSINESS_BLOCKED",
+                dataBloqueio: business.dataBloqueio
+            });
+        }
+
+        // Verificar se está cancelado
+        if (business.statusPagamento === "CANCELADO") {
+            return res.status(403).json({ 
+                message: "Assinatura cancelada. Entre em contato com o suporte.",
+                code: "BUSINESS_CANCELLED"
+            });
+        }
+
+        // Verificar inadimplência (vencimento + tolerância)
+        if (business.vencimento) {
+            const vencimento = new Date(business.vencimento);
+            const diasAtraso = Math.floor((hoje - vencimento) / (1000 * 60 * 60 * 24));
+            
+            // Se está inadimplente e passou da tolerância, bloquear
+            if (business.statusPagamento === "INADIMPLENTE" && diasAtraso > toleranciaDias) {
+                // Bloquear automaticamente
+                await prisma.business.update({
+                    where: { id: businessIdFinal },
+                    data: {
+                        statusPagamento: "BLOQUEADO",
+                        dataBloqueio: hoje
+                    }
+                });
+                
+                return res.status(403).json({ 
+                    message: `Acesso bloqueado por inadimplência. Vencimento há ${diasAtraso} dias. Entre em contato com o suporte para regularizar.`,
+                    code: "BUSINESS_OVERDUE_BLOCKED",
+                    diasAtraso,
+                    vencimento: business.vencimento
+                });
+            }
+        }
+
+        // Se for ADMIN, validar código de acesso especial
+        if (role === "ADMIN") {
+            if (!codigoAcesso) {
+                return res.status(400).json({ message: "Código de acesso é obrigatório para administradores" });
+            }
+
+            // Buscar business admin-system
+            const adminBusiness = await prisma.business.findFirst({
+                where: { slug: "admin-system" }
+            });
+
+            if (!adminBusiness) {
+                return res.status(403).json({ message: "Sistema de administração não configurado" });
+            }
+
+            // Buscar código de acesso admin no business admin-system
+            const codigo = await prisma.codigoAcesso.findUnique({
+                where: { 
+                    businessId_codigo: {
+                        businessId: adminBusiness.id,
+                        codigo: codigoAcesso.trim().toUpperCase()
+                    }
+                }
+            });
+
+            if (!codigo) {
+                return res.status(403).json({ message: "Código de acesso inválido" });
+            }
+
+            if (!codigo.ativo) {
+                return res.status(403).json({ message: "Código de acesso está inativo" });
+            }
+
+            // Verificar se expirou
+            if (codigo.expiraEm && new Date() > codigo.expiraEm) {
+                return res.status(403).json({ message: "Código de acesso expirado" });
+            }
+
+            // Admin não precisa de businessId
+            const senhaHash = await bcrypt.hash(senha, 10);
+
+            const novoUsuario = await prisma.usuario.create({
+                data: {
+                    businessId: null, // Admin não tem businessId
+                    nome,
+                    email,
+                    senha: senhaHash,
+                    telefone: telefone || null,
+                    role: "ADMIN",
+                    mensagemPublica: null
+                }
+            });
+
+            const token = jwt.sign(
+                { userId: novoUsuario.id, role: novoUsuario.role, businessId: null },
+                JWT_SECRET,
+                { expiresIn: "7d" }
+            );
+
+            const { senha: _, ...usuarioSemSenha } = novoUsuario;
+
+            return res.status(201).json({
+                message: "Administrador cadastrado com sucesso",
+                token,
+                user: usuarioSemSenha
+            });
+        }
+
         // Validar código de acesso se for profissional
         if (role === "PROFISSIONAL") {
             if (!codigoAcesso) {
@@ -109,18 +296,13 @@ export const register = async (req, res) => {
             }
         }
 
-        // Verificar se email já existe no business
+        // Verificar se email já existe (único globalmente)
         const usuarioExistente = await prisma.usuario.findUnique({
-            where: { 
-                businessId_email: {
-                    businessId: businessIdFinal,
-                    email: email
-                }
-            }
+            where: { email }
         });
 
         if (usuarioExistente) {
-            return res.status(400).json({ message: "Email já cadastrado neste negócio" });
+            return res.status(400).json({ message: "Email já cadastrado" });
         }
 
         // Hash da senha

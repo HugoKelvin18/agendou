@@ -1,0 +1,24 @@
+# Comandos para Aplicar Mudanças
+
+## 1. Aplicar Migrations
+cd agendou_back
+npx prisma migrate deploy
+npx prisma generate
+
+## 2. Inicializar Sistema Admin
+npm run init-admin
+
+## 3. Criar Primeiro Admin (via Frontend)
+1. Acesse: http://localhost:5173/register
+2. Preencha:
+   - Nome: Seu nome
+   - Email: admin@exemplo.com
+   - Senha: sua senha
+   - Role: ADMIN
+   - Código de Acesso: ADMIN2026
+3. Faça login e será redirecionado para /admin/dashboard
+
+## 4. Verificar
+- Login como admin funciona
+- Dashboard admin acessível em /admin/dashboard
+- Lista de businesses aparece

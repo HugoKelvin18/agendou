@@ -33,6 +33,8 @@ const Login: React.FC = () => {
                 navigate("/cliente/dashboard");
             } else if (user.role === "PROFISSIONAL") {
                 navigate("/profissional/dashboard");
+            } else if (user.role === "ADMIN") {
+                navigate("/admin/dashboard");
             } else {
                 setError("Tipo de usuário inválido");
             }

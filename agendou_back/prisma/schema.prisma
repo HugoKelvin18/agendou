@@ -12,7 +12,7 @@ datasource db {
 
 model Usuario {
   id                       Int               @id @default(autoincrement())
-  businessId               Int
+  businessId               Int?              // Nullable para admins (que não pertencem a um business específico)
   nome                     String
   email                    String
   senha                    String
@@ -35,15 +35,16 @@ model Usuario {
   linkedin                 String?
   createdAt                DateTime          @default(now())
   updatedAt                DateTime          @updatedAt
-  business                 Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  business                 Business?         @relation(fields: [businessId], references: [id], onDelete: Cascade)
   servicos                 Servico[]         @relation("ProfissionalServicos")
   agendamentosCliente      Agendamento[]     @relation("ClienteAgendamentos")
   agendamentosProfissional Agendamento[]     @relation("ProfissionalAgendamentos")
   disponibilidades         Disponibilidade[] @relation("ProfissionalDisponibilidades")
   notificacoesLidas        NotificacaoLida[]
 
-  @@unique([businessId, email])
+  @@unique([email]) // Email único globalmente (admin não precisa businessId)
   @@index([businessId])
+  @@index([role])
   @@map("usuarios")
 }
 
@@ -151,6 +152,20 @@ model Business {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Billing e Planos
+  plano              String?   // Ex: "FREE", "BASIC", "PRO", "ENTERPRISE"
+  statusPagamento    StatusPagamento @default(ATIVO)
+  vencimento         DateTime? // Data de vencimento da assinatura
+  ultimoPagamento    DateTime? // Data do último pagamento registrado
+  dataBloqueio       DateTime? // Data em que foi bloqueado (se aplicável)
+  toleranciaDias     Int       @default(5) // Dias de tolerância após vencimento antes de bloquear
+  
+  // Limites do plano
+  limiteUsuarios     Int?      // Limite de usuários totais (null = ilimitado)
+  limiteProfissionais Int?     // Limite de profissionais (null = ilimitado)
+  limiteServicos    Int?       // Limite de serviços (null = ilimitado)
+  limiteAgendamentos Int?      // Limite de agendamentos por mês (null = ilimitado)
+
   // Relações
   usuarios         Usuario[]
   servicos         Servico[]
@@ -160,17 +175,27 @@ model Business {
 
   @@index([slug])
   @@index([dominio])
+  @@index([statusPagamento])
+  @@index([vencimento])
   @@map("businesses")
 }
 
 enum Role {
   CLIENTE
   PROFISSIONAL
+  ADMIN
 }
 
 enum StatusAgendamento {
   PENDENTE
   EM_ANDAMENTO
   CONCLUIDO
+  CANCELADO
+}
+
+enum StatusPagamento {
+  ATIVO
+  INADIMPLENTE
+  BLOQUEADO
   CANCELADO
 }

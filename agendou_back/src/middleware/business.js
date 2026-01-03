@@ -31,6 +31,50 @@ export const validateBusiness = async (req, res, next) => {
             return res.status(404).json({ message: "Negócio não encontrado ou inativo" });
         }
 
+        // Verificar bloqueio e inadimplência
+        const hoje = new Date();
+        const toleranciaDias = business.toleranciaDias || 5;
+        
+        // Verificar se está bloqueado
+        if (business.statusPagamento === "BLOQUEADO") {
+            return res.status(403).json({ 
+                message: "Acesso bloqueado. Entre em contato com o suporte.",
+                code: "BUSINESS_BLOCKED",
+                dataBloqueio: business.dataBloqueio
+            });
+        }
+
+        // Verificar se está cancelado
+        if (business.statusPagamento === "CANCELADO") {
+            return res.status(403).json({ 
+                message: "Assinatura cancelada. Entre em contato com o suporte.",
+                code: "BUSINESS_CANCELLED"
+            });
+        }
+
+        // Verificar inadimplência (vencimento + tolerância)
+        if (business.vencimento && business.statusPagamento === "INADIMPLENTE") {
+            const diasAtraso = Math.floor((hoje - new Date(business.vencimento)) / (1000 * 60 * 60 * 24));
+            
+            if (diasAtraso > toleranciaDias) {
+                // Bloquear automaticamente após tolerância
+                await prisma.business.update({
+                    where: { id: businessId },
+                    data: {
+                        statusPagamento: "BLOQUEADO",
+                        dataBloqueio: hoje
+                    }
+                });
+                
+                return res.status(403).json({ 
+                    message: `Acesso bloqueado por inadimplência. Vencimento há ${diasAtraso} dias. Entre em contato com o suporte.`,
+                    code: "BUSINESS_OVERDUE_BLOCKED",
+                    diasAtraso,
+                    vencimento: business.vencimento
+                });
+            }
+        }
+
         // Validar que o businessId do token corresponde ao do header (se ambos existirem)
         if (headerBusinessId && tokenBusinessId && parseInt(headerBusinessId) !== tokenBusinessId) {
             return res.status(403).json({ message: "businessId do header não corresponde ao do token" });

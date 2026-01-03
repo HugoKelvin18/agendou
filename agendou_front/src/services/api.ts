@@ -12,13 +12,20 @@ export const api = axios.create({
     timeout: 10000, // Timeout de 10 segundos
 });
 
-//Intercepta requisições para adicionar o token automaticamente
+//Intercepta requisições para adicionar o token e businessId automaticamente
 api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("@agendou:token");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
+        
+        // Adicionar x-business-id se disponível
+        const businessId = localStorage.getItem("@agendou:businessId");
+        if (businessId) {
+            config.headers["x-business-id"] = businessId;
+        }
+        
         return config;
     },
     (error) => {

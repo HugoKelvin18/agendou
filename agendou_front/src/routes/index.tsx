@@ -22,6 +22,10 @@ import Faturamento from "../pages/profissional/Faturamento";
 import FaturamentoGraficos from "../pages/profissional/FaturamentoGraficos";
 import ConfiguracoesProfissional from "../pages/profissional/Configuracoes";
 
+// Rotas privadas - Admin
+import DashboardAdmin from "../pages/admin/Dashboard";
+import BusinessDetail from "../pages/admin/BusinessDetail";
+
 export default function AppRoutes() {
     return (
         <Routes>
@@ -118,6 +122,24 @@ export default function AppRoutes() {
                 element={
                     <PrivateRoute role="PROFISSIONAL">
                         <ConfiguracoesProfissional />
+                    </PrivateRoute>
+                } 
+            />
+
+            {/* Rotas privadas - Admin */}
+            <Route 
+                path="/admin/dashboard" 
+                element={
+                    <PrivateRoute role="ADMIN">
+                        <DashboardAdmin />
+                    </PrivateRoute>
+                } 
+            />
+            <Route 
+                path="/admin/businesses/:id" 
+                element={
+                    <PrivateRoute role="ADMIN">
+                        <BusinessDetail />
                     </PrivateRoute>
                 } 
             />

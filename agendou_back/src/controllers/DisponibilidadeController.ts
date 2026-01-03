@@ -7,6 +7,10 @@ interface AuthRequest extends Request {
     businessId?: number;
 }
 
+interface BusinessRequest extends Request {
+    businessId?: number;
+}
+
 // Função auxiliar para criar range de data local (evita problemas de timezone)
 function criarRangeDataLocal(dataString: string): { inicio: Date; fim: Date } | null {
     const partes = dataString.trim().split('-');
@@ -48,7 +52,7 @@ function dataStringParaLocal(dataString: string): Date | null {
 }
 
 // Listar disponibilidades
-export const listar = async (req: Request, res: Response) => {
+export const listar = async (req: BusinessRequest, res: Response) => {
     try {
         // Limpar disponibilidades com data passada
         const hoje = new Date();
@@ -62,10 +66,7 @@ export const listar = async (req: Request, res: Response) => {
             }
         });
 
-        const businessId = parseInt(req.query.businessId as string || req.headers["x-business-id"] as string || "0");
-        if (!businessId || businessId === 0) {
-            return res.status(400).json({ message: "businessId é obrigatório" });
-        }
+        const businessId = req.businessId!; // Garantido pelo middleware validateBusiness
 
         const { profissionalId, data } = req.query;
 
@@ -227,7 +228,7 @@ export const deletar = async (req: AuthRequest, res: Response) => {
 };
 
 // Horários disponíveis (considerando duração do serviço)
-export const horariosDisponiveis = async (req: Request, res: Response) => {
+export const horariosDisponiveis = async (req: BusinessRequest, res: Response) => {
     try {
         const { profissionalId, data, servicoId } = req.query;
 
@@ -235,10 +236,7 @@ export const horariosDisponiveis = async (req: Request, res: Response) => {
             return res.status(400).json({ message: "Parâmetros obrigatórios: profissionalId, data, servicoId" });
         }
 
-        const businessId = parseInt(req.query.businessId as string || req.headers["x-business-id"] as string || "0");
-        if (!businessId || businessId === 0) {
-            return res.status(400).json({ message: "businessId é obrigatório" });
-        }
+        const businessId = req.businessId!; // Garantido pelo middleware validateBusiness
 
         const servico = await prisma.servico.findFirst({
             where: { 

@@ -41,6 +41,9 @@ ALTER TABLE "usuarios" ADD CONSTRAINT "usuarios_businessId_fkey" FOREIGN KEY ("b
 CREATE INDEX "usuarios_businessId_idx" ON "usuarios"("businessId");
 
 -- Remover unique em email e criar unique composto
+-- Primeiro dropar a constraint (se existir como constraint)
+ALTER TABLE "usuarios" DROP CONSTRAINT IF EXISTS "usuarios_email_key";
+-- Depois dropar o índice (se existir como índice separado)
 DROP INDEX IF EXISTS "usuarios_email_key";
 CREATE UNIQUE INDEX "usuarios_businessId_email_key" ON "usuarios"("businessId", "email");
 
@@ -97,5 +100,8 @@ ALTER TABLE "codigos_acesso" ADD CONSTRAINT "codigos_acesso_businessId_fkey" FOR
 CREATE INDEX "codigos_acesso_businessId_idx" ON "codigos_acesso"("businessId");
 
 -- Remover unique em codigo e criar unique composto
+-- Primeiro dropar a constraint (se existir como constraint)
+ALTER TABLE "codigos_acesso" DROP CONSTRAINT IF EXISTS "codigos_acesso_codigo_key";
+-- Depois dropar o índice (se existir como índice separado)
 DROP INDEX IF EXISTS "codigos_acesso_codigo_key";
 CREATE UNIQUE INDEX "codigos_acesso_businessId_codigo_key" ON "codigos_acesso"("businessId", "codigo");

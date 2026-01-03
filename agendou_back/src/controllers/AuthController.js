@@ -205,10 +205,47 @@ export const register = async (req, res) => {
             });
         }
 
-        // Para CLIENTE e PROFISSIONAL, businessId é obrigatório
-        const businessIdFinal = businessId || parseInt(req.headers["x-business-id"] || "0");
-        if (!businessIdFinal || businessIdFinal === 0) {
-            return res.status(400).json({ message: "businessId é obrigatório" });
+        // Para PROFISSIONAL, buscar businessId através do código de acesso
+        // Para CLIENTE, businessId pode vir do body ou header
+        let businessIdFinal = null;
+
+        if (role === "PROFISSIONAL") {
+            if (!codigoAcesso) {
+                return res.status(400).json({ message: "Código de acesso é obrigatório para profissionais" });
+            }
+
+            // Buscar código de acesso no banco para obter o businessId
+            const codigo = await prisma.codigoAcesso.findFirst({
+                where: { 
+                    codigo: codigoAcesso.trim().toUpperCase(),
+                    ativo: true
+                },
+                include: {
+                    business: true
+                }
+            });
+
+            if (!codigo) {
+                return res.status(403).json({ message: "Código de acesso inválido" });
+            }
+
+            if (!codigo.ativo) {
+                return res.status(403).json({ message: "Código de acesso está inativo" });
+            }
+
+            // Verificar se expirou
+            if (codigo.expiraEm && new Date() > codigo.expiraEm) {
+                return res.status(403).json({ message: "Código de acesso expirado" });
+            }
+
+            // Obter businessId do código de acesso
+            businessIdFinal = codigo.businessId;
+        } else {
+            // Para CLIENTE, businessId pode vir do body ou header
+            businessIdFinal = businessId || parseInt(req.headers["x-business-id"] || "0");
+            if (!businessIdFinal || businessIdFinal === 0) {
+                return res.status(400).json({ message: "businessId é obrigatório" });
+            }
         }
 
         // Validar se business existe e está ativo
@@ -263,36 +300,6 @@ export const register = async (req, res) => {
                     diasAtraso,
                     vencimento: business.vencimento
                 });
-            }
-        }
-
-        // Validar código de acesso se for profissional
-        if (role === "PROFISSIONAL") {
-            if (!codigoAcesso) {
-                return res.status(400).json({ message: "Código de acesso é obrigatório para profissionais" });
-            }
-
-            // Buscar código de acesso no banco (com businessId)
-            const codigo = await prisma.codigoAcesso.findUnique({
-                where: { 
-                    businessId_codigo: {
-                        businessId: businessIdFinal,
-                        codigo: codigoAcesso.trim()
-                    }
-                }
-            });
-
-            if (!codigo) {
-                return res.status(403).json({ message: "Código de acesso inválido" });
-            }
-
-            if (!codigo.ativo) {
-                return res.status(403).json({ message: "Código de acesso está inativo" });
-            }
-
-            // Verificar se expirou
-            if (codigo.expiraEm && new Date() > codigo.expiraEm) {
-                return res.status(403).json({ message: "Código de acesso expirado" });
             }
         }
 

@@ -15,7 +15,7 @@ interface Notification {
 interface NotificationDrawerProps {
     isOpen: boolean;
     onClose: () => void;
-    role: 'CLIENTE' | 'PROFISSIONAL';
+    role: 'CLIENTE' | 'PROFISSIONAL' | 'ADMIN';
     notifications: Notification[];
     onMarkAsRead: (id: number | string) => void;
 }
@@ -36,10 +36,16 @@ const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
               { id: 'messages', label: 'Mensagens' },
               { id: 'appointments', label: 'Agendamentos' }
           ]
-        : [
+        : role === 'PROFISSIONAL'
+        ? [
               { id: 'all', label: 'Todas' },
               { id: 'appointments', label: 'Novos' },
               { id: 'cancellations', label: 'Cancelamentos' }
+          ]
+        : [
+              { id: 'all', label: 'Todas' },
+              { id: 'payment_overdue', label: 'Pagamentos' },
+              { id: 'support_request', label: 'Suporte' }
           ];
 
     const filteredNotifications = notifications.filter(notif => {
@@ -47,6 +53,8 @@ const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
         if (activeTab === 'messages') return notif.type === 'message';
         if (activeTab === 'appointments') return notif.type === 'appointment' || notif.type === 'update';
         if (activeTab === 'cancellations') return notif.type === 'cancellation';
+        if (activeTab === 'payment_overdue') return notif.type === 'payment_overdue';
+        if (activeTab === 'support_request') return notif.type === 'support_request';
         return true;
     });
 
@@ -60,6 +68,10 @@ const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                 return <XCircle size={18} className="text-red-500" />;
             case 'update':
                 return <AlertCircle size={18} className="text-yellow-500" />;
+            case 'payment_overdue':
+                return <AlertCircle size={18} className="text-red-500" />;
+            case 'support_request':
+                return <MessageSquare size={18} className="text-orange-500" />;
             default:
                 return <Clock size={18} className="text-gray-500" />;
         }

@@ -41,6 +41,7 @@ model Usuario {
   agendamentosProfissional Agendamento[]     @relation("ProfissionalAgendamentos")
   disponibilidades         Disponibilidade[] @relation("ProfissionalDisponibilidades")
   notificacoesLidas        NotificacaoLida[]
+  solicitacoesSuporte     SolicitacaoSuporte[]
 
   @@unique([email]) // Email único globalmente (admin não precisa businessId)
   @@index([businessId])
@@ -169,9 +170,10 @@ model Business {
   // Relações
   usuarios         Usuario[]
   servicos         Servico[]
-  disponibilidades Disponibilidade[]
-  agendamentos     Agendamento[]
-  codigosAcesso    CodigoAcesso[]
+  disponibilidades     Disponibilidade[]
+  agendamentos         Agendamento[]
+  codigosAcesso        CodigoAcesso[]
+  solicitacoesSuporte  SolicitacaoSuporte[]
 
   @@index([slug])
   @@index([dominio])
@@ -198,4 +200,33 @@ enum StatusPagamento {
   INADIMPLENTE
   BLOQUEADO
   CANCELADO
+}
+
+enum StatusSuporte {
+  PENDENTE
+  EM_ATENDIMENTO
+  RESOLVIDO
+  CANCELADO
+}
+
+model SolicitacaoSuporte {
+  id          Int          @id @default(autoincrement())
+  businessId  Int
+  usuarioId   Int          // Profissional que criou a solicitação
+  assunto     String       // Título/resumo do problema
+  descricao   String       // Descrição detalhada do problema
+  status      StatusSuporte @default(PENDENTE)
+  resposta    String?      // Resposta do admin
+  criadoEm    DateTime     @default(now())
+  atualizadoEm DateTime    @updatedAt
+  respondidoEm DateTime?   // Data em que foi respondido
+
+  // Relações
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  usuario  Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+  @@index([usuarioId])
+  @@index([status])
+  @@map("solicitacoes_suporte")
 }

@@ -80,14 +80,14 @@ export const validateBusiness = async (req, res, next) => {
             return res.status(403).json({ message: "businessId do header não corresponde ao do token" });
         }
 
-        // Se usuário autenticado, verificar se pertence ao business
-        if (req.userId) {
+        // Se usuário autenticado, verificar se pertence ao business (exceto ADMIN)
+        if (req.userId && req.userRole !== "ADMIN") {
             const usuario = await prisma.usuario.findUnique({
                 where: { id: req.userId },
-                select: { businessId: true }
+                select: { businessId: true, role: true }
             });
 
-            if (!usuario || usuario.businessId !== businessId) {
+            if (!usuario || (usuario.role !== "ADMIN" && usuario.businessId !== businessId)) {
                 return res.status(403).json({ message: "Usuário não pertence a este negócio" });
             }
         }

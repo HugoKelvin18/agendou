@@ -53,7 +53,7 @@ export default function DashboardAdmin() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <ModernHeader />
+            <ModernHeader role="ADMIN" />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="mb-8 flex items-center justify-between">
                     <div>
@@ -141,7 +141,9 @@ export default function DashboardAdmin() {
                                         <tr key={business.id} className="hover:bg-gray-50">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div>
-                                                    <div className="text-sm font-medium text-gray-900">{business.nome}</div>
+                                                    <div className="text-sm font-medium text-gray-900">
+                                                        {business.codigoAcesso || business.nome}
+                                                    </div>
                                                     <div className="text-sm text-gray-500">{business.slug}</div>
                                                 </div>
                                             </td>

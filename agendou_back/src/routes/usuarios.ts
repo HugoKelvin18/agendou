@@ -13,4 +13,9 @@ router.get("/perfil/me", authenticateToken, validateBusiness, UsuarioController.
 router.put("/perfil/me", authenticateToken, validateBusiness, UsuarioController.updatePerfil);
 router.put("/senha", authenticateToken, validateBusiness, UsuarioController.alterarSenha);
 
+// Rotas de suporte (profissionais)
+import * as SuporteController from "../controllers/SuporteController.js";
+router.post("/suporte", authenticateToken, validateBusiness, SuporteController.criarSolicitacao);
+router.get("/suporte", authenticateToken, validateBusiness, SuporteController.listarMinhasSolicitacoes);
+
 export default router;

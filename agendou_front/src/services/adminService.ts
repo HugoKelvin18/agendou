@@ -27,6 +27,8 @@ export interface BusinessAdmin extends BusinessMetricas {
     createdAt: string;
     updatedAt: string;
     metricas: BusinessMetricas;
+    codigoAcesso?: string | null;
+    solicitacoesSuporte?: any[];
 }
 
 export const adminService = {
@@ -90,6 +92,12 @@ export const adminService = {
             descricao,
             expiraEm
         });
+        return response.data;
+    },
+
+    // Enviar mensagem para business
+    enviarMensagem: async (id: number, mensagem: string) => {
+        const response = await api.post(`/admin/businesses/${id}/mensagem`, { mensagem });
         return response.data;
     }
 };

@@ -20,4 +20,12 @@ router.post("/businesses/:id/liberar", AdminController.liberarBusiness);
 // Rotas de códigos de acesso admin
 router.post("/codigos-acesso", AdminController.criarCodigoAcessoAdmin);
 
+// Rotas de suporte (admin)
+import * as SuporteController from "../controllers/SuporteController.js";
+router.get("/suporte", SuporteController.listarTodasSolicitacoes);
+router.post("/suporte/:id/responder", SuporteController.responderSolicitacao);
+
+// Rotas de mensagens
+router.post("/businesses/:id/mensagem", AdminController.enviarMensagemBusiness);
+
 export default router;

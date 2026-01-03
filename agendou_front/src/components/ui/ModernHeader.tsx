@@ -20,7 +20,7 @@ interface ModernHeaderProps {
         onClick: () => void;
         icon?: React.ReactNode;
     };
-    role?: 'CLIENTE' | 'PROFISSIONAL';
+    role?: 'CLIENTE' | 'PROFISSIONAL' | 'ADMIN';
 }
 
 const ModernHeader: React.FC<ModernHeaderProps> = ({ 
@@ -164,7 +164,13 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
                                         
                                         <button
                                             onClick={() => {
-                                                navigate(role === 'CLIENTE' ? '/cliente/configuracoes' : '/profissional/configuracoes');
+                                                if (role === 'CLIENTE') {
+                                                    navigate('/cliente/configuracoes');
+                                                } else if (role === 'PROFISSIONAL') {
+                                                    navigate('/profissional/configuracoes');
+                                                } else if (role === 'ADMIN') {
+                                                    navigate('/admin/configuracoes');
+                                                }
                                                 setShowMenu(false);
                                             }}
                                             className="w-full flex items-center gap-3 px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm text-gray-700 hover:bg-gray-50 transition-colors"

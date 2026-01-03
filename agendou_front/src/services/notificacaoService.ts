@@ -2,13 +2,16 @@ import api from "./api";
 
 export interface Notification {
     id: string;
-    type: 'message' | 'appointment' | 'cancellation' | 'update';
+    type: 'message' | 'appointment' | 'cancellation' | 'update' | 'payment_overdue' | 'support_request';
     title: string;
     message: string;
     time: string;
     timestamp?: number;
     read: boolean;
     actionUrl?: string;
+    businessId?: number;
+    diasAtraso?: number;
+    solicitacaoId?: number;
 }
 
 export const notificacaoService = {
@@ -19,6 +22,11 @@ export const notificacaoService = {
 
     listarProfissional: async (): Promise<Notification[]> => {
         const response = await api.get("/notificacoes/profissional");
+        return response.data;
+    },
+
+    listarAdmin: async (): Promise<Notification[]> => {
+        const response = await api.get("/notificacoes/admin");
         return response.data;
     },
 

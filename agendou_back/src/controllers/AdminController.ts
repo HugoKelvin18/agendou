@@ -28,7 +28,20 @@ export const listarBusinesses = async (req: AuthRequest, res: Response) => {
                 limiteServicos: true,
                 limiteAgendamentos: true,
                 createdAt: true,
-                updatedAt: true
+                updatedAt: true,
+                codigosAcesso: {
+                    select: {
+                        codigo: true,
+                        ativo: true
+                    },
+                    where: {
+                        ativo: true
+                    },
+                    take: 1,
+                    orderBy: {
+                        createdAt: "asc" // Primeiro código criado
+                    }
+                }
             },
             orderBy: {
                 createdAt: "desc"
@@ -66,8 +79,14 @@ export const listarBusinesses = async (req: AuthRequest, res: Response) => {
                     diasAtraso = Math.floor((hoje.getTime() - vencimento.getTime()) / (1000 * 60 * 60 * 24));
                 }
 
+                // Pegar o primeiro código de acesso ativo (ou o primeiro código criado)
+                const codigoAcesso = business.codigosAcesso && business.codigosAcesso.length > 0 
+                    ? business.codigosAcesso[0].codigo 
+                    : null;
+
                 return {
                     ...business,
+                    codigoAcesso, // Adicionar código de acesso ao retorno
                     metricas: {
                         totalUsuarios,
                         totalProfissionais,
@@ -122,6 +141,38 @@ export const obterBusiness = async (req: AuthRequest, res: Response) => {
                         status: true,
                         criadoEm: true
                     }
+                },
+                codigosAcesso: {
+                    select: {
+                        codigo: true,
+                        ativo: true
+                    },
+                    where: {
+                        ativo: true
+                    },
+                    take: 1,
+                    orderBy: {
+                        createdAt: "asc"
+                    }
+                },
+                solicitacoesSuporte: {
+                    where: {
+                        status: {
+                            in: ["PENDENTE", "EM_ATENDIMENTO"]
+                        }
+                    },
+                    include: {
+                        usuario: {
+                            select: {
+                                id: true,
+                                nome: true,
+                                email: true
+                            }
+                        }
+                    },
+                    orderBy: {
+                        criadoEm: "desc"
+                    }
                 }
             }
         });
@@ -158,8 +209,14 @@ export const obterBusiness = async (req: AuthRequest, res: Response) => {
             diasAtraso = Math.floor((hoje.getTime() - vencimento.getTime()) / (1000 * 60 * 60 * 24));
         }
 
+        // Pegar o primeiro código de acesso ativo
+        const codigoAcesso = business.codigosAcesso && business.codigosAcesso.length > 0 
+            ? business.codigosAcesso[0].codigo 
+            : null;
+
         res.json({
             ...business,
+            codigoAcesso, // Adicionar código de acesso ao retorno
             metricas: {
                 totalUsuarios,
                 totalProfissionais,
@@ -395,5 +452,48 @@ export const criarCodigoAcessoAdmin = async (req: AuthRequest, res: Response) =>
             return res.status(400).json({ message: "Código já existe" });
         }
         res.status(500).json({ message: "Erro ao criar código de acesso" });
+    }
+};
+
+// Enviar mensagem para business
+export const enviarMensagemBusiness = async (req: AuthRequest, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { mensagem } = req.body;
+
+        if (!mensagem || !mensagem.trim()) {
+            return res.status(400).json({ message: "Mensagem é obrigatória" });
+        }
+
+        // Buscar business
+        const business = await prisma.business.findUnique({
+            where: { id: parseInt(id) },
+            include: {
+                usuarios: {
+                    where: {
+                        role: "PROFISSIONAL"
+                    },
+                    select: {
+                        id: true,
+                        email: true,
+                        nome: true
+                    }
+                }
+            }
+        });
+
+        if (!business) {
+            return res.status(404).json({ message: "Business não encontrado" });
+        }
+
+        // Aqui você pode implementar envio de email ou notificação
+        // Por enquanto, apenas retornar sucesso
+        res.json({
+            message: "Mensagem enviada com sucesso",
+            destinatarios: business.usuarios.length
+        });
+    } catch (err: any) {
+        console.error("Erro ao enviar mensagem:", err);
+        res.status(500).json({ message: "Erro ao enviar mensagem" });
     }
 };

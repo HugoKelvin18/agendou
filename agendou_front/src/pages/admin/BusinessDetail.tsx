@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Building2, DollarSign, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Building2, DollarSign, AlertTriangle, MessageSquare, Settings, X, Save } from "lucide-react";
 import { adminService, BusinessAdmin } from "../../services/adminService";
+import { suporteService, SolicitacaoSuporte } from "../../services/suporteService";
 import ModernHeader from "../../components/ui/ModernHeader";
 
 export default function BusinessDetail() {
@@ -10,6 +11,10 @@ export default function BusinessDetail() {
     const [business, setBusiness] = useState<BusinessAdmin | null>(null);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
+    const [showMensagem, setShowMensagem] = useState(false);
+    const [showPlano, setShowPlano] = useState(false);
+    const [mensagemForm, setMensagemForm] = useState({ mensagem: "" });
+    const [planoForm, setPlanoForm] = useState({ plano: "", limiteProfissionais: "" });
 
     useEffect(() => {
         if (id) {
@@ -57,6 +62,49 @@ export default function BusinessDetail() {
         }
     };
 
+    const handleEnviarMensagem = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!mensagemForm.mensagem.trim()) {
+            alert("Digite uma mensagem");
+            return;
+        }
+        try {
+            setActionLoading(true);
+            await adminService.enviarMensagem(parseInt(id!), mensagemForm.mensagem);
+            alert("Mensagem enviada com sucesso!");
+            setMensagemForm({ mensagem: "" });
+            setShowMensagem(false);
+        } catch (err: any) {
+            console.error("Erro ao enviar mensagem:", err);
+            alert(err.response?.data?.message || "Erro ao enviar mensagem");
+        } finally {
+            setActionLoading(false);
+        }
+    };
+
+    const handleAlterarPlano = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            setActionLoading(true);
+            await adminService.atualizarPlano(
+                parseInt(id!),
+                planoForm.plano,
+                {
+                    limiteProfissionais: planoForm.limiteProfissionais ? parseInt(planoForm.limiteProfissionais) : undefined
+                }
+            );
+            alert("Plano atualizado com sucesso!");
+            setPlanoForm({ plano: "", limiteProfissionais: "" });
+            setShowPlano(false);
+            await carregarBusiness();
+        } catch (err: any) {
+            console.error("Erro ao alterar plano:", err);
+            alert(err.response?.data?.message || "Erro ao alterar plano");
+        } finally {
+            setActionLoading(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-50">
@@ -81,7 +129,7 @@ export default function BusinessDetail() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <ModernHeader />
+            <ModernHeader role="ADMIN" />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <button
                     onClick={() => navigate("/admin/dashboard")}
@@ -123,9 +171,48 @@ export default function BusinessDetail() {
                 </div>
 
 
-                <div className="bg-white rounded-lg shadow p-6">
+                {/* Solicitações de Suporte */}
+                {business.solicitacoesSuporte && business.solicitacoesSuporte.length > 0 && (
+                    <div className="bg-white rounded-lg shadow mb-6">
+                        <div className="px-6 py-4 border-b border-gray-200">
+                            <h2 className="text-xl font-semibold text-gray-900">Solicitações de Suporte</h2>
+                        </div>
+                        <div className="p-6">
+                            <div className="space-y-4">
+                                {business.solicitacoesSuporte.map((solicitacao: any) => (
+                                    <div key={solicitacao.id} className="border border-gray-200 rounded-lg p-4">
+                                        <div className="flex items-start justify-between mb-2">
+                                            <div>
+                                                <h3 className="font-semibold text-gray-900">{solicitacao.assunto}</h3>
+                                                <p className="text-sm text-gray-600">
+                                                    Por: {solicitacao.usuario?.nome} • {new Date(solicitacao.criadoEm).toLocaleDateString("pt-BR")}
+                                                </p>
+                                            </div>
+                                            <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                                solicitacao.status === "PENDENTE" ? "bg-yellow-100 text-yellow-800" :
+                                                solicitacao.status === "EM_ATENDIMENTO" ? "bg-blue-100 text-blue-800" :
+                                                "bg-green-100 text-green-800"
+                                            }`}>
+                                                {solicitacao.status}
+                                            </span>
+                                        </div>
+                                        <p className="text-gray-700 mb-2">{solicitacao.descricao}</p>
+                                        {solicitacao.resposta && (
+                                            <div className="mt-3 pt-3 border-t border-gray-200">
+                                                <p className="text-sm font-medium text-gray-600 mb-1">Resposta:</p>
+                                                <p className="text-gray-800">{solicitacao.resposta}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <div className="bg-white rounded-lg shadow p-6 mb-6">
                     <h2 className="text-lg font-semibold mb-4">Ações</h2>
-                    <div className="flex gap-4">
+                    <div className="flex flex-wrap gap-4">
                         {business.statusPagamento === "BLOQUEADO" ? (
                             <button
                                 onClick={handleLiberar}
@@ -143,7 +230,122 @@ export default function BusinessDetail() {
                                 Bloquear Business
                             </button>
                         )}
+                        <button
+                            onClick={() => setShowMensagem(!showMensagem)}
+                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2"
+                        >
+                            <MessageSquare className="w-4 h-4" />
+                            Enviar Mensagem
+                        </button>
+                        <button
+                            onClick={() => {
+                                setShowPlano(!showPlano);
+                                setPlanoForm({ plano: business.plano || "", limiteProfissionais: business.limiteProfissionais?.toString() || "" });
+                            }}
+                            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 flex items-center gap-2"
+                        >
+                            <Settings className="w-4 h-4" />
+                            Alterar Plano
+                        </button>
                     </div>
+
+                    {showMensagem && (
+                        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                            <div className="flex items-center justify-between mb-3">
+                                <h3 className="font-semibold">Enviar Mensagem</h3>
+                                <button onClick={() => setShowMensagem(false)} className="text-gray-500 hover:text-gray-700">
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+                            <form onSubmit={handleEnviarMensagem}>
+                                <textarea
+                                    value={mensagemForm.mensagem}
+                                    onChange={(e) => setMensagemForm({ mensagem: e.target.value })}
+                                    placeholder="Digite sua mensagem para o business..."
+                                    rows={4}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-3"
+                                    required
+                                />
+                                <div className="flex gap-2">
+                                    <button
+                                        type="submit"
+                                        disabled={actionLoading}
+                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+                                    >
+                                        <Save className="w-4 h-4" />
+                                        Enviar
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setShowMensagem(false);
+                                            setMensagemForm({ mensagem: "" });
+                                        }}
+                                        className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
+                                    >
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    )}
+
+                    {showPlano && (
+                        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                            <div className="flex items-center justify-between mb-3">
+                                <h3 className="font-semibold">Alterar Plano</h3>
+                                <button onClick={() => setShowPlano(false)} className="text-gray-500 hover:text-gray-700">
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+                            <form onSubmit={handleAlterarPlano}>
+                                <div className="space-y-3">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Plano</label>
+                                        <select
+                                            value={planoForm.plano}
+                                            onChange={(e) => setPlanoForm({ ...planoForm, plano: e.target.value })}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                            required
+                                        >
+                                            <option value="">Selecione...</option>
+                                            <option value="FREE">FREE</option>
+                                            <option value="BASIC">BASIC</option>
+                                            <option value="PRO">PRO</option>
+                                            <option value="ENTERPRISE">ENTERPRISE</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Limite de Profissionais</label>
+                                        <input
+                                            type="number"
+                                            value={planoForm.limiteProfissionais}
+                                            onChange={(e) => setPlanoForm({ ...planoForm, limiteProfissionais: e.target.value })}
+                                            placeholder="Deixe vazio para ilimitado"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex gap-2 mt-4">
+                                    <button
+                                        type="submit"
+                                        disabled={actionLoading}
+                                        className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50 flex items-center gap-2"
+                                    >
+                                        <Save className="w-4 h-4" />
+                                        Salvar
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPlano(false)}
+                                        className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
+                                    >
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

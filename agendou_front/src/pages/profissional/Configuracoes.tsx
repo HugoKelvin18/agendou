@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { usuarioService, Usuario, UpdatePerfilData, AlterarSenhaData } from "../../services/usuarioService";
+import { suporteService } from "../../services/suporteService";
 import Input from "../../components/forms/Input";
-import { User, Lock, LogOut, Edit2, Save, X, Eye, EyeOff, AlertCircle, ArrowLeft, MessageSquare, MapPin, Phone, Mail, Instagram, Facebook, Globe, Linkedin } from "lucide-react";
+import { User, Lock, LogOut, Edit2, Save, X, Eye, EyeOff, AlertCircle, ArrowLeft, MessageSquare, MapPin, Phone, Mail, Instagram, Facebook, Globe, Linkedin, HelpCircle } from "lucide-react";
 
 export default function ConfiguracoesProfissional() {
     const { user, logout, updateUser } = useAuth();
@@ -47,6 +48,13 @@ export default function ConfiguracoesProfissional() {
     const [mostrarSenhaAtual, setMostrarSenhaAtual] = useState(false);
     const [mostrarNovaSenha, setMostrarNovaSenha] = useState(false);
     const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
+    
+    // Estados para suporte
+    const [showSuporte, setShowSuporte] = useState(false);
+    const [formSuporte, setFormSuporte] = useState({
+        assunto: "",
+        descricao: ""
+    });
 
     useEffect(() => {
         carregarPerfil();
@@ -888,6 +896,84 @@ export default function ConfiguracoesProfissional() {
                     ) : (
                         <div className="p-4 bg-gray-50 rounded-lg">
                             <p className="text-gray-600">Sua senha está protegida. Clique em "Alterar Senha" para modificá-la.</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* Suporte */}
+                <div className="bg-white rounded-xl shadow-lg p-6">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-xl md:text-2xl font-bold text-gray-800 flex items-center gap-2">
+                            <HelpCircle className="text-orange-600" size={24} />
+                            Contato com Suporte
+                        </h2>
+                        {!showSuporte && (
+                            <button
+                                onClick={() => setShowSuporte(true)}
+                                className="flex items-center gap-2 px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-medium"
+                            >
+                                <MessageSquare size={18} />
+                                Solicitar Suporte
+                            </button>
+                        )}
+                    </div>
+
+                    {showSuporte ? (
+                        <form onSubmit={handleEnviarSuporte} className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Assunto do Problema *
+                                </label>
+                                <input
+                                    type="text"
+                                    value={formSuporte.assunto}
+                                    onChange={(e) => setFormSuporte({ ...formSuporte, assunto: e.target.value })}
+                                    placeholder="Ex: Problema com agendamentos, Dúvida sobre faturamento, etc."
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Descrição do Problema *
+                                </label>
+                                <textarea
+                                    value={formSuporte.descricao}
+                                    onChange={(e) => setFormSuporte({ ...formSuporte, descricao: e.target.value })}
+                                    placeholder="Descreva detalhadamente o problema ou dúvida que você está enfrentando..."
+                                    rows={6}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+                                    required
+                                />
+                            </div>
+                            <div className="flex gap-3 justify-end pt-4">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setShowSuporte(false);
+                                        setFormSuporte({ assunto: "", descricao: "" });
+                                        setError("");
+                                    }}
+                                    className="px-6 py-2 border-2 border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="flex items-center gap-2 px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50"
+                                >
+                                    <Save size={18} />
+                                    Enviar Solicitação
+                                </button>
+                            </div>
+                        </form>
+                    ) : (
+                        <div className="p-4 bg-orange-50 rounded-lg border border-orange-100">
+                            <p className="text-base text-gray-800">
+                                Precisa de ajuda? Entre em contato com nosso suporte descrevendo seu problema ou dúvida. 
+                                Nossa equipe entrará em contato o mais breve possível.
+                            </p>
                         </div>
                     )}
                 </div>

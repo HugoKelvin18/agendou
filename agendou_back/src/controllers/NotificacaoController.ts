@@ -280,3 +280,115 @@ export const marcarComoLida = async (req: AuthRequest, res: Response) => {
         res.status(500).json({ message: "Erro ao marcar notificação" });
     }
 };
+
+export const listarAdmin = async (req: AuthRequest, res: Response) => {
+    try {
+        const adminId = req.userId!;
+
+        // Buscar IDs de notificações já lidas
+        const notificacoesLidas = await prisma.notificacaoLida.findMany({
+            where: { usuarioId: adminId },
+            select: { notificacaoId: true }
+        });
+        const idsLidas = new Set(notificacoesLidas.map(n => n.notificacaoId));
+
+        const notificacoes: any[] = [];
+
+        // 1. Businesses com pagamento em atraso
+        const hoje = new Date();
+        const businessesAtrasados = await prisma.business.findMany({
+            where: {
+                statusPagamento: {
+                    in: ["INADIMPLENTE", "BLOQUEADO"]
+                },
+                vencimento: {
+                    not: null
+                }
+            },
+            select: {
+                id: true,
+                nome: true,
+                slug: true,
+                statusPagamento: true,
+                vencimento: true,
+                toleranciaDias: true
+            }
+        });
+
+        for (const business of businessesAtrasados) {
+            if (business.vencimento) {
+                const vencimento = new Date(business.vencimento);
+                const diasAtraso = Math.floor((hoje.getTime() - vencimento.getTime()) / (1000 * 60 * 60 * 24));
+                
+                if (diasAtraso > 0) {
+                    const notifId = `business-atraso-${business.id}`;
+                    notificacoes.push({
+                        id: notifId,
+                        type: "payment_overdue",
+                        title: `Business com pagamento em atraso: ${business.nome}`,
+                        message: `Status: ${business.statusPagamento} • ${diasAtraso} dias em atraso`,
+                        time: formatarTempoRelativo(vencimento),
+                        timestamp: vencimento.getTime(),
+                        read: idsLidas.has(notifId),
+                        actionUrl: `/admin/businesses/${business.id}`,
+                        businessId: business.id,
+                        diasAtraso
+                    });
+                }
+            }
+        }
+
+        // 2. Solicitações de suporte pendentes
+        const solicitacoesPendentes = await prisma.solicitacaoSuporte.findMany({
+            where: {
+                status: {
+                    in: ["PENDENTE", "EM_ATENDIMENTO"]
+                }
+            },
+            include: {
+                business: {
+                    select: {
+                        id: true,
+                        nome: true,
+                        slug: true
+                    }
+                },
+                usuario: {
+                    select: {
+                        id: true,
+                        nome: true,
+                        email: true
+                    }
+                }
+            },
+            orderBy: {
+                criadoEm: "desc"
+            },
+            take: 20
+        });
+
+        for (const solicitacao of solicitacoesPendentes) {
+            const notifId = `suporte-${solicitacao.id}`;
+            notificacoes.push({
+                id: notifId,
+                type: "support_request",
+                title: `Solicitação de Suporte: ${solicitacao.assunto}`,
+                message: `${solicitacao.usuario.nome} (${solicitacao.business.nome}): ${solicitacao.descricao.substring(0, 100)}${solicitacao.descricao.length > 100 ? '...' : ''}`,
+                time: formatarTempoRelativo(solicitacao.criadoEm),
+                timestamp: solicitacao.criadoEm.getTime(),
+                read: idsLidas.has(notifId),
+                actionUrl: `/admin/businesses/${solicitacao.businessId}`,
+                businessId: solicitacao.businessId,
+                solicitacaoId: solicitacao.id
+            });
+        }
+
+        // Ordenar por timestamp (mais recentes primeiro)
+        notificacoes.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+        res.json(notificacoes.slice(0, 30));
+    } catch (err: any) {
+        console.error("Erro ao listar notificações do admin:", err);
+        res.status(500).json({ message: "Erro ao buscar notificações" });
+    }
+};

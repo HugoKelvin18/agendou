@@ -211,9 +211,7 @@ export default function DashboardAdmin() {
                                                 }
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <div>Usuários: {business.metricas.totalUsuarios}</div>
-                                                <div>Profissionais: {business.metricas.totalProfissionais}</div>
-                                                <div>Serviços: {business.metricas.totalServicos}</div>
+                                                {business.metricas.totalProfissionais} profissionais
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <button

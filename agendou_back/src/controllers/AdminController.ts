@@ -50,6 +50,8 @@ export const listarBusinesses = async (req: AuthRequest, res: Response) => {
             }
         });
 
+        console.log(`[AdminController] Total de businesses encontrados: ${businesses.length}`);
+
         // Calcular métricas de uso para cada business
         const businessesComMetricas = await Promise.all(
             businesses.map(async (business) => {
@@ -100,6 +102,7 @@ export const listarBusinesses = async (req: AuthRequest, res: Response) => {
             })
         );
 
+        console.log(`[AdminController] Businesses com métricas processados: ${businessesComMetricas.length}`);
         res.json(businessesComMetricas);
     } catch (err: any) {
         console.error("Erro ao listar businesses:", err);

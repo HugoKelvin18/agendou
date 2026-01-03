@@ -4,6 +4,7 @@ import { prisma } from "../lib/prisma.js";
 interface AuthRequest extends Request {
     userId?: number;
     userRole?: string;
+    businessId?: number;
 }
 
 // Função auxiliar para criar range de data local (evita problemas de timezone)
@@ -61,9 +62,14 @@ export const listar = async (req: Request, res: Response) => {
             }
         });
 
+        const businessId = parseInt(req.query.businessId as string || req.headers["x-business-id"] as string || "0");
+        if (!businessId || businessId === 0) {
+            return res.status(400).json({ message: "businessId é obrigatório" });
+        }
+
         const { profissionalId, data } = req.query;
 
-        const where: any = {};
+        const where: any = { businessId: businessId };
         if (profissionalId) where.profissionalId = parseInt(profissionalId as string);
         if (data) {
             const rangeData = criarRangeDataLocal(data as string);
@@ -102,6 +108,7 @@ export const listarPorProfissional = async (req: AuthRequest, res: Response) => 
         await prisma.disponibilidade.deleteMany({
             where: {
                 profissionalId,
+                businessId: req.businessId!,
                 data: {
                     lt: hoje
                 }
@@ -109,7 +116,10 @@ export const listarPorProfissional = async (req: AuthRequest, res: Response) => 
         });
 
         const disponibilidades = await prisma.disponibilidade.findMany({
-            where: { profissionalId },
+            where: { 
+                profissionalId,
+                businessId: req.businessId!
+            },
             orderBy: [
                 { data: "asc" },
                 { horaInicio: "asc" }
@@ -149,6 +159,7 @@ export const criar = async (req: AuthRequest, res: Response) => {
         const conflito = await prisma.disponibilidade.findFirst({
             where: {
                 profissionalId,
+                businessId: req.businessId!,
                 data: {
                     gte: rangeData.inicio,
                     lte: rangeData.fim
@@ -169,6 +180,7 @@ export const criar = async (req: AuthRequest, res: Response) => {
 
         const disponibilidade = await prisma.disponibilidade.create({
             data: {
+                businessId: req.businessId!,
                 profissionalId,
                 data: dataLocal,
                 horaInicio: parseInt(horaInicio),
@@ -194,7 +206,8 @@ export const deletar = async (req: AuthRequest, res: Response) => {
         const disponibilidade = await prisma.disponibilidade.findFirst({
             where: {
                 id: parseInt(id),
-                profissionalId
+                profissionalId,
+                businessId: req.businessId!
             }
         });
 
@@ -222,11 +235,20 @@ export const horariosDisponiveis = async (req: Request, res: Response) => {
             return res.status(400).json({ message: "Parâmetros obrigatórios: profissionalId, data, servicoId" });
         }
 
-        const servico = await prisma.servico.findUnique({
-            where: { id: parseInt(servicoId as string) }
+        const businessId = parseInt(req.query.businessId as string || req.headers["x-business-id"] as string || "0");
+        if (!businessId || businessId === 0) {
+            return res.status(400).json({ message: "businessId é obrigatório" });
+        }
+
+        const servico = await prisma.servico.findFirst({
+            where: { 
+                id: parseInt(servicoId as string),
+                businessId: businessId,
+                ativo: true
+            }
         });
 
-        if (!servico || !servico.ativo) {
+        if (!servico) {
             return res.status(404).json({ message: "Serviço não encontrado ou inativo" });
         }
 
@@ -240,6 +262,7 @@ export const horariosDisponiveis = async (req: Request, res: Response) => {
         const disponibilidades = await prisma.disponibilidade.findMany({
             where: {
                 profissionalId: parseInt(profissionalId as string),
+                businessId: businessId,
                 data: {
                     gte: rangeData.inicio,
                     lte: rangeData.fim
@@ -255,6 +278,7 @@ export const horariosDisponiveis = async (req: Request, res: Response) => {
         const agendamentos = await prisma.agendamento.findMany({
             where: {
                 profissionalId: parseInt(profissionalId as string),
+                businessId: businessId,
                 data: {
                     gte: rangeData.inicio,
                     lte: rangeData.fim

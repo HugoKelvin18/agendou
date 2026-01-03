@@ -4,13 +4,23 @@ import { prisma } from "../lib/prisma.js";
 interface AuthRequest extends Request {
     userId?: number;
     userRole?: string;
+    businessId?: number;
 }
 
 // Listar todos os serviços
 export const listar = async (req: Request, res: Response) => {
     try {
+        const businessId = parseInt(req.query.businessId as string || req.headers["x-business-id"] as string || "0");
+        
+        if (!businessId || businessId === 0) {
+            return res.status(400).json({ message: "businessId é obrigatório" });
+        }
+
         const servicos = await prisma.servico.findMany({
-            where: { ativo: true },
+            where: { 
+                ativo: true,
+                businessId: businessId
+            },
             include: {
                 profissional: { select: { id: true, nome: true } }
             }
@@ -27,11 +37,17 @@ export const listar = async (req: Request, res: Response) => {
 export const listarPorProfissional = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
+        const businessId = parseInt(req.query.businessId as string || req.headers["x-business-id"] as string || "0");
+        
+        if (!businessId || businessId === 0) {
+            return res.status(400).json({ message: "businessId é obrigatório" });
+        }
 
         const servicos = await prisma.servico.findMany({
             where: {
                 profissionalId: parseInt(id),
-                ativo: true
+                ativo: true,
+                businessId: businessId
             },
             include: {
                 profissional: { select: { id: true, nome: true } }
@@ -49,6 +65,7 @@ export const listarPorProfissional = async (req: Request, res: Response) => {
 export const criar = async (req: AuthRequest, res: Response) => {
     try {
         const profissionalId = req.userId!;
+        const businessId = req.businessId!;
         const { nome, descricao, preco, duracao, imagemUrl } = req.body;
 
         if (!nome || !descricao || preco === undefined || !duracao) {
@@ -57,6 +74,7 @@ export const criar = async (req: AuthRequest, res: Response) => {
 
         const servico = await prisma.servico.create({
             data: {
+                businessId: businessId,
                 nome,
                 descricao,
                 preco: parseFloat(preco),
@@ -84,11 +102,12 @@ export const atualizar = async (req: AuthRequest, res: Response) => {
         const { id } = req.params;
         const { nome, descricao, preco, duracao, imagemUrl } = req.body;
 
-        // Verificar se o serviço pertence ao profissional
+        // Verificar se o serviço pertence ao profissional e business
         const servicoExistente = await prisma.servico.findFirst({
             where: {
                 id: parseInt(id),
-                profissionalId
+                profissionalId,
+                businessId: req.businessId!
             }
         });
 
@@ -127,7 +146,8 @@ export const deletar = async (req: AuthRequest, res: Response) => {
         const servicoExistente = await prisma.servico.findFirst({
             where: {
                 id: parseInt(id),
-                profissionalId
+                profissionalId,
+                businessId: req.businessId!
             }
         });
 

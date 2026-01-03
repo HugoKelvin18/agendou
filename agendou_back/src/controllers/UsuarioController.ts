@@ -5,14 +5,19 @@ import { prisma } from "../lib/prisma.js";
 interface AuthRequest extends Request {
     userId?: number;
     userRole?: string;
+    businessId?: number;
 }
 
 export const getPerfil = async (req: AuthRequest, res: Response) => {
     try {
         const usuarioId = req.userId!;
+        const businessId = req.businessId!;
 
-        const usuario = await prisma.usuario.findUnique({
-            where: { id: usuarioId },
+        const usuario = await prisma.usuario.findFirst({
+            where: { 
+                id: usuarioId,
+                businessId: businessId
+            },
             select: {
                 id: true,
                 nome: true,
@@ -77,6 +82,18 @@ export const updatePerfil = async (req: AuthRequest, res: Response) => {
         if (tiktok !== undefined) dadosUpdate.tiktok = tiktok;
         if (site !== undefined) dadosUpdate.site = site;
         if (linkedin !== undefined) dadosUpdate.linkedin = linkedin;
+
+        // Verificar se usuário pertence ao businessId
+        const usuarioExistente = await prisma.usuario.findFirst({
+            where: { 
+                id: usuarioId,
+                businessId: req.businessId!
+            }
+        });
+
+        if (!usuarioExistente) {
+            return res.status(404).json({ message: "Usuário não encontrado" });
+        }
 
         const usuario = await prisma.usuario.update({
             where: { id: usuarioId },
@@ -152,8 +169,17 @@ export const alterarSenha = async (req: AuthRequest, res: Response) => {
 
 export const listarProfissionais = async (req: Request, res: Response) => {
     try {
+        const businessId = parseInt(req.query.businessId as string || req.headers["x-business-id"] as string || "0");
+        
+        if (!businessId || businessId === 0) {
+            return res.status(400).json({ message: "businessId é obrigatório" });
+        }
+
         const profissionais = await prisma.usuario.findMany({
-            where: { role: "PROFISSIONAL" },
+            where: { 
+                role: "PROFISSIONAL",
+                businessId: businessId
+            },
             select: {
                 id: true,
                 nome: true,

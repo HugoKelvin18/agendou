@@ -6,14 +6,25 @@ const JWT_SECRET = process.env.JWT_SECRET || "seu-secret-aqui";
 
 export const login = async (req, res) => {
     try {
-        const { email, senha } = req.body;
+        const { email, senha, businessId } = req.body;
 
         if (!email || !senha) {
             return res.status(400).json({ message: "Email e senha são obrigatórios" });
         }
 
+        // businessId é obrigatório (pode vir do body ou header)
+        const businessIdFinal = businessId || parseInt(req.headers["x-business-id"] || "0");
+        if (!businessIdFinal || businessIdFinal === 0) {
+            return res.status(400).json({ message: "businessId é obrigatório" });
+        }
+
         const usuario = await prisma.usuario.findUnique({
-            where: { email }
+            where: { 
+                businessId_email: {
+                    businessId: businessIdFinal,
+                    email: email
+                }
+            }
         });
 
         if (!usuario) {
@@ -27,7 +38,7 @@ export const login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: usuario.id, role: usuario.role },
+            { userId: usuario.id, role: usuario.role, businessId: usuario.businessId },
             JWT_SECRET,
             { expiresIn: "7d" }
         );
@@ -47,10 +58,25 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
     try {
-        const { nome, email, senha, telefone, role, codigoAcesso } = req.body;
+        const { nome, email, senha, telefone, role, codigoAcesso, businessId } = req.body;
 
         if (!nome || !email || !senha || !role) {
             return res.status(400).json({ message: "Campos obrigatórios: nome, email, senha, role" });
+        }
+
+        // businessId é obrigatório
+        const businessIdFinal = businessId || parseInt(req.headers["x-business-id"] || "0");
+        if (!businessIdFinal || businessIdFinal === 0) {
+            return res.status(400).json({ message: "businessId é obrigatório" });
+        }
+
+        // Validar se business existe e está ativo
+        const business = await prisma.business.findUnique({
+            where: { id: businessIdFinal }
+        });
+
+        if (!business || !business.ativo) {
+            return res.status(404).json({ message: "Negócio não encontrado ou inativo" });
         }
 
         // Validar código de acesso se for profissional
@@ -59,9 +85,14 @@ export const register = async (req, res) => {
                 return res.status(400).json({ message: "Código de acesso é obrigatório para profissionais" });
             }
 
-            // Buscar código de acesso no banco
+            // Buscar código de acesso no banco (com businessId)
             const codigo = await prisma.codigoAcesso.findUnique({
-                where: { codigo: codigoAcesso.trim() }
+                where: { 
+                    businessId_codigo: {
+                        businessId: businessIdFinal,
+                        codigo: codigoAcesso.trim()
+                    }
+                }
             });
 
             if (!codigo) {
@@ -78,13 +109,18 @@ export const register = async (req, res) => {
             }
         }
 
-        // Verificar se email já existe
+        // Verificar se email já existe no business
         const usuarioExistente = await prisma.usuario.findUnique({
-            where: { email }
+            where: { 
+                businessId_email: {
+                    businessId: businessIdFinal,
+                    email: email
+                }
+            }
         });
 
         if (usuarioExistente) {
-            return res.status(400).json({ message: "Email já cadastrado" });
+            return res.status(400).json({ message: "Email já cadastrado neste negócio" });
         }
 
         // Hash da senha
@@ -93,6 +129,7 @@ export const register = async (req, res) => {
         // Criar usuário
         const novoUsuario = await prisma.usuario.create({
             data: {
+                businessId: businessIdFinal,
                 nome,
                 email,
                 senha: senhaHash,
@@ -104,7 +141,7 @@ export const register = async (req, res) => {
 
         // Gerar token
         const token = jwt.sign(
-            { userId: novoUsuario.id, role: novoUsuario.role },
+            { userId: novoUsuario.id, role: novoUsuario.role, businessId: novoUsuario.businessId },
             JWT_SECRET,
             { expiresIn: "7d" }
         );

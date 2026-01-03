@@ -1,4 +1,4 @@
-﻿import express from "express";
+import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { prisma } from "./lib/prisma.js";
@@ -74,6 +74,7 @@ app.get("/db-check", async (_req, res) => {
 
 // Rotas da API
 import authRoutes from "./routes/auth.js";
+import businessRoutes from "./routes/business.js";
 import usuarioRoutes from "./routes/usuarios.js";
 import agendamentoRoutes from "./routes/agendamentos.js";
 import servicoRoutes from "./routes/servicos.js";
@@ -81,6 +82,7 @@ import disponibilidadeRoutes from "./routes/disponibilidades.js";
 import notificacaoRoutes from "./routes/notificacoes.js";
 
 app.use("/auth", authRoutes);
+app.use("/", businessRoutes); // Rotas públicas de business em /public/business
 app.use("/usuarios", usuarioRoutes);
 app.use("/agendamentos", agendamentoRoutes);
 app.use("/servicos", servicoRoutes);

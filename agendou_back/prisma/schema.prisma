@@ -12,8 +12,9 @@ datasource db {
 
 model Usuario {
   id                       Int               @id @default(autoincrement())
+  businessId               Int
   nome                     String
-  email                    String            @unique
+  email                    String
   senha                    String
   telefone                 String?
   role                     Role              @default(CLIENTE)
@@ -34,17 +35,21 @@ model Usuario {
   linkedin                 String?
   createdAt                DateTime          @default(now())
   updatedAt                DateTime          @updatedAt
+  business                 Business          @relation(fields: [businessId], references: [id], onDelete: Cascade)
   servicos                 Servico[]         @relation("ProfissionalServicos")
   agendamentosCliente      Agendamento[]     @relation("ClienteAgendamentos")
   agendamentosProfissional Agendamento[]     @relation("ProfissionalAgendamentos")
   disponibilidades         Disponibilidade[] @relation("ProfissionalDisponibilidades")
   notificacoesLidas        NotificacaoLida[]
 
+  @@unique([businessId, email])
+  @@index([businessId])
   @@map("usuarios")
 }
 
 model Servico {
   id             Int      @id @default(autoincrement())
+  businessId     Int
   nome           String
   descricao      String
   preco          Float
@@ -56,14 +61,17 @@ model Servico {
   updatedAt      DateTime @updatedAt
 
   // Relações
+  business     Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
   profissional Usuario       @relation("ProfissionalServicos", fields: [profissionalId], references: [id], onDelete: Cascade)
   agendamentos Agendamento[]
 
+  @@index([businessId])
   @@map("servicos")
 }
 
 model Disponibilidade {
   id             Int      @id @default(autoincrement())
+  businessId     Int
   profissionalId Int
   data           DateTime
   horaInicio     Int // em minutos desde meia-noite
@@ -74,13 +82,16 @@ model Disponibilidade {
   updatedAt      DateTime @updatedAt
 
   // Relações
-  profissional Usuario @relation("ProfissionalDisponibilidades", fields: [profissionalId], references: [id], onDelete: Cascade)
+  business     Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  profissional Usuario  @relation("ProfissionalDisponibilidades", fields: [profissionalId], references: [id], onDelete: Cascade)
 
+  @@index([businessId])
   @@map("disponibilidades")
 }
 
 model Agendamento {
   id             Int               @id @default(autoincrement())
+  businessId     Int
   clienteId      Int
   profissionalId Int
   servicoId      Int
@@ -91,10 +102,12 @@ model Agendamento {
   atualizadoEm   DateTime          @updatedAt
 
   // Relações
-  cliente      Usuario @relation("ClienteAgendamentos", fields: [clienteId], references: [id], onDelete: Cascade)
-  profissional Usuario @relation("ProfissionalAgendamentos", fields: [profissionalId], references: [id], onDelete: Cascade)
-  servico      Servico @relation(fields: [servicoId], references: [id], onDelete: Restrict)
+  business     Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  cliente      Usuario  @relation("ClienteAgendamentos", fields: [clienteId], references: [id], onDelete: Cascade)
+  profissional Usuario  @relation("ProfissionalAgendamentos", fields: [profissionalId], references: [id], onDelete: Cascade)
+  servico      Servico  @relation(fields: [servicoId], references: [id], onDelete: Restrict)
 
+  @@index([businessId])
   @@map("agendamentos")
 }
 
@@ -112,15 +125,42 @@ model NotificacaoLida {
 }
 
 model CodigoAcesso {
-  id        Int       @id @default(autoincrement())
-  codigo    String    @unique
-  ativo     Boolean   @default(true)
-  expiraEm  DateTime? // Opcional: data de expiração
-  descricao String? // Opcional: descrição do código
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id         Int       @id @default(autoincrement())
+  businessId Int
+  codigo     String
+  ativo      Boolean   @default(true)
+  expiraEm   DateTime? // Opcional: data de expiração
+  descricao  String? // Opcional: descrição do código
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
+  // Relações
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, codigo])
+  @@index([businessId])
   @@map("codigos_acesso")
+}
+
+model Business {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  slug      String   @unique
+  dominio   String?  @unique
+  ativo     Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relações
+  usuarios         Usuario[]
+  servicos         Servico[]
+  disponibilidades Disponibilidade[]
+  agendamentos     Agendamento[]
+  codigosAcesso    CodigoAcesso[]
+
+  @@index([slug])
+  @@index([dominio])
+  @@map("businesses")
 }
 
 enum Role {

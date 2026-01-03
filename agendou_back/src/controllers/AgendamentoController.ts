@@ -4,6 +4,7 @@ import { prisma } from "../lib/prisma.js";
 interface AuthRequest extends Request {
     userId?: number;
     userRole?: string;
+    businessId?: number;
 }
 
 const HOURS_2_MS = 2 * 60 * 60 * 1000; // 2 horas em milissegundos
@@ -58,11 +59,12 @@ export const criarCliente = async (req: AuthRequest, res: Response) => {
             return res.status(400).json({ message: "Campos obrigatórios: servicoId, data, hora, profissionalId" });
         }
 
-        // Verificar se serviço existe e pertence ao profissional
+        // Verificar se serviço existe e pertence ao profissional e business
         const servico = await prisma.servico.findFirst({
             where: {
                 id: servicoId,
                 profissionalId,
+                businessId: req.businessId!,
                 ativo: true
             }
         });
@@ -91,6 +93,7 @@ export const criarCliente = async (req: AuthRequest, res: Response) => {
         const disponibilidade = await prisma.disponibilidade.findFirst({
             where: {
                 profissionalId,
+                businessId: req.businessId!,
                 data: {
                     gte: rangeData.inicio,
                     lte: rangeData.fim

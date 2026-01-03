@@ -6,10 +6,14 @@ interface AuthRequest extends Request {
     userId?: number;
     userRole?: string;
     businessId?: number;
+    body: any;
+    params: any;
+    query: any;
 }
 
 interface BusinessRequest extends Request {
     businessId?: number;
+    query: any;
 }
 
 export const getPerfil = async (req: AuthRequest, res: Response) => {
@@ -137,14 +141,24 @@ export const updatePerfil = async (req: AuthRequest, res: Response) => {
 export const alterarSenha = async (req: AuthRequest, res: Response) => {
     try {
         const usuarioId = req.userId!;
+        const businessId = req.businessId; // Pode ser null para admins
         const { senhaAtual, novaSenha } = req.body;
 
         if (!senhaAtual || !novaSenha) {
             return res.status(400).json({ message: "Senha atual e nova senha são obrigatórias" });
         }
 
-        const usuario = await prisma.usuario.findUnique({
-            where: { id: usuarioId }
+        // Para não-admins, verificar businessId; para admins, businessId pode ser null
+        const whereClause: any = { id: usuarioId };
+        if (businessId !== null && businessId !== undefined) {
+            whereClause.businessId = businessId;
+        } else {
+            // Se businessId é null, verificar se é admin
+            whereClause.role = "ADMIN";
+        }
+
+        const usuario = await prisma.usuario.findFirst({
+            where: whereClause
         });
 
         if (!usuario) {

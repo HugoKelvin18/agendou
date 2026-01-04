@@ -82,20 +82,24 @@ import disponibilidadeRoutes from "./routes/disponibilidades.js";
 import notificacaoRoutes from "./routes/notificacoes.js";
 import adminRoutes from "./routes/admin.js";
 
-app.use("/auth", authRoutes);
-app.use("/", businessRoutes); // Rotas públicas de business em /public/business
-
-// Rota de teste direta para verificar se o problema é de importação
+// Registrar rota de lead ANTES de businessRoutes para garantir que funcione
 app.post("/public/business/lead", async (req, res) => {
+    console.log("📥 POST /public/business/lead recebido");
     try {
         const { criarLead } = await import("./controllers/LeadController.js");
         return criarLead(req, res);
     } catch (error) {
         console.error("Erro ao importar LeadController:", error);
-        return res.status(500).json({ message: "Erro ao processar solicitação" });
+        console.error("Stack:", error.stack);
+        return res.status(500).json({ 
+            message: "Erro ao processar solicitação",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 });
 
+app.use("/auth", authRoutes);
+app.use("/", businessRoutes); // Rotas públicas de business em /public/business
 app.use("/usuarios", usuarioRoutes);
 app.use("/agendamentos", agendamentoRoutes);
 app.use("/servicos", servicoRoutes);

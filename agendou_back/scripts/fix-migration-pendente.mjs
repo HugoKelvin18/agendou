@@ -1,6 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import dotenv from 'dotenv';
+
+// Carregar variáveis de ambiente
+dotenv.config();
+
+// Verificar se DATABASE_URL está configurada
+if (!process.env.DATABASE_URL) {
+    console.error('❌ ERRO: DATABASE_URL não está configurada!');
+    console.error('   Configure a variável DATABASE_URL no Render (Environment Variables)');
+    console.error('   Ou no arquivo .env local');
+    process.exit(1);
+}
 
 const execAsync = promisify(exec);
 const prisma = new PrismaClient();

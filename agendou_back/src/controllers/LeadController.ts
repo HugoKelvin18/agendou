@@ -53,7 +53,7 @@ export const criarLead = async (req: Request, res: Response) => {
                 slug,
                 whatsapp: whatsapp.trim(),
                 plano,
-                statusPagamento: "PENDENTE" as any, // Cast temporário para evitar erro de tipo
+                statusPagamento: "PENDENTE", // Status PENDENTE adicionado ao enum
                 ativo: false, // Inativo até confirmação
                 vencimento: null, // Será definido quando ativado
                 ultimoPagamento: null,

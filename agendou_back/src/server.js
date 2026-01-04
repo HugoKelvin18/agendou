@@ -91,6 +91,13 @@ app.use("/disponibilidades", disponibilidadeRoutes);
 app.use("/notificacoes", notificacaoRoutes);
 app.use("/admin", adminRoutes); // Rotas administrativas
 
+// Log de rotas registradas (apenas em desenvolvimento)
+if (process.env.NODE_ENV !== 'production') {
+    console.log('✅ Rotas registradas:');
+    console.log('   POST /public/business/lead');
+    console.log('   GET /public/business');
+}
+
 // Render usa PORT dinamica
 const PORT = process.env.PORT || 3001;
 

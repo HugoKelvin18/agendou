@@ -8,7 +8,10 @@ const router = Router();
 router.get("/public/business", BusinessController.resolverBusiness);
 
 // Rota pública para criar lead (solicitação de plano)
-router.post("/public/business/lead", LeadController.criarLead);
+router.post("/public/business/lead", (req, res) => {
+    console.log("📥 POST /public/business/lead recebido");
+    LeadController.criarLead(req, res);
+});
 
 // Rotas protegidas (admin - futuro)
 // router.get("/", authenticateToken, BusinessController.listar);

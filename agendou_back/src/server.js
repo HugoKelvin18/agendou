@@ -84,6 +84,18 @@ import adminRoutes from "./routes/admin.js";
 
 app.use("/auth", authRoutes);
 app.use("/", businessRoutes); // Rotas públicas de business em /public/business
+
+// Rota de teste direta para verificar se o problema é de importação
+app.post("/public/business/lead", async (req, res) => {
+    try {
+        const { criarLead } = await import("./controllers/LeadController.js");
+        return criarLead(req, res);
+    } catch (error) {
+        console.error("Erro ao importar LeadController:", error);
+        return res.status(500).json({ message: "Erro ao processar solicitação" });
+    }
+});
+
 app.use("/usuarios", usuarioRoutes);
 app.use("/agendamentos", agendamentoRoutes);
 app.use("/servicos", servicoRoutes);

@@ -5,24 +5,32 @@ async function deploy() {
         console.log('🔧 Gerando Prisma Client...');
         execSync('npx prisma generate', { stdio: 'inherit' });
 
-        console.log('🔍 Tentando resolver migração falhada...');
+        console.log('🔍 Tentando resolver migrações falhadas...');
         
-        // Tentar resolver a migração falhada (ignorar erros se já foi resolvida)
-        try {
-            execSync('npx prisma migrate resolve --rolled-back 20250115200000_add_multi_tenant_business', {
-                stdio: 'inherit'
-            });
-            console.log('✅ Migração falhada resolvida (rolled-back)');
-        } catch (resolveError) {
-            // Se falhar, tentar marcar como applied
+        // Lista de migrações que podem ter falhado
+        const migrationsFalhadas = [
+            '20250115200000_add_multi_tenant_business',
+            '20250121000000_add_whatsapp_and_pendente_status'
+        ];
+        
+        for (const migration of migrationsFalhadas) {
             try {
-                execSync('npx prisma migrate resolve --applied 20250115200000_add_multi_tenant_business', {
-                    stdio: 'inherit'
+                // Tentar marcar como applied primeiro
+                execSync(`npx prisma migrate resolve --applied ${migration}`, {
+                    stdio: 'pipe'
                 });
-                console.log('✅ Migração falhada resolvida (applied)');
-            } catch (appliedError) {
-                // Se ambos falharem, provavelmente já foi resolvida ou não existe
-                console.log('ℹ️  Migração já resolvida ou não existe. Continuando...');
+                console.log(`✅ Migração ${migration} marcada como aplicada`);
+            } catch (error) {
+                // Se falhar, tentar rolled-back
+                try {
+                    execSync(`npx prisma migrate resolve --rolled-back ${migration}`, {
+                        stdio: 'pipe'
+                    });
+                    console.log(`✅ Migração ${migration} marcada como rolled-back`);
+                } catch (rollbackError) {
+                    // Se ambos falharem, provavelmente já foi resolvida ou não existe
+                    console.log(`ℹ️  Migração ${migration} já resolvida ou não existe. Continuando...`);
+                }
             }
         }
 

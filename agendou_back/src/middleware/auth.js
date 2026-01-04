@@ -22,7 +22,8 @@ export const authenticateToken = async (req, res, next) => {
 
         req.userId = decoded.userId;
         req.userRole = user.role;
-        req.businessId = user.businessId; // Adiciona businessId do usuário
+        // businessId pode vir do token decodificado ou do usuário no banco
+        req.businessId = decoded.businessId !== undefined ? decoded.businessId : user.businessId;
         next();
     } catch (error) {
         return res.status(403).json({ message: "Token inválido ou expirado" });

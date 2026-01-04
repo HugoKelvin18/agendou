@@ -18,7 +18,31 @@ export const validateBusiness = async (req, res, next) => {
             businessId = tokenBusinessId;
         }
 
+        // Se ainda não tem businessId, tentar buscar do usuário autenticado
+        if ((!businessId || isNaN(businessId)) && req.userId) {
+            const usuario = await prisma.usuario.findUnique({
+                where: { id: req.userId },
+                select: { businessId: true, role: true }
+            });
+
+            // Se for ADMIN, não precisa de businessId
+            if (usuario && usuario.role === "ADMIN") {
+                return next();
+            }
+
+            // Para outros roles, usar businessId do usuário
+            if (usuario && usuario.businessId) {
+                businessId = usuario.businessId;
+            }
+        }
+
         if (!businessId || isNaN(businessId)) {
+            console.error("[validateBusiness] businessId não encontrado:", {
+                headerBusinessId,
+                tokenBusinessId,
+                userId: req.userId,
+                userRole: req.userRole
+            });
             return res.status(400).json({ message: "businessId não fornecido ou inválido" });
         }
 

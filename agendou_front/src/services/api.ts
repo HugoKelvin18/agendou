@@ -9,7 +9,7 @@ export const api = axios.create({
     headers: {
         "Content-Type": "application/json"
     },
-    timeout: 10000, // Timeout de 10 segundos
+    timeout: 30000, // Timeout de 30 segundos (aumentado para cold start do Render)
 });
 
 //Intercepta requisições para adicionar o token e businessId automaticamente

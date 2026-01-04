@@ -112,11 +112,14 @@ export default function Planos() {
 
         try {
             setLoading(true);
+            // Timeout maior para cold start do Render
             const response = await api.post('/public/business/lead', {
                 nome: formData.nome.trim(),
                 whatsapp: formData.whatsapp.trim(),
                 plano: planoSelecionado,
                 aceiteTermos: formData.aceiteTermos
+            }, {
+                timeout: 30000 // 30 segundos para aguardar cold start
             });
 
             // Redirecionar para tela de espera

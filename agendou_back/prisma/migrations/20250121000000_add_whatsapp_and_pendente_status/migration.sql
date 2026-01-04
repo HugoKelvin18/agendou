@@ -1,5 +1,5 @@
 -- AlterTable: Adicionar campo whatsapp ao Business
-ALTER TABLE "business" ADD COLUMN IF NOT EXISTS "whatsapp" TEXT;
+ALTER TABLE "businesses" ADD COLUMN IF NOT EXISTS "whatsapp" TEXT;
 
 -- AlterEnum: Adicionar PENDENTE ao enum StatusPagamento
 -- PostgreSQL não suporta IF NOT EXISTS para ADD VALUE, então usamos um bloco DO com tratamento de erro

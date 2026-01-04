@@ -194,6 +194,34 @@ export default function ConfiguracoesProfissional() {
         }
     };
 
+    const handleEnviarSuporte = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError("");
+        setSuccess("");
+
+        if (!formSuporte.assunto.trim() || !formSuporte.descricao.trim()) {
+            setError("Preencha todos os campos obrigatórios");
+            return;
+        }
+
+        try {
+            setLoading(true);
+            await suporteService.criarSolicitacao(
+                formSuporte.assunto.trim(),
+                formSuporte.descricao.trim()
+            );
+            setSuccess("Solicitação de suporte enviada com sucesso! Nossa equipe entrará em contato em breve.");
+            setFormSuporte({ assunto: "", descricao: "" });
+            setShowSuporte(false);
+            setTimeout(() => setSuccess(""), 5000);
+        } catch (err: any) {
+            console.error("Erro ao enviar solicitação de suporte:", err);
+            setError(err.response?.data?.message || err.response?.data?.error || "Erro ao enviar solicitação de suporte. Tente novamente.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleLogout = () => {
         if (confirm("Tem certeza que deseja sair?")) {
             logout();
@@ -960,11 +988,20 @@ export default function ConfiguracoesProfissional() {
                                 </button>
                                 <button
                                     type="submit"
-                                    disabled={loading}
-                                    className="flex items-center gap-2 px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50"
+                                    disabled={loading || !formSuporte.assunto.trim() || !formSuporte.descricao.trim()}
+                                    className="flex items-center gap-2 px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    <Save size={18} />
-                                    Enviar Solicitação
+                                    {loading ? (
+                                        <>
+                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                            Enviando...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Save size={18} />
+                                            Enviar Solicitação
+                                        </>
+                                    )}
                                 </button>
                             </div>
                         </form>

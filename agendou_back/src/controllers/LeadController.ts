@@ -53,7 +53,7 @@ export const criarLead = async (req: Request, res: Response) => {
                 slug,
                 whatsapp: whatsapp.trim(),
                 plano,
-                statusPagamento: "PENDENTE",
+                statusPagamento: "PENDENTE" as any, // Cast temporário para evitar erro de tipo
                 ativo: false, // Inativo até confirmação
                 vencimento: null, // Será definido quando ativado
                 ultimoPagamento: null,
@@ -74,8 +74,36 @@ export const criarLead = async (req: Request, res: Response) => {
         });
     } catch (error: any) {
         console.error("Erro ao criar lead:", error);
+        console.error("Detalhes do erro:", {
+            message: error.message,
+            code: error.code,
+            meta: error.meta
+        });
+        
+        // Mensagens de erro mais específicas
+        if (error.code === 'P2002') {
+            return res.status(400).json({ 
+                message: "Já existe um negócio com este nome. Tente um nome diferente." 
+            });
+        }
+        
+        if (error.message?.includes('StatusPagamento') || error.message?.includes('PENDENTE')) {
+            return res.status(500).json({ 
+                message: "Erro: Status PENDENTE não está disponível. Verifique se a migration foi aplicada.",
+                details: error.message
+            });
+        }
+        
+        if (error.message?.includes('whatsapp')) {
+            return res.status(500).json({ 
+                message: "Erro: Campo whatsapp não encontrado. Verifique se a migration foi aplicada.",
+                details: error.message
+            });
+        }
+        
         return res.status(500).json({ 
-            message: "Erro ao processar solicitação. Tente novamente." 
+            message: "Erro ao processar solicitação. Tente novamente.",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 };

@@ -2,20 +2,23 @@
 ALTER TABLE "businesses" ADD COLUMN IF NOT EXISTS "whatsapp" TEXT;
 
 -- AlterEnum: Adicionar PENDENTE ao enum StatusPagamento
--- PostgreSQL não suporta IF NOT EXISTS para ADD VALUE, então usamos um bloco DO com tratamento de erro
+-- Usar bloco DO com tratamento de erro para evitar falha se valor já existir
 DO $$ 
+DECLARE
+    enum_exists BOOLEAN;
 BEGIN
     -- Verificar se o valor PENDENTE já existe no enum
-    IF NOT EXISTS (
+    SELECT EXISTS (
         SELECT 1 
         FROM pg_enum e
         JOIN pg_type t ON e.enumtypid = t.oid
         WHERE t.typname = 'StatusPagamento' 
         AND e.enumlabel = 'PENDENTE'
-    ) THEN
-        -- Adicionar PENDENTE ao enum
-        -- Usar EXECUTE para evitar problemas de parsing
-        EXECUTE 'ALTER TYPE "StatusPagamento" ADD VALUE ''PENDENTE''';
+    ) INTO enum_exists;
+    
+    -- Se não existir, adicionar
+    IF NOT enum_exists THEN
+        ALTER TYPE "StatusPagamento" ADD VALUE 'PENDENTE';
     END IF;
 EXCEPTION
     WHEN duplicate_object THEN
@@ -23,14 +26,16 @@ EXCEPTION
         NULL;
     WHEN OTHERS THEN
         -- Para outros erros, verificar novamente se o valor existe
-        -- Se existir, ignorar; caso contrário, relançar o erro
-        IF NOT EXISTS (
+        SELECT EXISTS (
             SELECT 1 
             FROM pg_enum e
             JOIN pg_type t ON e.enumtypid = t.oid
             WHERE t.typname = 'StatusPagamento' 
             AND e.enumlabel = 'PENDENTE'
-        ) THEN
+        ) INTO enum_exists;
+        
+        -- Se ainda não existir, relançar o erro
+        IF NOT enum_exists THEN
             RAISE;
         END IF;
 END $$;

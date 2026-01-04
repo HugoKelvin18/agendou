@@ -160,6 +160,7 @@ model Business {
   ultimoPagamento    DateTime? // Data do último pagamento registrado
   dataBloqueio       DateTime? // Data em que foi bloqueado (se aplicável)
   toleranciaDias     Int       @default(5) // Dias de tolerância após vencimento antes de bloquear
+  whatsapp           String?   // WhatsApp do responsável pelo business
   
   // Limites do plano
   limiteUsuarios     Int?      // Limite de usuários totais (null = ilimitado)
@@ -197,6 +198,7 @@ enum StatusAgendamento {
 }
 
 enum StatusPagamento {
+  PENDENTE
   ATIVO
   INADIMPLENTE
   BLOQUEADO

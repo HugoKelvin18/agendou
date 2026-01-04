@@ -6,6 +6,8 @@ import { PrivateRoute } from "./PrivateRoutes";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import RecuperarSenha from "../pages/auth/RecuperarSenha";
+import Planos from "../pages/public/Planos";
+import AguardandoConfirmacao from "../pages/public/AguardandoConfirmacao";
 
 // Rotas privadas - Cliente
 import DashboardCliente from "../pages/cliente/Dashboard";
@@ -26,6 +28,7 @@ import ConfiguracoesProfissional from "../pages/profissional/Configuracoes";
 import DashboardAdmin from "../pages/admin/Dashboard";
 import BusinessDetail from "../pages/admin/BusinessDetail";
 import ConfiguracoesAdmin from "../pages/admin/Configuracoes";
+import SolicitacoesPendentes from "../pages/admin/SolicitacoesPendentes";
 
 export default function AppRoutes() {
     return (
@@ -152,10 +155,17 @@ export default function AppRoutes() {
                     </PrivateRoute>
                 } 
             />
+            <Route 
+                path="/admin/solicitacoes-pendentes" 
+                element={
+                    <PrivateRoute role="ADMIN">
+                        <SolicitacoesPendentes />
+                    </PrivateRoute>
+                } 
+            />
 
-            {/* Rota padrão - redireciona para login */}
-            <Route path="/" element={<Login />} />
-            <Route path="*" element={<Login />} />
+            {/* Rota padrão - redireciona para planos */}
+            <Route path="*" element={<Planos />} />
         </Routes>
     );
 }

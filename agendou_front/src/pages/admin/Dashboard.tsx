@@ -115,6 +115,13 @@ export default function DashboardAdmin() {
                             Atualizar
                         </button>
                         <button
+                            onClick={() => navigate("/admin/solicitacoes-pendentes")}
+                            className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 flex items-center gap-2"
+                        >
+                            <Clock className="w-4 h-4" />
+                            Solicitações Pendentes
+                        </button>
+                        <button
                             onClick={() => navigate("/admin/configuracoes")}
                             className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 flex items-center gap-2"
                         >

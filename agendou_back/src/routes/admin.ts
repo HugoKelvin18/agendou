@@ -1,5 +1,6 @@
 import express from "express";
 import * as AdminController from "../controllers/AdminController.js";
+import * as LeadController from "../controllers/LeadController.js";
 import { authenticateToken, requireRole } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -27,5 +28,9 @@ router.post("/suporte/:id/responder", SuporteController.responderSolicitacao);
 
 // Rotas de mensagens
 router.post("/businesses/:id/mensagem", AdminController.enviarMensagemBusiness);
+
+// Rotas de leads (solicitações pendentes)
+router.get("/leads/pendentes", LeadController.listarPendentes);
+router.post("/leads/:id/ativar", LeadController.ativarBusiness);
 
 export default router;

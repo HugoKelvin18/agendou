@@ -40,7 +40,7 @@ async function fixMigration() {
         
         const tableName = Array.isArray(tableCheck) && tableCheck.length > 0 
             ? tableCheck[0].table_name 
-            : 'business'; // Default
+            : 'businesses'; // Default (correto conforme schema)
         
         console.log(`   📋 Usando tabela: ${tableName}`);
         

@@ -5,7 +5,18 @@ async function deploy() {
         console.log('🔧 Gerando Prisma Client...');
         execSync('npx prisma generate', { stdio: 'inherit' });
 
-        console.log('🔍 Tentando resolver migrações falhadas...');
+        console.log('🔍 Verificando e corrigindo migrações falhadas...');
+        
+        // Primeiro, tentar corrigir a migration específica que está falhando
+        // Isso garante que o banco está no estado correto antes de marcar como resolvida
+        try {
+            console.log('🔧 Executando fix para migration 20250121000000_add_whatsapp_and_pendente_status...');
+            execSync('npm run fix-migration-pendente', { stdio: 'inherit' });
+            console.log('✅ Fix executado com sucesso');
+        } catch (fixError) {
+            console.log('⚠️  Fix não executou completamente, mas continuando...');
+            console.log('   Isso pode ser normal se a migration já foi corrigida.');
+        }
         
         // Lista de migrações que podem ter falhado
         const migrationsFalhadas = [

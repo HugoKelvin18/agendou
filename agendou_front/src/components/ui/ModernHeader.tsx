@@ -50,12 +50,18 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
     const carregarNotificacoes = async () => {
         try {
             const { notificacaoService } = await import('../../services/notificacaoService');
-            const notifs = role === 'CLIENTE'
-                ? await notificacaoService.listarCliente()
-                : await notificacaoService.listarProfissional();
+            let notifs: Notification[] = [];
+            if (role === 'CLIENTE') {
+                notifs = await notificacaoService.listarCliente();
+            } else if (role === 'PROFISSIONAL') {
+                notifs = await notificacaoService.listarProfissional();
+            } else if (role === 'ADMIN') {
+                notifs = await notificacaoService.listarAdmin();
+            }
             setNotifications(notifs);
         } catch (err) {
             console.error("Erro ao carregar notificações:", err);
+            // Não quebrar a aplicação se houver erro nas notificações
             setNotifications([]);
         }
     };

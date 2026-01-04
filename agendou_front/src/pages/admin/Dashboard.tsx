@@ -53,11 +53,12 @@ export default function DashboardAdmin() {
         await carregarBusinesses();
     };
 
-    // Calcular estatísticas
-    const totalBusinesses = businesses.length;
-    const businessesAtivos = businesses.filter(b => b.statusPagamento === "ATIVO").length;
-    const businessesBloqueados = businesses.filter(b => b.statusPagamento === "BLOQUEADO").length;
-    const businessesInadimplentes = businesses.filter(b => b.statusPagamento === "INADIMPLENTE").length;
+    // Calcular estatísticas (garantir que businesses seja array)
+    const businessesArray = Array.isArray(businesses) ? businesses : [];
+    const totalBusinesses = businessesArray.length;
+    const businessesAtivos = businessesArray.filter(b => b.statusPagamento === "ATIVO").length;
+    const businessesBloqueados = businessesArray.filter(b => b.statusPagamento === "BLOQUEADO").length;
+    const businessesInadimplentes = businessesArray.filter(b => b.statusPagamento === "INADIMPLENTE").length;
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -185,7 +186,7 @@ export default function DashboardAdmin() {
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div>
                                                     <div className="text-sm font-medium text-gray-900">
-                                                        {business.codigoAcesso || business.nome}
+                                                        {business.codigoAcesso || business.nome || "Sem nome"}
                                                     </div>
                                                     <div className="text-sm text-gray-500">{business.slug}</div>
                                                 </div>
@@ -198,7 +199,7 @@ export default function DashboardAdmin() {
                                                     {getStatusIcon(business.statusPagamento)}
                                                     {business.statusPagamento}
                                                 </span>
-                                                {business.metricas.diasAtraso !== null && business.metricas.diasAtraso > 0 && (
+                                                {business.metricas?.diasAtraso !== null && business.metricas?.diasAtraso !== undefined && business.metricas.diasAtraso > 0 && (
                                                     <div className="text-xs text-red-600 mt-1">
                                                         {business.metricas.diasAtraso} dias em atraso
                                                     </div>
@@ -211,7 +212,7 @@ export default function DashboardAdmin() {
                                                 }
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {business.metricas.totalProfissionais} profissionais
+                                                {business.metricas?.totalProfissionais || 0} profissionais
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <button

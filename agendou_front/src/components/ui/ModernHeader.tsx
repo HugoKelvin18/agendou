@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Bell, User, LogOut, Settings, ChevronDown, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
@@ -47,7 +47,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
     }, []);
 
     // Carregar notificações do backend
-    const carregarNotificacoes = async () => {
+    const carregarNotificacoes = useCallback(async () => {
         try {
             const { notificacaoService } = await import('../../services/notificacaoService');
             let notifs: Notification[] = [];
@@ -64,7 +64,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
             // Não quebrar a aplicação se houver erro nas notificações
             setNotifications([]);
         }
-    };
+    }, [role]);
 
     useEffect(() => {
         carregarNotificacoes();
@@ -75,7 +75,7 @@ const ModernHeader: React.FC<ModernHeaderProps> = ({
         }, 45000);
 
         return () => clearInterval(interval);
-    }, [role]);
+    }, [role, carregarNotificacoes]);
 
     const unreadCount = notifications.filter(n => !n.read).length;
 

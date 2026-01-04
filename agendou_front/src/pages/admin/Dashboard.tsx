@@ -10,6 +10,7 @@ export default function DashboardAdmin() {
     const [businesses, setBusinesses] = useState<BusinessAdmin[]>([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         carregarBusinesses();

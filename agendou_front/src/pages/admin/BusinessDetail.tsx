@@ -186,20 +186,11 @@ export default function BusinessDetail() {
                             <div className="space-y-4">
                                 {business.solicitacoesSuporte.map((solicitacao: any) => (
                                     <div key={solicitacao.id} className="border border-gray-200 rounded-lg p-4">
-                                        <div className="flex items-start justify-between mb-2">
-                                            <div>
-                                                <h3 className="font-semibold text-gray-900">{solicitacao.assunto}</h3>
-                                                <p className="text-sm text-gray-600">
-                                                    Por: {solicitacao.usuario?.nome} • {new Date(solicitacao.criadoEm).toLocaleDateString("pt-BR")}
-                                                </p>
-                                            </div>
-                                            <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                                solicitacao.status === "PENDENTE" ? "bg-yellow-100 text-yellow-800" :
-                                                solicitacao.status === "EM_ATENDIMENTO" ? "bg-blue-100 text-blue-800" :
-                                                "bg-green-100 text-green-800"
-                                            }`}>
-                                                {solicitacao.status}
-                                            </span>
+                                        <div className="mb-2">
+                                            <h3 className="font-semibold text-gray-900">{solicitacao.assunto}</h3>
+                                            <p className="text-sm text-gray-600">
+                                                Por: {solicitacao.usuario?.nome} • {new Date(solicitacao.criadoEm).toLocaleDateString("pt-BR")}
+                                            </p>
                                         </div>
                                         <p className="text-gray-700 mb-2">{solicitacao.descricao}</p>
                                         {solicitacao.resposta && (
